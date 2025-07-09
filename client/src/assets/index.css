@@ -1,14 +1,70 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "https://fonts.googleapis.com/css2?family=Birthstone&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@theme {
+  --color-primary-50: oklch(95.86% 0.016 58.66);
+  --color-primary-100: oklch(91.48% 0.034 58.81);
+  --color-primary-200: oklch(83.19% 0.08 62.65);
+  --color-primary-300: oklch(74.64% 0.1 66.24);
+  --color-primary-400: oklch(65.94% 0.088 65.86);
+  --color-primary-500: oklch(57.25% 0.077 66.61);
+  --color-primary-600: oklch(49.51% 0.067 66.02);
+  --color-primary-700: oklch(40.85% 0.054 66.36);
+  --color-primary-800: oklch(32.18% 0.043 68.03);
+  --color-primary-900: oklch(23.46% 0.032 67.29);
+  --color-primary-950: oklch(18.79% 0.025 66.13);
+
+  --color-peach-50: oklch(96.55% 0.009 52.18);
+  --color-peach-100: oklch(93.25% 0.02 60.18);
+  --color-peach-200: oklch(86.56% 0.045 62.79);
+  --color-peach-300: oklch(79.21% 0.075 65.72);
+  --color-peach-400: oklch(70.17% 0.066 65.61);
+  --color-peach-500: oklch(60.5% 0.058 65.44);
+  --color-peach-600: oklch(51.12% 0.048 65.23);
+  --color-peach-700: oklch(41.63% 0.039 66.38);
+  --color-peach-800: oklch(32.86% 0.031 66.4);
+  --color-peach-900: oklch(23.44% 0.022 66.44);
+  --color-peach-950: oklch(17.83% 0.017 70.83);
+}
+
+:root {
+  --appbar-height: 50px;
+  font-family: "Roboto", Avenir, Helvetica, Arial, sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* color-scheme: light dark; */
+}
+
+html, body {
+  box-sizing: border-box;
+}
+
+.birthstone-regular {
+  font-family: "Birthstone", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.fraunces-regular {
+  font-family: "Fraunces", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "SOFT" 0,
+    "WONK" 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
 }

@@ -1,4 +1,46 @@
+import { useNavigate } from "react-router";
+import { Theme } from "../Utils/Theme"
+import Button from "./Button";
+import { IconBars } from "../Utils/SVGIcons";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  return <></>
+  const navigate = useNavigate();
+  const [ bg, setBg ] = useState("");
+  const height = Theme.appbar.classHeight;
+
+  useEffect(() => {
+    function onScroll(e: Event) {
+      // console.log((e.currentTarget as HTMLDivElement).scrollTop);
+      const root = e.currentTarget as HTMLDivElement;
+      // console.log(root.scrollTop);
+      if (root.scrollTop > 25) {
+        setBg(Theme.appbar.scrolledBackground);
+      }
+      else {
+        setBg("");
+      }
+    }
+    // console.log("useEffect navbar");
+    document.querySelector("#root")?.addEventListener("scroll", onScroll);
+    // window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    }
+  }, []);
+
+  return <div className={`${height} ${bg} w-full px-3 flex items-center fixed top-0 left-0 text-white`}>
+    <a className="flex gap-2 items-center z-[999]" href="/" onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      navigate("/");
+    }}>
+    <img className="w-[32px] h-auto rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
+    <p className="birthstone-regular text-4xl">Kape Kalakal</p>
+    </a>
+
+    <Button pType="icon" className="w-[38px] h-[38px] ml-auto">
+      <IconBars fill="#fff"/>
+    </Button>
+  </div>
 }

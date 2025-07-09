@@ -14,7 +14,7 @@
   --color-primary-900: oklch(23.46% 0.032 67.29);
   --color-primary-950: oklch(18.79% 0.025 66.13);
 
-  --color-peach-50: oklch(96.55% 0.009 52.18);
+  /* --color-peach-50: oklch(96.55% 0.009 52.18);
   --color-peach-100: oklch(93.25% 0.02 60.18);
   --color-peach-200: oklch(86.56% 0.045 62.79);
   --color-peach-300: oklch(79.21% 0.075 65.72);
@@ -24,7 +24,7 @@
   --color-peach-700: oklch(41.63% 0.039 66.38);
   --color-peach-800: oklch(32.86% 0.031 66.4);
   --color-peach-900: oklch(23.44% 0.022 66.44);
-  --color-peach-950: oklch(17.83% 0.017 70.83);
+  --color-peach-950: oklch(17.83% 0.017 70.83); */
 }
 
 :root {
@@ -42,10 +42,6 @@
   /* color-scheme: light dark; */
 }
 
-html, body {
-  box-sizing: border-box;
-}
-
 .birthstone-regular {
   font-family: "Birthstone", cursive;
   font-weight: 400;
@@ -55,7 +51,7 @@ html, body {
 .fraunces-regular {
   font-family: "Fraunces", serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  /* font-weight: 400; */
   font-style: normal;
   font-variation-settings:
     "SOFT" 0,
@@ -67,4 +63,6 @@ html, body, #root {
   height: 100%;
 
   margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }

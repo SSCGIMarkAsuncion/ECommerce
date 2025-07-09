@@ -4,6 +4,7 @@ import Navbar from "../Components/Navbar";
 import PromoList from "../Components/PromoList";
 import usePromo from "../Hooks/usePromo";
 import { type Product } from "../Models/Product";
+import BestSeller from "../Components/BestSellerCarousel";
 
 export default function Home() {
   const { getPromo } = usePromo();
@@ -37,7 +38,9 @@ export default function Home() {
     <div className="bg-primary-50 p-4">
       <PromoList promos={promos} />
     </div>
-    <div className="bg-primary-600 p-4">
+    <div className="bg-primary-800 p-4">
+        <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium"> Best Sellers </h1>
+        <BestSeller bestSellers={[]} />
     </div>
   </>
 }

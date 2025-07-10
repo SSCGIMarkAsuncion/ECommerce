@@ -6,6 +6,17 @@ import { useCallback } from 'react';
 import Button from './Button';
 
 export default function BestSeller({ products }: { products: Product[] }) {
+  const responsive = CarouselBreakpoints;
+  if (products.length < 4) {
+    responsive.desktop.items = products.length;
+  }
+  if (products.length < 3) {
+    responsive.tablet.items = products.length;
+  }
+  if (products.length < 2) {
+    responsive.mobile.items = products.length;
+  }
+
   return <Carousel
     swipeable={true}
     draggable={false}
@@ -16,7 +27,7 @@ export default function BestSeller({ products }: { products: Product[] }) {
     containerClass="w-full min-h-[300px]"
     itemClass="h-full min-h-[inherit]"
     // removeArrowOnDeviceType={["tablet", "mobile"]}
-    responsive={CarouselBreakpoints}>
+    responsive={responsive}>
     {
       (!products || products.length == 0)?
       ((new Array(4)).fill(null)).map((_,i) => {

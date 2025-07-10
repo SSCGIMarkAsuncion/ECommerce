@@ -26,12 +26,8 @@ export const Theme = {
 };
 
 export const CarouselBreakpoints = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 5
-  },
   desktop: {
-    breakpoint: { max: 3000, min: 1025 },
+    breakpoint: { max: 4000, min: 1025 },
     items: 4
   },
   tablet: {

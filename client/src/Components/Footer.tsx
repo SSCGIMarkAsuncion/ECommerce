@@ -3,18 +3,18 @@ import Link from "./Link";
 
 export default function Footer() {
   return <div className="bg-primary-950 p-1 text-white">
-    <div className="p-1 fraunces-regular flex gap-3 mb-4">
+    <div className="px-2 py-3 fraunces-regular flex gap-3 mb-4">
       <div>
-        <div className="flex gap-2 items-center">
-          <img className="w-[18px] h-[18px] rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
+        <div className="flex flex-col gap-2 items-center">
+          <img className="w-[24px] h-[24px] rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
           <h1 className="text-sm">Kape Kalakal</h1>
         </div>
-        <p className="text-xs">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
+        <p className="text-xs text-center">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
       </div>
 
-      <div>
+      {/* <div>
         <h1 className="text-sm">Navigation</h1>
-        <div className="text-xs">
+        <div className="text-sm">
         <ul className="pl-2">
           <li><Link href="/#home">Home</Link></li>
           <li><Link href="/#promos">Promos</Link></li>
@@ -22,11 +22,11 @@ export default function Footer() {
           <li><Link href="/products">Products</Link></li>
         </ul>
         </div>
-      </div>
+      </div> */}
 
       <div>
         <h1 className="text-sm w-max">Contact us</h1>
-        <div className="text-xs">
+        <div className="text-sm">
         <ul className="pl-2">
           <li>
             <Link href="tel:09212312213">

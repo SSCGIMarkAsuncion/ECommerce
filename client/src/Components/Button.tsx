@@ -13,13 +13,12 @@ export default function Button(props: ButtonProps) {
   let style = Theme.button[props.pType || "filled"][props.pColor || "primary"];
   let rounded = props.pType == "icon"? "rounded-full":Theme.rounded;
   let padding = props.pType == "icon"? "p-2":"px-3 py-2"
-  let centerChild = props.pType == "icon"? "flex align-center justify-center":"";
 
   return <button type="button"
    className={`cursor-pointer font-medium
-    flex items-center gap-2 
+    flex items-center justify-center gap-2
     ${Theme.button.disabled}
-    ${centerChild} ${padding} ${rounded} ${style} ${Theme.transition} ${props.className || ""}`}
+    ${padding} ${rounded} ${style} ${Theme.transition} ${props.className || ""}`}
     disabled={Boolean(props.loading)}>
     { props.children || "" }
     { props.loading && <IconSpinner className="h-5 w-5"/> }

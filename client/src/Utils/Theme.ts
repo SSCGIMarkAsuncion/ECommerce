@@ -9,7 +9,7 @@ export const Theme = {
   },
   transition: "transition-all ease-in duration-200",
   button: {
-    disabled: "disabled:brightness-[0.7] disabled:cursor-default! disabled:pointer-events-none",
+    disabled: "disabled:contrast-[0.7] disabled:cursor-default! disabled:pointer-events-none",
     filled: {
       primary: "bg-primary-900 hover:brightness-[1.6] active:brightness-[1.6] text-white",
       whitePrimary: "bg-white hover:brightness-[0.6] active:brightness-[0.6] text-primary-900",

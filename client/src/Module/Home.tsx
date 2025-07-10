@@ -5,6 +5,7 @@ import PromoList from "../Components/PromoList";
 import usePromo from "../Hooks/usePromo";
 import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
+import Footer from "../Components/Footer";
 
 export default function Home() {
   const { getPromo, getBestSellers } = usePromo();
@@ -27,7 +28,7 @@ export default function Home() {
 
   return <>
     <Navbar />
-    <div className="min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-8 pb-8">
+    <div id="home" className="min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-8 pb-8">
       {/* <div className="absolute top-[calc(var(--appbar-height))] w-full">
         <h1 className="absolute right-[18%] birthstone-regular text-white text-9xl tracking-wider font-medium opacity-10">
           Kape<br /> Kalakal
@@ -42,12 +43,13 @@ export default function Home() {
         <Button pColor="whitePrimary" className="text-lg">Explore now</Button>
       </div>
     </div>
-    <div className="bg-primary-50 p-4">
+    <div id="promos" className="bg-primary-50 p-4">
       <PromoList promos={promos} />
     </div>
-    <div className="bg-primary-600 p-4">
+    <div id="bestsellers" className="bg-primary-600 p-4">
       <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium"> Best Sellers </h1>
       <BestSeller products={bestSellers} />
     </div>
+    <Footer />
   </>
 }

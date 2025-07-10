@@ -1,0 +1,13 @@
+{
+  "name": "ecommerce-server",
+  "main": "./src/script.js",
+  "author": "maasuncion@sscgi.com",
+  "license": "ISC",
+  "scripts": {
+    "start": "nodemon ./src/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "morgan": "^1.10.0"
+  }
+}

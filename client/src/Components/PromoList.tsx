@@ -13,11 +13,11 @@ export interface PromoProps extends React.HTMLProps<HTMLDivElement> {
 };
 
 export default function PromoList(props: PromoListProps) {
-  return <div className="p-2 flex flex-col gap-2">
+  return <div className="p-2 flex flex-col gap-4">
   {
     (props.promos.length == 0)?
-      (new Array(4)).map(() => {
-        return <Skeleton className="w-full h-[200px] bg-primary-100"/>
+      ((new Array(4)).fill(null)).map((_,i) => {
+        return <Skeleton key={i} className="w-full h-[200px] bg-primary-100"/>
       })
       :props.promos.map((promo, i) => {
         return <Promo key={promo.id} promo={promo} index={i} />

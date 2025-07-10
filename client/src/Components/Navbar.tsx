@@ -29,7 +29,7 @@ export default function Navbar() {
     }
   }, []);
 
-  return <div className={`${height} ${bg} w-full px-3 flex items-center fixed top-0 left-0 text-white`}>
+  return <div className={`${height} ${Theme.transition} ${bg} w-full px-3 flex items-center fixed top-0 left-0 text-white`}>
     <a className="flex gap-2 items-center z-[999]" href="/" onClick={(e) => {
       e.preventDefault();
       e.stopPropagation();

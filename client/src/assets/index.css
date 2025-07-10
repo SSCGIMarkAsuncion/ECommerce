@@ -66,3 +66,9 @@ html, body, #root {
   box-sizing: border-box;
   overflow-x: hidden;
 }
+
+/* REACT-MULTI-CAROUSEL */
+.react-multi-carousel-track {
+  height: 100%;
+  min-height: inherit;
+}

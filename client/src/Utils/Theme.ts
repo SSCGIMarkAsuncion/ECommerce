@@ -11,7 +11,7 @@ export const Theme = {
   button: {
     disabled: "disabled:brightness-[0.7] disabled:cursor-default! disabled:pointer-events-none",
     filled: {
-      primary: "bg-primary-900 hover:brightness-[1.4] active:brightness-[1.4] text-white",
+      primary: "bg-primary-900 hover:brightness-[1.6] active:brightness-[1.6] text-white",
       whitePrimary: "bg-white hover:brightness-[0.6] active:brightness-[0.6] text-primary-900",
     },
     outline: {
@@ -22,5 +22,24 @@ export const Theme = {
       primary: "bg-none hover:bg-neutral-900/25 active:bg-neutral-900/25",
       whitePrimary: ""
     }
+  }
+};
+
+export const CarouselBreakpoints = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 5
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1025 },
+    items: 4
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 641 },
+    items: 3
+  },
+  mobile: {
+    breakpoint: { max: 640, min: 0 },
+    items: 2
   }
 };

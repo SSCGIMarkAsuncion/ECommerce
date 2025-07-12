@@ -9,7 +9,7 @@ export const Theme = {
   },
   transition: "transition-all ease-in duration-200",
   button: {
-    disabled: "disabled:contrast-[0.7] disabled:cursor-default! disabled:pointer-events-none",
+    disabled: "disabled:bg-neutral-500 disabled:text-neutral-200 disabled:cursor-default! disabled:pointer-events-none",
     filled: {
       primary: "bg-primary-900 hover:brightness-[1.6] active:brightness-[1.6] text-white",
       whitePrimary: "bg-white hover:brightness-[0.6] active:brightness-[0.6] text-primary-900",
@@ -19,7 +19,7 @@ export const Theme = {
       whitePrimary: "bg-inherit hover:bg-white active:bg-white text-white hover:text-primary-900 active:text-primary-900 border-2 border-white"
     },
     icon: {
-      primary: "bg-none hover:bg-neutral-900/25 active:bg-neutral-900/25",
+      primary: "bg-none hover:bg-neutral-900/50 active:bg-neutral-900/50",
       whitePrimary: ""
     }
   }

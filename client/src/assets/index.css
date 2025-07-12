@@ -14,17 +14,50 @@
   --color-primary-900: oklch(23.46% 0.032 67.29);
   --color-primary-950: oklch(18.79% 0.025 66.13);
 
-  /* --color-peach-50: oklch(96.55% 0.009 52.18);
-  --color-peach-100: oklch(93.25% 0.02 60.18);
-  --color-peach-200: oklch(86.56% 0.045 62.79);
-  --color-peach-300: oklch(79.21% 0.075 65.72);
-  --color-peach-400: oklch(70.17% 0.066 65.61);
-  --color-peach-500: oklch(60.5% 0.058 65.44);
-  --color-peach-600: oklch(51.12% 0.048 65.23);
-  --color-peach-700: oklch(41.63% 0.039 66.38);
-  --color-peach-800: oklch(32.86% 0.031 66.4);
-  --color-peach-900: oklch(23.44% 0.022 66.44);
-  --color-peach-950: oklch(17.83% 0.017 70.83); */
+  --animate-slide-down: slide-down 0.5s ease-out both;
+  --animate-slide-up: slide-up 0.5s ease-out both;
+  --animate-rotate-180: rotate-180 0.3s ease-out both;
+  --animate-rotate-180-rev: rotate-180-rev 0.3s ease-out both;
+
+  @keyframes slide-down {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes rotate-180 {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(180deg);
+    }
+  }
+
+  @keyframes rotate-180-rev {
+    from {
+      transform: rotate(180deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
 }
 
 :root {

@@ -2,7 +2,8 @@ import { useNavigate } from "react-router";
 import { Theme } from "../Utils/Theme"
 import Button from "./Button";
 import { IconBars } from "../Utils/SVGIcons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -39,8 +40,34 @@ export default function Navbar() {
     <p className="birthstone-regular text-4xl">Kape Kalakal</p>
     </a>
 
-    <Button pType="icon" className="w-[38px] h-[38px] ml-auto">
-      <IconBars fill="#fff"/>
+    <NavbarMenu />
+  </div>
+}
+
+
+function NavbarMenu() {
+  const [ isOpen, setOpen ] = useState(true);
+
+  const toggle = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setOpen(v => !v);
+  }, []);
+
+  return <div id="menu" className="ml-auto">
+    <Button onClick={toggle}
+      pType="icon" className="w-[38px] h-[38px]">
+
+      <IconBars fill="#fff" />
+
     </Button>
+    <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center">
+      <MenuItem href="/products">Products</MenuItem>
+      <MenuItem href="/login">Login</MenuItem>
+      {/* <SubMenu title="SubMenu" onClick={(e) => {
+        e.stopPropagation();
+      }}>
+        <p>asda</p>
+      </SubMenu> */}
+    </SlidingMenuContent>
   </div>
 }

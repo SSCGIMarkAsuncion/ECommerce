@@ -3,11 +3,11 @@ import Link from "./Link";
 
 export default function Footer() {
   return <div className="bg-primary-950 p-1 text-white">
-    <div className="px-2 py-3 fraunces-regular flex gap-3 mb-4">
+    <div className="px-2 py-3 fraunces-regular text-md flex gap-3 mb-4">
       <div>
         <div className="flex flex-col gap-2 items-center">
           <img className="w-[24px] h-[24px] rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
-          <h1 className="text-sm">Kape Kalakal</h1>
+          <h1>Kape Kalakal</h1>
         </div>
         <p className="text-xs text-center">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
       </div>
@@ -24,19 +24,19 @@ export default function Footer() {
         </div>
       </div> */}
 
-      <div>
-        <h1 className="text-sm w-max">Contact us</h1>
+      <div className="ml-auto">
+        <h1 className="w-max">Contact us</h1>
         <div className="text-sm">
         <ul className="pl-2">
           <li>
             <Link href="tel:09212312213">
-              <IconPhone className="w-[8px] h-auto" />
+              <IconPhone className="w-[12px] h-auto" />
               09xxxxxxxxx
             </Link>
           </li>
           <li>
             <Link href="mailto:kapekalakal@gmail.com">
-              <IconEnvelope className="w-[8px] h-auto" />
+              <IconEnvelope className="w-[12px] h-auto" />
               kapekalakal@gmail.com
             </Link>
           </li>
@@ -51,6 +51,6 @@ export default function Footer() {
       </div>
 
     </div>
-    <p className="italic text-xs fraunces-regular">&copy; 2025 Kape Kalakal. All Rights Reserved.</p>
+    <p className="italic text-sm fraunces-regular">&copy; 2025 Kape Kalakal. All Rights Reserved.</p>
   </div>
 }

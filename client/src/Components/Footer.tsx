@@ -3,13 +3,13 @@ import Link from "./Link";
 
 export default function Footer() {
   return <div className="bg-primary-950 p-1 text-white">
-    <div className="px-2 py-3 fraunces-regular text-md flex gap-3 mb-4">
+    <div className="px-4 py-3 fraunces-regular text-md flex gap-3 mb-4">
       <div>
         <div className="flex flex-col gap-2 items-center">
-          <img className="w-[24px] h-[24px] rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
+          <img className="w-[32px] h-[32px] rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
           <h1>Kape Kalakal</h1>
         </div>
-        <p className="text-xs text-center">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
+        <p className="text-sm text-center">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
       </div>
 
       {/* <div>
@@ -27,7 +27,7 @@ export default function Footer() {
       <div className="ml-auto">
         <h1 className="w-max">Contact us</h1>
         <div className="text-sm">
-        <ul className="pl-2">
+        <ul className="pl-2 *:my-2">
           <li>
             <Link href="tel:09212312213">
               <IconPhone className="w-[12px] h-auto" />

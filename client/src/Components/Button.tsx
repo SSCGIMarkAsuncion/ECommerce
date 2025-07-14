@@ -2,6 +2,8 @@ import type React from "react";
 import { Theme, type ButtonColorStyles, type ButtonType } from "../Utils/Theme";
 import { IconSpinner } from "../Utils/SVGIcons";
 
+type HTMLButtonTypes = "button" | "submit" | "reset" | undefined;
+
 export interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   pColor?: ButtonColorStyles,
   pType?: ButtonType,
@@ -14,7 +16,8 @@ export default function Button(props: ButtonProps) {
   let rounded = props.pType == "icon"? "rounded-full":Theme.rounded;
   let padding = props.pType == "icon"? "p-2":"px-3 py-2"
 
-  return <button type="button"
+  const type: HTMLButtonTypes = (props.type || "button") as HTMLButtonTypes;
+  return <button type={type}
    onClick={props.onClick}
    className={`cursor-pointer font-medium
     flex items-center justify-center gap-2

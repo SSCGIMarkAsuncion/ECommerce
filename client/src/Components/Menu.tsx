@@ -1,4 +1,4 @@
-import { useCallback, useState, type HTMLProps, type JSX, type ReactNode } from "react";
+import { useCallback, useState, type HTMLProps } from "react";
 import { Theme } from "../Utils/Theme";
 import { IconCaretDown, IconXMark } from "../Utils/SVGIcons";
 import Button from "./Button";

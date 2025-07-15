@@ -24,18 +24,21 @@ export function SlidingMenuContent(props: SlidingMenuContentProps) {
   </div>
 }
 
-export function MenuItem(props: HTMLProps<HTMLDivElement>) {
+export function MenuItem(props: HTMLProps<HTMLAnchorElement>) {
   const navigate = useNavigate();
-  return <a className={`${Theme.transition} cursor-pointer p-2 hover:bg-primary-950`} href={props.href} onClick={() => {
-    if (props.href)
-      navigate(props.href);
-  }}>
+  return <a className={`${Theme.transition} cursor-pointer p-2 hover:bg-primary-950 ${props.className}`} href={props.href}
+    onClick={props.onClick || ((e) => {
+      e.preventDefault();
+      if (props.href)
+        navigate(props.href);
+    })}>
     {props.children}
   </a>
 }
 
 export interface SubMenuProps extends HTMLProps<HTMLDivElement> {
   title: string,
+  contentContainerClassName?: string
 };
 
 export function SubMenu(props: SubMenuProps) {
@@ -49,7 +52,7 @@ export function SubMenu(props: SubMenuProps) {
   return <div onClick={props.onClick}>
     <div onClick={onClick} className="flex justify-center cursor-pointer p-2 hover:bg-primary-950">{props.title} <IconCaretDown className={`ml-2 w-[8px] h-[auto] ${caretRotation}`} /></div>
     <div
-     hidden={isHidden} className={`animate-slide-down p-2`}>
+     hidden={isHidden} className={`animate-slide-down w-full ${props.contentContainerClassName || ""}`}>
       {props.children}
     </div>
   </div>

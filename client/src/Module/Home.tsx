@@ -6,9 +6,14 @@ import usePromo from "../Hooks/usePromo";
 import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
 import Footer from "../Components/Footer";
+import useAuth from "../Hooks/useAuth";
+import type { User } from "../Models/User";
+import { useUser } from "../Context/User";
 
 export default function Home() {
   const { getPromo, getBestSellers } = usePromo();
+  const { authVerify } = useAuth();
+  const { userDispatcher } = useUser();
   const [ promos, setPromos ] = useState<Product[]>([]);
   const [ bestSellers, setBestSellers ] = useState<Product[]>([]);
 
@@ -24,10 +29,15 @@ export default function Home() {
         setBestSellers(bestSellers);
       })
       .catch(e => console.log(e));
+
+    authVerify()
+      .then((user: User) => {
+        userDispatcher({ type: "assign", user });
+      })
+      .catch(e => console.log("ERR", e));
   }, []);
 
   return <>
-    <Navbar />
     <div id="home" className="min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-8 pb-8">
       {/* <div className="absolute top-[calc(var(--appbar-height))] w-full">
         <h1 className="absolute right-[18%] birthstone-regular text-white text-9xl tracking-wider font-medium opacity-10">
@@ -50,6 +60,7 @@ export default function Home() {
       <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium"> Best Sellers </h1>
       <BestSeller products={bestSellers} />
     </div>
+    <Navbar />
     <Footer />
   </>
 }

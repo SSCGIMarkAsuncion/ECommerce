@@ -4,6 +4,8 @@ import Button from "./Button";
 import { IconBars } from "../Utils/SVGIcons";
 import { useCallback, useEffect, useState } from "react";
 import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
+import { useUser } from "../Context/User";
+import useAuth from "../Hooks/useAuth";
 
 export default function Navbar({ className = "" }) {
   const navigate = useNavigate();
@@ -47,6 +49,8 @@ export default function Navbar({ className = "" }) {
 
 function NavbarMenu() {
   const [ isOpen, setOpen ] = useState(true);
+  const { user, userDispatcher } = useUser();
+  const { authLogout } = useAuth();
 
   const toggle = useCallback((e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
@@ -61,14 +65,27 @@ function NavbarMenu() {
 
     </Button>
     <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center">
+      { (user && user.role == "admin") && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
       <MenuItem href="/products">Products</MenuItem>
-      <MenuItem href="/login">Login</MenuItem>
-      <MenuItem href="/register">Register</MenuItem>
-      <SubMenu title="SubMenu" onClick={(e) => {
-        e.stopPropagation();
-      }}>
-        <p>asda</p>
-      </SubMenu>
+      { user == null?
+        <>
+        <MenuItem href="/login">Login</MenuItem>
+        <MenuItem href="/register">Register</MenuItem>
+        </>:
+        <SubMenu title={user.username}
+         contentContainerClassName="text-sm"
+         onClick={(e) => {
+          e.stopPropagation();
+        }}>
+          <MenuItem className="block w-full" onClick={(e) => {
+            toggle(e);
+            authLogout(() => {
+            userDispatcher({
+              type: "remove", user: null
+            });
+          })}}>Logout</MenuItem>
+        </SubMenu>
+      }
     </SlidingMenuContent>
   </div>
 }

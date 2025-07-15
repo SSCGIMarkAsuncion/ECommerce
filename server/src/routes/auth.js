@@ -31,10 +31,7 @@ router.post("/register",
   });
 
   if (doc) {
-    return res.status(400)
-      .json({
-        email: "User already exists"
-      });
+    throw new MError(400, "User already exists");
   }
 
   const result = await collection.insertOne(user);

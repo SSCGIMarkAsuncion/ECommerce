@@ -33,10 +33,10 @@ export default function useAuth() {
       body: JSON.stringify(json)
     });
 
-    const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
-      return resjson;
+      return "";
     }
+    const resjson = await res.json();
     throw new MError(resjson);
   };
 

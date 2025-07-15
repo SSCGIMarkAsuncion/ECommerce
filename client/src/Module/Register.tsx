@@ -33,8 +33,7 @@ export default function Register() {
     const data = new FormData(form);
     setLoading(true);
     authRegister(data)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         navigate("/");
       })
       .catch((err: MError) => {

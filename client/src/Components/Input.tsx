@@ -1,6 +1,7 @@
 import { useCallback, useState, type HTMLProps, type ReactNode } from "react";
 import { Theme } from "../Utils/Theme";
 import { IconEye, IconEyeSlash } from "../Utils/SVGIcons";
+import useDelayCallback from "../Hooks/useDelayCallback";
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   suffix?: ReactNode,
@@ -12,7 +13,6 @@ export interface InputProps extends HTMLProps<HTMLInputElement> {
 export default function Input(props: InputProps) {
   const [ invalid, setInvalid ] = useState(false);
   const [ errs, setErrs ] = useState<string[]>([]);
-
   const onValidate = useCallback((e: React.FocusEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     const value = e.target.value;
@@ -38,7 +38,7 @@ export default function Input(props: InputProps) {
       }
     }
 
-    console.log(errMsgs);
+    // console.log(errMsgs);
 
     // console.log(value);
     if (errMsgs.length > 0) {
@@ -54,13 +54,14 @@ export default function Input(props: InputProps) {
         props.onStatus(value, false);
     }
   }, [props.validators, props.onStatus]);
+  const delayedCallback = useDelayCallback(onValidate, 500);
 
   return <div>
     <label htmlFor={props.id} className="fraunces-regular text-xl">{props.label}</label>
     <div 
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
-      onChange={onValidate as React.ChangeEventHandler<HTMLInputElement>}
+      onChange={(e) => delayedCallback(e)}
       className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
      data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950
       flex items-center`}>

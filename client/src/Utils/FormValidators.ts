@@ -30,19 +30,19 @@ export function checkPassword(value: string) {
   }
 
   if (value.length < 8) {
-    return "Password must be at least 8 characters long";
+    return "Must be at least 8 characters long";
   }
 
   let errors = [];
 
   if (numCount < 1) {
-    errors.push("Password must contain at least 1 number");
+    errors.push("Must contain at least 1 number");
   }
   if (upperCount < 1) {
-    errors.push("Password must contain at least 1 uppercase character");
+    errors.push("Must contain at least 1 uppercase character");
   }
   if (specialCount < 1) {
-    errors.push("Password must contain at least 1 special character");
+    errors.push("Must contain at least 1 special character");
   }
 
   if (errors.length > 0) {

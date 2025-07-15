@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 
-// delay callback
+// delays callback in ms
 export default function useDelayCallback(fn: (...args: any) => void, delay: number) {
   const timer = useRef<number>(0);
 

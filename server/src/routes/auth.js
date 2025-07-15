@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
   }, {
     projection: User.project()
   });
-  console.log(doc);
+  // console.log(doc);
   if (doc == null) {
     throw new MError(400, "User does not exists");
   }
@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
     username: doc.username,
     role: doc.role
   };
-  console.log(doc, jwtPayload);
+  // console.log(doc, jwtPayload);
 
   const token = createToken(jwtPayload);
   res.cookie("TOKEN", token, {

@@ -1,0 +1,6 @@
+export default function FormHeader() {
+  return <>
+    <img src="/kape_kalakal.png" className="w-[30vw] md:w-[10vw] mx-auto h-auto" />
+    <h1 className="fraunces-regular text-4xl md:text-2xl text-center">Register</h1>
+  </>
+}

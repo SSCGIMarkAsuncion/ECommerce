@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { Theme } from "../Utils/Theme"
 import Button from "./Button";
-import { IconBars } from "../Utils/SVGIcons";
+import { IconBars, IconCart, IconSearch } from "../Utils/SVGIcons";
 import { useCallback, useEffect, useState } from "react";
 import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 import { useUser } from "../Context/User";
@@ -66,7 +66,14 @@ function NavbarMenu() {
     </Button>
     <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center">
       { (user && user.role == "admin") && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
-      <MenuItem href="/products">Products</MenuItem>
+      <MenuItem href="/products" className="flex items-center gap-2 justify-center">
+        <IconSearch className="w-[18px] h-[18px]"/>
+        Products
+      </MenuItem>
+      <MenuItem href="/cart" className="flex items-center gap-2 justify-center">
+        <IconCart className="w-[18px] h-[18px]"/>
+        Cart
+      </MenuItem>
       { user == null?
         <>
         <MenuItem href="/login">Login</MenuItem>

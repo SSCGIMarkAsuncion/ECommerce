@@ -57,7 +57,7 @@ export default function Input(props: InputProps) {
   const delayedCallback = useDelayCallback(onValidate, 500);
 
   return <div>
-    <label htmlFor={props.id} className="fraunces-regular text-xl">{props.label}</label>
+    <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
     <div 
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}

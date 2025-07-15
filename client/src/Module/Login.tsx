@@ -6,6 +6,7 @@ import { Theme } from "../Utils/Theme";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import type { MError } from "../Utils/Error";
+import FormError from "../Components/FormError";
 
 export default function Login() {
   const [ errs, setErrs ] = useState<string[]>([]);
@@ -41,19 +42,10 @@ export default function Login() {
       <img src="/kape_kalakal.png" className="w-[30vw] mx-auto h-auto" />
       <h1 className="fraunces-regular text-4xl text-center">Login</h1>
       <form className="text-lg px-8" onSubmit={onSubmit}>
-        {
-          errs.length > 0 && <div className="mt-1 bg-red-400/85 border-2 border-dashed text-white border-red-400 p-4 rounded-lg text-sm">
-          {
-            errs.map((err, i) => {
-              return <p key={i} className="mb-2 animate-appear">{err}</p>;
-            })
-          }
-          </div>
-        }
+        <FormError errors={errs} />
         <Input required id="email" label="Email"
           type="email" placeholder="john@email.com" />
-        <InputPassword required id="password" label="Password"
-          type="password" />
+        <InputPassword required id="password" label="Password" />
         <Button loading={loading} className="w-full my-4" type="submit">Login</Button>
       </form>
 

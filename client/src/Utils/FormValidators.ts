@@ -46,7 +46,7 @@ export function checkPassword(value: string) {
   }
 
   if (errors.length > 0) {
-    return errors.join("<br/>");
+    return errors;
   }
   return "";
 }

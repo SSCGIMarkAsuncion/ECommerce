@@ -5,7 +5,7 @@ import { IconEye, IconEyeSlash } from "../Utils/SVGIcons";
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   suffix?: ReactNode,
   label: string,
-  validators?: ((value: string) => string)[], // returns an error message, empty if no error
+  validators?: ((value: string) => string | string[])[], // returns an error message, empty if no error
   onStatus?: (value: string, invalid: boolean) => void
 };
 
@@ -17,7 +17,10 @@ export default function Input(props: InputProps) {
     e.stopPropagation();
     const value = e.target.value;
     const errMsgs: string[] = [];
-    if (e.target.validationMessage && e.target.validationMessage !== ":ignore:") {
+
+    e.target.setCustomValidity("");
+
+    if (e.target.validationMessage) {
       errMsgs.push(e.target.validationMessage);
     }
 
@@ -25,12 +28,17 @@ export default function Input(props: InputProps) {
       props.validators.forEach((validator) => {
         const errMsg = validator(value)
         if (errMsg) {
-          errMsgs.push(errMsg);
+          if (typeof errMsg == "string")
+            errMsgs.push(errMsg);
+          else errMsgs.push(...errMsg);
         }
       });
-
-      e.target.setCustomValidity(":ignore:");
+      if (e.target.validationMessage.length == 0 && errMsgs.length > 0) {
+        e.target.setCustomValidity(errMsgs[0]);
+      }
     }
+
+    console.log(errMsgs);
 
     // console.log(value);
     if (errMsgs.length > 0) {
@@ -57,8 +65,8 @@ export default function Input(props: InputProps) {
      data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950
       flex items-center`}>
       <input
-        name={props.id}
         ref={props.ref}
+        name={props.id}
         aria-invalid={true}
         id={props.id}
         className="w-full outline-none"
@@ -92,9 +100,9 @@ export function InputPassword(props: InputProps) {
     });
   }, []);
 
-  return <Input required id={props.id} label={props.label}
+  return <Input ref={props.ref} validators={props.validators} required id={props.id} label={props.label}
     type={type} suffix={
-      <div className="w-[18px] h-[18px] flex items-center" onClick={(e) => {
+      <div className="w-[18px] h-[18px] flex items-center cursor-pointer" onClick={(e) => {
         e.stopPropagation();
         toggle();
       }}>

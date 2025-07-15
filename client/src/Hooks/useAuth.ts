@@ -22,6 +22,24 @@ export default function useAuth() {
     throw new MError(resjson);
   };
 
+  const authRegister = async(data: FormData) => {
+    const json = Object.fromEntries(data.entries());
+    const res = await fetch(`${api}/auth/register`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(json)
+    });
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status < 300) {
+      return resjson;
+    }
+    throw new MError(resjson);
+  };
+
   const authLogout = async (cb: () => void) => {
     await fetch(`${api}/auth/logout`, {
       method: "GET",
@@ -47,6 +65,7 @@ export default function useAuth() {
   return {
     authLogin,
     authLogout,
-    authVerify
+    authVerify,
+    authRegister
   }
 }

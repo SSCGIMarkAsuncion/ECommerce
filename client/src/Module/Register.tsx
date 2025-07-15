@@ -1,24 +1,24 @@
 import { useCallback, useState } from "react";
 import Button from "../Components/Button";
-import Input, { InputPassword } from "../Components/Input";
+import Input from "../Components/Input";
 import Navbar from "../Components/Navbar";
 import { Theme } from "../Utils/Theme";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import type { MError } from "../Utils/Error";
 
-export default function Login() {
+export default function Register() {
   const [ errs, setErrs ] = useState<string[]>([]);
   const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
-  const { authLogin } = useAuth();
+  const { authRegister } = useAuth();
 
   const onSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const data = new FormData(form);
     setLoading(true);
-    authLogin(data)
+    authRegister(data)
       .then((res) => {
         console.log(res);
         navigate("/");
@@ -52,7 +52,9 @@ export default function Login() {
         }
         <Input required id="email" label="Email"
           type="email" placeholder="john@email.com" />
-        <InputPassword required id="password" label="Password"
+        <Input required id="password" label="Password"
+          type="password" />
+        <Input required id="password2" label="Password"
           type="password" />
         <Button loading={loading} className="w-full my-4" type="submit">Login</Button>
       </form>

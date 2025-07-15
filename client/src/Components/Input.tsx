@@ -1,8 +1,9 @@
 import { useCallback, useState, type HTMLProps, type ReactNode } from "react";
 import { Theme } from "../Utils/Theme";
+import { IconEye, IconEyeSlash } from "../Utils/SVGIcons";
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
-  iconPrefix?: ReactNode
+  suffix?: ReactNode,
   label: string,
   validators?: ((value: string) => string)[], // returns an error message, empty if no error
   onStatus?: (value: string, invalid: boolean) => void
@@ -53,7 +54,8 @@ export default function Input(props: InputProps) {
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
       onChange={onValidate as React.ChangeEventHandler<HTMLInputElement>}
       className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
-     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950`}>
+     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950
+      flex items-center`}>
       <input
         name={props.id}
         ref={props.ref}
@@ -63,6 +65,9 @@ export default function Input(props: InputProps) {
         type={props.type} placeholder={props.placeholder}
         required={props.required}>
       </input>
+      {
+        props.suffix
+      }
     </div>
     <div className="mt-1 text-red-700 text-sm">
       {
@@ -72,4 +77,28 @@ export default function Input(props: InputProps) {
       }
     </div>
   </div>
+}
+
+export function InputPassword(props: InputProps) {
+  const [ type, setType ] = useState("password");
+  const suffix = type == "password"?
+   <IconEye fill="#000" />:<IconEyeSlash fill="#000" />;
+
+  const toggle = useCallback(() => {
+    setType(v => {
+      if (v == "password")
+        return "text";
+      else return "password";
+    });
+  }, []);
+
+  return <Input required id={props.id} label={props.label}
+    type={type} suffix={
+      <div className="w-[18px] h-[18px] flex items-center" onClick={(e) => {
+        e.stopPropagation();
+        toggle();
+      }}>
+        {suffix}
+      </div>
+    } />
 }

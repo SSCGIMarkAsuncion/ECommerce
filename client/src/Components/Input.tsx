@@ -5,7 +5,7 @@ import useDelayCallback from "../Hooks/useDelayCallback";
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   suffix?: ReactNode,
-  label: string,
+  label?: string,
   validators?: ((value: string) => string | string[])[], // returns an error message, empty if no error
   onStatus?: (value: string, invalid: boolean) => void
 };
@@ -64,11 +64,13 @@ export default function Input(props: InputProps) {
       onChange={(e) => delayedCallback(e)}
       className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
      data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950
-      flex items-center`}>
+      flex items-center ${props.className}`}>
       <input
         ref={props.ref}
+        value={props.value}
         name={props.id}
         aria-invalid={true}
+        onChange={props.onChange}
         id={props.id}
         className="w-full outline-none"
         type={props.type} placeholder={props.placeholder}

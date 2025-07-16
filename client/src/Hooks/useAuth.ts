@@ -1,9 +1,14 @@
+import { useEffect } from "react";
+import { useUser } from "../Context/User";
 import { MError } from "../Utils/Error";
+import type { User } from "../Models/User";
 
 const api = import.meta.env.VITE_API;
 // const host = encodeURI(import.meta.env.VITE_HOST);
 
 export default function useAuth() {
+  const { userDispatcher } = useUser();
+
   const authLogin = async (data: FormData) => {
     const json = Object.fromEntries(data.entries());
     const res = await fetch(`${api}/auth/login`, {
@@ -62,10 +67,25 @@ export default function useAuth() {
     throw new MError(resjson);
   }
 
+  const verifyAndSetUser = (onFail?: () => void) => {
+    useEffect(() => {
+      authVerify()
+        .then((user: User) => {
+          userDispatcher({ type: "assign", user });
+        })
+        .catch( e => {
+          console.log("ERR", e);
+          if (onFail)
+            onFail();
+        });
+    }, []);
+  };
+
   return {
     authLogin,
     authLogout,
     authVerify,
-    authRegister
+    authRegister,
+    verifyAndSetUser
   }
 }

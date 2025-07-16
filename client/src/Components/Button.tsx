@@ -23,7 +23,7 @@ export default function Button(props: ButtonProps) {
     flex items-center justify-center gap-2
     ${Theme.button.disabled}
     ${padding} ${rounded} ${style} ${Theme.transition} ${props.className || ""}`}
-    disabled={Boolean(props.loading)}>
+    disabled={(props.disabled == undefined)? Boolean(props.loading):Boolean(props.disabled)}>
     { props.children || "" }
     { props.loading && <IconSpinner className="h-5 w-5"/> }
   </button>

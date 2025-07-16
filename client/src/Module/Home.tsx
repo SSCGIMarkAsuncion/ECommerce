@@ -7,13 +7,10 @@ import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
 import Footer from "../Components/Footer";
 import useAuth from "../Hooks/useAuth";
-import type { User } from "../Models/User";
-import { useUser } from "../Context/User";
 
 export default function Home() {
+  useAuth().verifyAndSetUser();
   const { getPromo, getBestSellers } = usePromo();
-  const { authVerify } = useAuth();
-  const { userDispatcher } = useUser();
   const [ promos, setPromos ] = useState<Product[]>([]);
   const [ bestSellers, setBestSellers ] = useState<Product[]>([]);
 
@@ -29,12 +26,6 @@ export default function Home() {
         setBestSellers(bestSellers);
       })
       .catch(e => console.log(e));
-
-    authVerify()
-      .then((user: User) => {
-        userDispatcher({ type: "assign", user });
-      })
-      .catch(e => console.log("ERR", e));
   }, []);
 
   return <>

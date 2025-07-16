@@ -1,17 +1,18 @@
 import { useNavigate } from "react-router";
 import { Theme } from "../Utils/Theme"
 import Button from "./Button";
-import { IconBars, IconCart, IconSearch } from "../Utils/SVGIcons";
+import { IconBars, IconCart, IconSearch, IconSidebar } from "../Utils/SVGIcons";
 import { useCallback, useEffect, useState } from "react";
 import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 import { useUser } from "../Context/User";
 import useAuth from "../Hooks/useAuth";
 import { isAdmin } from "../Models/User";
 
-export default function Navbar({ className = "" }) {
+export default function Navbar({ className = "", admin = false }) {
   const navigate = useNavigate();
   const [ bg, setBg ] = useState(Theme.appbar.normalBackground);
   const height = Theme.appbar.classHeight;
+  const [sideBarState, setSideBarState] = useState(false);
 
   useEffect(() => {
     function onScroll(e: Event) {
@@ -34,6 +35,19 @@ export default function Navbar({ className = "" }) {
   }, []);
 
   return <div className={`${height} ${Theme.transition} ${bg} w-full px-3 flex items-center fixed top-0 left-0 text-white ${className}`}>
+    {
+      admin && 
+      <Button onClick={() => {
+        setSideBarState(v => !v);
+        const ev = new CustomEvent("SidebarToggle", {
+          detail: !sideBarState
+        });
+        window.dispatchEvent(ev);
+      }}
+        pType="icon" className="w-[33px] h-[33px] mr-2">
+        <IconSidebar fill="#fff" className={`${sideBarState? "rotate-180":""}`} />
+      </Button>
+    }
     <a className="flex gap-2 items-center z-[999]" href="/" onClick={(e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -66,7 +80,6 @@ function NavbarMenu() {
 
     </Button>
     <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center">
-      { (user && isAdmin(user)) && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
       <MenuItem href="/products" className="flex items-center gap-2 justify-center">
         <IconSearch className="w-[18px] h-[18px]"/>
         Products
@@ -77,6 +90,9 @@ function NavbarMenu() {
       </MenuItem>
       <MenuItem href="/#contact" className="flex items-center gap-2 justify-center">
         Contact Us
+      </MenuItem>
+      <MenuItem href="/aboutus" className="flex items-center gap-2 justify-center">
+        About Us
       </MenuItem>
       { user == null?
         <>

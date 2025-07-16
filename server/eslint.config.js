@@ -8,6 +8,7 @@ export default defineConfig([
     files: ["**/*.{js,mjs,cjs}"],
     rules: {
       "no-unused-vars": "warn",
+      "no-unreachable": "warn",
     }, plugins: { js }, extends: ["js/recommended"]
   },
   { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.node } },

@@ -4,22 +4,34 @@ import encryption from "../encryption.js";
 import token from "../utils/jwt.js";
 import { User } from "../schema/user.js";
 import MError from "../error.js";
+import { authenticateJWT } from "../middleware/verify_token.js";
+import { verifyRole } from "../middleware/role.js";
+import ROLES from "../utils/roles.js";
 
 let { createToken, verifyToken } = token;
 let { client } = db;
 
 const router = express.Router();
 
+// TODO add password validation on register
 router.post("/register",
-  async (req, res) => {
+ authenticateJWT,
+ verifyRole,
+ async (req, res) => {
   const db = await client();
   const body = req.body;
+  const role = req.query.role;
+  const tokenRole = req.tokenPayload.role;
+
+  if (role == ROLES.ADMIN && tokenRole != ROLES.SUPERADMIN) {
+    throw new MError(400, "Request Not Allowed");
+  }
 
   const user = {
     email: body.email,
     username: body.username,
     password: encryption.encrypt(body.password),
-    role: "user"
+    role: role
   };
 
   const ecommerceDb = db.db("ecommerce");
@@ -40,16 +52,9 @@ router.post("/register",
   res.status(200).send("");
 });
 
-router.get("/verify", async (req, res) => {
-  const token = req.cookies.TOKEN;
-  const decoded = verifyToken(token);
-
-  // console.log(decoded);
-
-  if (decoded == null) {
-    throw new MError(400, "Token Invalid");
-  }
-  return res.status(200).json(decoded);
+router.get("/verify", authenticateJWT, async (req, res) => {
+  console.log(req.tokenPayload);
+  return res.status(200).json(req.tokenPayload);
 });
 
 router.post("/login", async (req, res) => {

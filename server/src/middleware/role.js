@@ -30,7 +30,6 @@ export function verifyRole(req, _, next) {
     // allow any role for role=user request as long as authenticated
     case ROLES.USER:
     default:
-      req.params.role = ROLES.USER;
       return next();
   }
   throw new MError(400, "Request Not Allowed");

@@ -2,7 +2,7 @@ import express from "express";
 import db from "../mongodb.js";
 import encryption from "../encryption.js";
 import token from "../utils/jwt.js";
-import { User } from "../schema/user.js";
+import User from "../schema/user.js";
 import MError from "../error.js";
 import { authenticateJWT } from "../middleware/verify_token.js";
 import { verifyRole } from "../middleware/role.js";
@@ -20,7 +20,7 @@ router.post("/register",
  async (req, res) => {
   const db = await client();
   const body = req.body;
-  const role = req.query.role;
+  const role = req.query.role || ROLES.USER;
   const tokenRole = req.tokenPayload.role;
 
   if (role == ROLES.ADMIN && tokenRole != ROLES.SUPERADMIN) {

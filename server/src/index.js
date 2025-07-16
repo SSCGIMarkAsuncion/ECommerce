@@ -8,6 +8,7 @@ dotenv.config();
 import db from "./mongodb.js";
 const { client, connect } = db;
 import authRouter from "./routes/auth.js";
+import productsRouter from "./routes/products.js";
 
 const app = express();
 const port = 3000;
@@ -32,6 +33,7 @@ app.get('/', async (req, res) => {
     .send("");
 });
 app.use("/auth/", authRouter);
+app.use("/products/", productsRouter);
 app.use((err, _, res, __) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });
 });

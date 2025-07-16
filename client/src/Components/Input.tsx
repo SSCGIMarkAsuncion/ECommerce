@@ -18,8 +18,8 @@ export default function Input(props: InputProps) {
     const value = e.target.value;
     const errMsgs: string[] = [];
 
+    // clear custom validationMessage, while still getting the default validationMessage
     e.target.setCustomValidity("");
-
     if (e.target.validationMessage) {
       errMsgs.push(e.target.validationMessage);
     }

@@ -38,16 +38,9 @@ export default function Home() {
   }, []);
 
   return <>
-    <div id="home" className="min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-8 pb-8">
-      {/* <div className="absolute top-[calc(var(--appbar-height))] w-full">
-        <h1 className="absolute right-[18%] birthstone-regular text-white text-9xl tracking-wider font-medium opacity-10">
-          Kape<br /> Kalakal
-        </h1>
-        <img src="/coffee_cup.png"
-        className="absolute right-[-20%] w-[400px]" />
-      </div> */}
-      <div className="w-[60%] fraunces-regular">
-        <h1 className="my-10 text-white text-4xl/14 tracking-wider font-medium text-shadow-black text-shadow-sm">
+    <div id="home" className="bg-[url('/home_bg.png')] bg-cover bg-center aspect-[16/9] min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-8 pb-8">
+      <div className="w-[60%] fraunces-regular text-5xl/14 md:text-6xl/15 xl:text-8xl/26">
+        <h1 className="my-10 text-white tracking-wider font-medium text-shadow-black text-shadow-lg">
           Trade in Flavor,<br /> Brew Real Connection
         </h1>
         <Button pColor="whitePrimary" className="text-lg">Explore now</Button>

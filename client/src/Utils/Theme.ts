@@ -5,6 +5,7 @@ export const Theme = {
   rounded: "rounded-xs",
   appbar: {
     classHeight: "h-[var(--appbar-height)]",
+    normalBackground: "bg-primary-900",
     scrolledBackground: "bg-primary-900"
   },
   transition: "transition-all ease-in duration-200",

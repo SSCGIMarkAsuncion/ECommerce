@@ -9,7 +9,7 @@ import useAuth from "../Hooks/useAuth";
 
 export default function Navbar({ className = "" }) {
   const navigate = useNavigate();
-  const [ bg, setBg ] = useState("");
+  const [ bg, setBg ] = useState(Theme.appbar.normalBackground);
   const height = Theme.appbar.classHeight;
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function Navbar({ className = "" }) {
         setBg(Theme.appbar.scrolledBackground);
       }
       else {
-        setBg("");
+        setBg(Theme.appbar.normalBackground);
       }
     }
     // console.log("useEffect navbar");

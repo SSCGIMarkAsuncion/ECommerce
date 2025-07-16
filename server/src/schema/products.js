@@ -1,5 +1,5 @@
 export default class Products {
-  _id = null;
+  id = null;
   name = "";
   description = "";
   price = 0;

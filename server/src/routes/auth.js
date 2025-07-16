@@ -8,8 +8,8 @@ import { authenticateJWT } from "../middleware/verify_token.js";
 import { verifyRole } from "../middleware/role.js";
 import ROLES from "../utils/roles.js";
 
-let { createToken, verifyToken } = token;
-let { client } = db;
+let { createToken } = token;
+let { getCollection, COLLECTIONS } = db;
 
 const router = express.Router();
 
@@ -18,7 +18,6 @@ router.post("/register",
  authenticateJWT,
  verifyRole,
  async (req, res) => {
-  const db = await client();
   const body = req.body;
   const role = req.query.role || ROLES.USER;
   const tokenRole = req.tokenPayload.role;
@@ -34,8 +33,7 @@ router.post("/register",
     role: role
   };
 
-  const ecommerceDb = db.db("ecommerce");
-  const collection = ecommerceDb.collection("users");
+  const collection = getCollection(COLLECTIONS.USERS);
   const doc = await collection.findOne({
     email: user.email
   }, {
@@ -67,9 +65,7 @@ router.post("/login", async (req, res) => {
     password: encryption.encrypt(body.password)
   };
 
-  const db = await client();
-  const ecommerceDb = db.db("ecommerce");
-  const collection = ecommerceDb.collection("users");
+  const collection = getCollection(COLLECTIONS.USERS);
   const doc = await collection.findOne({
     email: user.email,
     password: user.password

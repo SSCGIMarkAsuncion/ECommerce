@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { Collection, MongoClient, ServerApiVersion } from "mongodb";
 
 let mongoClient = null;
 
@@ -16,8 +16,8 @@ async function connect(uri) {
   }
 }
 
-/** @returns {Promise<MongoClient>} */
-async function client() {
+/** @returns {MongoClient} */
+function client() {
   if (!mongoClient) {
     throw Error("MongoDB is null");
   }
@@ -25,7 +25,18 @@ async function client() {
   return mongoClient;
 }
 
+/** @returns {Collection<Document>} */
+function getCollection(collection) {
+  const dbclient = client();
+  return dbclient.db("ecommerce").collection(collection);
+}
+
 export default {
-  client: client,
-  connect: connect
+  client,
+  connect,
+  getCollection,
+  COLLECTIONS: {
+    USERS: "users",
+    PRODUCTS: "products"
+  }
 };

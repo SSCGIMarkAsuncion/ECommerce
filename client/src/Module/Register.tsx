@@ -52,7 +52,7 @@ export default function Register() {
     <Navbar className="bg-primary-950" />
     <div className="h-full py-[var(--appbar-height)] bg-[inherit]">
       <div className={`my-8 w-[90%] md:w-[60%] mx-auto p-4 bg-white shadow-black shadow-xs/15 ${Theme.rounded}`}>
-        <FormHeader />
+        <FormHeader title="Register" />
         <form className="text-lg md:text-sm px-8" onSubmit={onSubmit}>
           <FormError errors={errs} />
           <Input required id="email" label="Email"

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 import { useUser } from "../Context/User";
 import useAuth from "../Hooks/useAuth";
+import { isAdmin } from "../Models/User";
 
 export default function Navbar({ className = "" }) {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ function NavbarMenu() {
 
     </Button>
     <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center">
-      { (user && user.role == "admin") && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
+      { (user && isAdmin(user)) && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
       <MenuItem href="/products" className="flex items-center gap-2 justify-center">
         <IconSearch className="w-[18px] h-[18px]"/>
         Products
@@ -73,6 +74,9 @@ function NavbarMenu() {
       <MenuItem href="/cart" className="flex items-center gap-2 justify-center">
         <IconCart className="w-[18px] h-[18px]"/>
         Cart
+      </MenuItem>
+      <MenuItem href="/#contact" className="flex items-center gap-2 justify-center">
+        Contact Us
       </MenuItem>
       { user == null?
         <>
@@ -84,6 +88,11 @@ function NavbarMenu() {
          onClick={(e) => {
           e.stopPropagation();
         }}>
+          { user && isAdmin(user)?
+            <MenuItem href="/admin" className="block w-full">
+              Admin Dashboard
+            </MenuItem>:<></>
+          }
           <MenuItem className="block w-full" onClick={(e) => {
             toggle(e);
             authLogout(() => {

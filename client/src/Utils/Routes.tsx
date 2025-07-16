@@ -3,6 +3,7 @@ import Home from "../Module/Home";
 import NotFound from "../Module/404";
 import Login from "../Module/Login";
 import Register from "../Module/Register";
+import Admin from "../Module/admin";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const ROUTER = createBrowserRouter([
   {
     path: "/register",
     element: <Register />
+  },
+  {
+    path: "/admin",
+    element: <Admin />
   },
   {
     path: "*",

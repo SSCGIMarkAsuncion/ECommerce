@@ -4,3 +4,7 @@ export interface User {
   email: string,
   role: "admin" | "superadmin" | "user"
 };
+
+export function isAdmin(user: User) {
+  return user.role == "admin" || user.role == "superadmin";
+}

@@ -26,11 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', async (req, res) => {
-  const db = await client();
-  const _docs = await db.db("ecommerce").collection("users").find();
-
   res.status(200)
-    .send("");
+    .send("Server is Working");
 });
 app.use("/auth/", authRouter);
 app.use("/products/", productsRouter);

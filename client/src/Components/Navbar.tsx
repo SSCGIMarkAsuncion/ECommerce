@@ -12,7 +12,7 @@ export default function Navbar({ className = "", admin = false }) {
   const navigate = useNavigate();
   const [ bg, setBg ] = useState(Theme.appbar.normalBackground);
   const height = Theme.appbar.classHeight;
-  const [sideBarState, setSideBarState] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     function onScroll(e: Event) {
@@ -26,11 +26,18 @@ export default function Navbar({ className = "", admin = false }) {
         setBg(Theme.appbar.normalBackground);
       }
     }
-    // console.log("useEffect navbar");
-    document.querySelector("#root")?.addEventListener("scroll", onScroll);
-    // window.addEventListener("scroll", onScroll);
+
+    function handleSidebarClose() {
+      setSidebarOpen(false);
+    }
+
+    const root = document.querySelector("#root");
+    root?.addEventListener("scroll", onScroll);
+    window.addEventListener("SidebarClose", handleSidebarClose);
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      root?.removeEventListener("scroll", onScroll);
+      window.removeEventListener("SidebarClose", handleSidebarClose);
     }
   }, []);
 
@@ -38,14 +45,14 @@ export default function Navbar({ className = "", admin = false }) {
     {
       admin && 
       <Button onClick={() => {
-        setSideBarState(v => !v);
+        setSidebarOpen(v => !v);
         const ev = new CustomEvent("SidebarToggle", {
-          detail: !sideBarState
+          detail: !sidebarOpen
         });
         window.dispatchEvent(ev);
       }}
         pType="icon" className="w-[33px] h-[33px] mr-2">
-        <IconSidebar fill="#fff" className={`${sideBarState? "rotate-180":""}`} />
+        <IconSidebar fill="#fff" className={`${sidebarOpen? "rotate-180":""}`} />
       </Button>
     }
     <a className="flex gap-2 items-center z-[999]" href="/" onClick={(e) => {
@@ -53,8 +60,8 @@ export default function Navbar({ className = "", admin = false }) {
       e.stopPropagation();
       navigate("/");
     }}>
-    <img className="w-[32px] h-auto rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
-    <p className="birthstone-regular text-4xl">Kape Kalakal</p>
+    <img className="w-8 h-auto" src="/Logo_2.svg" alt="Home" title="Home" />
+    <p className="birthstone-regular text-4xl shadow-lg">Kape Kalakal</p>
     </a>
 
     <NavbarMenu />

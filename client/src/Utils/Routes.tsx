@@ -3,7 +3,7 @@ import Home from "../Module/Home";
 import NotFound from "../Module/404";
 import Login from "../Module/Login";
 import Register from "../Module/Register";
-import Admin from "../Module/admin";
+import Admin from "../Module/Admin";
 
 export const ROUTER = createBrowserRouter([
   {

@@ -1,3 +1,5 @@
+import type { IColumn } from "../Utils/DataBuilder";
+
 export interface Product {
   id: string,
   name: string,
@@ -9,6 +11,60 @@ export interface Product {
   createdAt: Date,
   updatedAt: Date
 };
+
+export function mapToProduct(obj: any): Product {
+  return {
+    id: obj._id,
+    name: obj.name,
+    description: obj.description,
+    price: obj.price,
+    salePrice: obj.salePrice,
+    imgs: obj.imgs,
+    tags: obj.tags,
+    createdAt: new Date(obj.createdAt),
+    updatedAt: new Date(obj.updatedAt)
+  };
+}
+
+export const PRODUCT_COLUMNS: IColumn[] = [
+  {
+    id: "name",
+    enableColumnFilter: true
+  },
+  // {
+  //   id: "description",
+  //   enableColumnFilter: true
+  // },
+  {
+    id: "price",
+    enableColumnFilter: true,
+    isNumber: true
+  },
+  {
+    name: "Sale Price",
+    id: "salePrice",
+    enableColumnFilter: true,
+    isNumber: true
+  },
+  {
+    id: "tags",
+    enableColumnFilter: true,
+    enableSorting: false,
+    isArray: true
+  },
+  {
+    name: "Created At",
+    id: "createdAt",
+    enableColumnFilter: true,
+    isDate: true
+  },
+  {
+    name: "Updated At",
+    id: "updatedAt",
+    enableColumnFilter: true,
+    isDate: true
+  },
+];
 
 export const dummyPromoProducts: Product[] = [
   {

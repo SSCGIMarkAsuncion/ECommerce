@@ -86,3 +86,51 @@ export function IconSidebar({ className = "", fill = "#fff", }) {
     <path fill-rule="evenodd" clip-rule="evenodd" d="M2.475 0.124998H16.5332C17.8258 0.124998 18.875 1.17422 18.875 2.46679V16.5336C18.875 17.8258 17.8258 18.8754 16.5332 18.8754H2.475C1.18242 18.8754 0.133204 17.8258 0.133204 16.5336V2.46679C0.133204 1.17422 1.18242 0.124998 2.475 0.124998ZM12.625 1.68789V17.3125H16.1453C16.7898 17.3125 17.3129 16.7895 17.3129 16.1449V2.85547C17.3129 2.21094 16.7898 1.68789 16.1453 1.68789H12.625ZM2.86289 17.3125H11.0625V1.68789H2.86289C2.21836 1.68789 1.69531 2.21094 1.69531 2.85547V16.1449C1.69531 16.7895 2.21836 17.3125 2.86289 17.3125Z" />
   </svg>
 }
+
+export function IconBag({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" fill={fill} className={className} viewBox="0 0 448 512">
+    <path d="M160 112c0-35.3 28.7-64 64-64s64 28.7 64 64l0 48-128 0 0-48zm-48 48l-64 0c-26.5 0-48 21.5-48 48L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-208c0-26.5-21.5-48-48-48l-64 0 0-48C336 50.1 285.9 0 224 0S112 50.1 112 112l0 48zm24 48a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm152 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/>
+  </svg>
+}
+
+export function IconUser({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" fill={fill} className={className} viewBox="0 0 448 512">
+    <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
+  </svg>
+}
+
+export function IconMoneyWave({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" fill={fill} className={className} viewBox="0 0 576 512">
+    <path d="M0 112.5L0 422.3c0 18 10.1 35 27 41.3c87 32.5 174 10.3 261-11.9c79.8-20.3 159.6-40.7 239.3-18.9c23 6.3 48.7-9.5 48.7-33.4l0-309.9c0-18-10.1-35-27-41.3C462 15.9 375 38.1 288 60.3C208.2 80.6 128.4 100.9 48.7 79.1C25.6 72.8 0 88.6 0 112.5zM288 352c-44.2 0-80-43-80-96s35.8-96 80-96s80 43 80 96s-35.8 96-80 96zM64 352c35.3 0 64 28.7 64 64l-64 0 0-64zm64-208c0 35.3-28.7 64-64 64l0-64 64 0zM512 304l0 64-64 0c0-35.3 28.7-64 64-64zM448 96l64 0 0 64c-35.3 0-64-28.7-64-64z"/>
+  </svg>
+}
+
+export function IconPercent({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" fill={fill} className={className} viewBox="0 0 384 512">
+    <path d="M374.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-320 320c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l320-320zM128 128A64 64 0 1 0 0 128a64 64 0 1 0 128 0zM384 384a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z" />
+  </svg>
+}
+
+export function IconPlus({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" fill={fill} className={className} viewBox="0 0 448 512">
+    <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
+  </svg>
+}
+
+export function IconPen({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" fill={fill} className={className} viewBox="0 0 512 512">
+    <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
+  </svg>
+}
+export function IconTrash({ className = "", fill = "#fff", }) {
+  // <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  return <svg xmlns="http://www.w3.org/2000/svg" className={className} fill={fill} viewBox="0 0 448 512">
+    <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"/>
+  </svg>
+}

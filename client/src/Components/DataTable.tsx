@@ -1,11 +1,14 @@
 import { type ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, type SortDirection, type SortingState, useReactTable } from "@tanstack/react-table";
-import { useState, type HTMLProps } from "react";
+import { useState, type HTMLAttributes, type HTMLProps } from "react";
 import Button from "./Button";
 import Input from "./Input";
+import type { OpenableData } from "../Utils/DataBuilder";
+import { IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
 
 export interface DataTableProps extends HTMLProps<HTMLElement> {
   tableColumns: any[],
-  tableData: any[]
+  tableData: any[],
+  title: string
 };
 
 export default function DataTable(props: DataTableProps) {
@@ -47,16 +50,24 @@ export default function DataTable(props: DataTableProps) {
     },
   });
   return <div className="p-4">
+      <div className="flex gap-2 capitalize items-center">
+        <h3 className="text-2xl">{props.title}</h3>
+        <Button className="m-2 ml-auto capitalize text-sm" pColor="green"><IconPlus className="w-4 h-4" /> Add</Button>
+      </div>
+      <div className="w-full rounded-lg overflow-y-hidden border-2 border-gray-200">
       <table className={`min-w-full table-fixed text-black`}>
         <thead className="bg-gray-100">
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
 
-              {headerGroup.headers.map((header, i, arr) =>{
+              {headerGroup.headers.map((header) =>{
                 return (
                   <th key={header.id}
-                    className="uppercase relative p-2 border-b-2 border-gray-200 text-left text-primary-950 text-md font-semibold"
-                    style={{ width: header.getSize() }} >
+                    className="capitalize relative p-1 border-b-2 border-gray-200 text-left text-primary-950 text-md font-semibold"
+                    style={{
+                      width: header.getSize(),
+                      maxWidth: `${header.column.columnDef.maxSize}px`
+                    }} >
                     <div
                       className="cursor-pointer select-none flex items-center gap-1"
                       onClick={header.column.getToggleSortingHandler()}
@@ -66,7 +77,7 @@ export default function DataTable(props: DataTableProps) {
                     </div>
                     {header.column.getCanFilter() ? (
                       <Input
-                        className="text-sm"
+                        className="text-xs"
                         type="text"
                         value={(header.column.getFilterValue() ?? '') as string}
                         onChange={e => header.column.setFilterValue((e.target as HTMLInputElement).value)}
@@ -77,23 +88,25 @@ export default function DataTable(props: DataTableProps) {
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''
+                        style={{
+                          userSelect: "none",
+                          touchAction: "none"
+                        }}
+                        className={`absolute top-0 right-0 h-full w-[3px] bg-black/50 cursor-col-resize opacity-0 hover:opacity-100 ${header.column.getIsResizing() ? "bg-primary-900 opacity-100" : ''
                           }`}
                       ></div>
                     )}
                   </th>
                 )
               })}
-
             </tr>
           ))}
         </thead>
-
         <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id} className="hover:bg-gray-50">
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="hover:bg-gray-100 max-h-[60px]">
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className="px-4 py-2 border-b-2 border-gray-200 text-sm">
+                <td key={cell.id} className={`p-1 border-gray-200 text-sm border-b-2`}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
@@ -101,23 +114,39 @@ export default function DataTable(props: DataTableProps) {
           ))}
         </tbody>
       </table>
-
-      <div hidden={data.length <= pageSize} className="flex gap-4 items-center mt-4 text-sm">
-        <Button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Prev
-        </Button>
-        <span>
-          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-        </span>
-        <Button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="flex gap-4 items-center m-2 text-sm">
+        <div hidden={data.length < pageSize}>
+          <Button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Prev
+          </Button>
+          <span>
+            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          </span>
+          <Button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
       </div>
     </div>;
+}
+
+
+export interface RowActionsProps extends HTMLAttributes<HTMLDivElement> {
+  data: any,
+  type: OpenableData
+};
+
+export function RowActions(props: RowActionsProps) {
+  const buttonSizes = "w-7 h-7";
+  return <div className="flex gap-2 justify-center">
+    <Button pType="icon" className={buttonSizes} ><IconPen className="fill-green-800" /></Button>
+    <Button pType="icon" className={buttonSizes} ><IconTrash className="fill-red-800" /></Button>
+  </div>;
 }

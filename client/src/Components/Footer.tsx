@@ -6,7 +6,7 @@ export default function Footer() {
     <div className="px-4 py-3 fraunces-regular text-md flex gap-3 mb-4">
       <div>
         <div className="flex flex-col gap-2 items-center">
-          <img className="w-[32px] h-[32px] rounded-md" src="/kape_kalakal.jpeg" alt="icon" title="icon" />
+          <img className="w-[32px] h-[32px] rounded-md" src="/Logo_2.svg" alt="icon" title="icon" />
           <h1>Kape Kalakal</h1>
         </div>
         <p className="text-sm text-center">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>

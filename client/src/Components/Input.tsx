@@ -63,18 +63,12 @@ export default function Input(props: InputProps) {
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
       onChange={(e) => delayedCallback(e)}
       className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
-     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950
-      flex items-center ${props.className}`}>
+     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950 has-[input:disabled]:bg-gray-600/75
+      has-[input:disabled]:text-gray-800 flex items-center ${props.className}`}>
       <input
-        ref={props.ref}
-        value={props.value}
+        {...props}
         name={props.id}
-        aria-invalid={true}
-        onChange={props.onChange}
-        id={props.id}
-        className="w-full outline-none"
-        type={props.type} placeholder={props.placeholder}
-        required={props.required}>
+        className="w-full outline-none" >
       </input>
       {
         props.suffix
@@ -112,4 +106,23 @@ export function InputPassword(props: InputProps) {
         {suffix}
       </div>
     } />
+}
+
+export interface TextAreaProps extends HTMLProps<HTMLTextAreaElement> {
+  label?: string,
+};
+
+export function TextArea(props: TextAreaProps) {
+  return <div>
+    <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
+    <div 
+      className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
+     data-[invalid=true]:border-red-700 has-[textarea:focus-within]:border-primary-950 has-[textarea:disabled]:bg-gray-600/75
+      has-[textarea:disabled]:text-gray-800 flex items-center ${props.className}`}>
+      <textarea
+        {...props}
+        name={props.id}
+        className="w-full outline-none" />
+    </div>
+  </div>
 }

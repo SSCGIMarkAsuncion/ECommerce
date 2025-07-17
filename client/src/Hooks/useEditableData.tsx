@@ -4,8 +4,8 @@ import useProducts from "./useProducts";
 
 export function useEditableData() {
   const { getProducts } = useProducts();
-  const load = async (data: OpenableData): Promise<TableData | null> => {
-    switch (data) {
+  const load = async (type: OpenableData): Promise<TableData | null> => {
+    switch (type) {
       case "products":
         const products = await getProducts([], []);
         if (products.length == 0)
@@ -24,6 +24,9 @@ export function useEditableData() {
       case "payments":
     }
     return null;
+  };
+
+  const edit = (type: OpenableData, data: any) => {
   };
 
   return {

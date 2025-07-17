@@ -2,7 +2,7 @@ import { type ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowMod
 import { useState, type HTMLAttributes, type HTMLProps } from "react";
 import Button from "./Button";
 import Input from "./Input";
-import type { OpenableData } from "../Utils/DataBuilder";
+import { MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_EVENT_NAME, type OpenableData } from "../Utils/DataBuilder";
 import { IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
 
 export interface DataTableProps extends HTMLProps<HTMLElement> {
@@ -145,8 +145,25 @@ export interface RowActionsProps extends HTMLAttributes<HTMLDivElement> {
 
 export function RowActions(props: RowActionsProps) {
   const buttonSizes = "w-7 h-7";
+  const triggerEvent = (evType: string) => {
+    const ev = new CustomEvent(MODIFY_DATA_EVENT_NAME, {
+      detail: {
+        action: evType,
+        dataType: props.type,
+        data: props.data
+      }
+    });
+    window.dispatchEvent(ev);
+  };
+
   return <div className="flex gap-2 justify-center">
-    <Button pType="icon" className={buttonSizes} ><IconPen className="fill-green-800" /></Button>
-    <Button pType="icon" className={buttonSizes} ><IconTrash className="fill-red-800" /></Button>
+    <Button onClick={(e) => {
+      e.preventDefault();
+      triggerEvent(MODIFY_DATA_ACTION_EDIT);
+    }} pType="icon" className={buttonSizes} ><IconPen className="fill-green-800" /></Button>
+    <Button onClick={(e) => {
+      e.preventDefault();
+      triggerEvent(MODIFY_DATA_ACTION_DELETE);
+    }} pType="icon" className={buttonSizes} ><IconTrash className="fill-red-800" /></Button>
   </div>;
 }

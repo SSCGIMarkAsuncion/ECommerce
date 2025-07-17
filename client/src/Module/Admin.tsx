@@ -5,19 +5,36 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import Sidebar, { SidebarButton } from "../Components/Sidebar";
 import { IconBag, IconCart, IconMoneyWave, IconPercent, IconSpinner, IconUser } from "../Utils/SVGIcons";
-import { type TableData, type OpenableData } from "../Utils/DataBuilder";
+import { type TableData, type OpenableData, MODIFY_DATA_EVENT_NAME, type ModifyDataDetail } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
+import { Modal, ModalEdit } from "../Components/Modal";
 
 
 export default function Admin() {
   const [ selectedData, setSelectedData ] = useState<OpenableData>("products");
   const [ isLoading, setIsLoading ] = useState(false);
   const [ currentData, setCurrentData ] = useState<TableData | null>(null);
+  const [ editData, setEditData ] = useState<ModifyDataDetail | null>(null);
   const { load: loadData } = useEditableData();
   const navigate = useNavigate();
   useAuth().verifyAndSetUser(() => {
     navigate("/");
   });
+
+  useEffect(() => {
+    function onModify(e: CustomEvent<ModifyDataDetail>) {
+      console.log("onModify", e.detail);
+      setEditData(e.detail);
+    }
+
+    // @ts-ignore
+    window.addEventListener(MODIFY_DATA_EVENT_NAME, onModify);
+
+    return () => {
+      // @ts-ignore
+      window.removeEventListener(MODIFY_DATA_EVENT_NAME, onModify);
+    }
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -56,6 +73,11 @@ export default function Admin() {
       <SidebarButton onClick={() => setSelectedData("users")} className="[&>svg]:w-4 [&>svg]:h-4"><IconUser />Users</SidebarButton>
     </Sidebar>
     <Navbar admin />
+
+    <Modal open={Boolean(editData)} onClick={() => setEditData(null)}>
+      { editData && <ModalEdit closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} /> }
+    </Modal>
+
   </>;
 }
 

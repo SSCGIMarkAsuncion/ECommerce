@@ -1,5 +1,5 @@
 import { createColumnHelper, type Row } from "@tanstack/react-table";
-import type { ReactNode } from "react";
+// import type { ReactNode } from "react";
 import { RowActions } from "../Components/DataTable";
 import { Pill } from "../Components/Pill";
 
@@ -8,7 +8,7 @@ export type TableData = {
   column: any[],
   data: any[]
 };
-export type RowAction = (data: any) => ReactNode;
+// export type RowAction = (data: any) => ReactNode;
 export interface IColumn {
   name?: string,
   id: string,
@@ -18,6 +18,15 @@ export interface IColumn {
   isDate?: boolean,
   isArray?: boolean
 };
+
+export interface ModifyDataDetail {
+  action: string,
+  dataType: OpenableData,
+  data: any
+};
+export const MODIFY_DATA_EVENT_NAME = "ModifyData";
+export const MODIFY_DATA_ACTION_DELETE = "delete";
+export const MODIFY_DATA_ACTION_EDIT = "edit";
 
 // export function buildRowsFrom(dataType: OpenableData, rawDatas: any[]) {
 //   const formattedData = rawDatas.map((data) => {
@@ -57,7 +66,7 @@ export function buildColumnFrom(
       maxSize: 100,
       cell: props => {
         // console.log(props.row);
-        return <RowActions type={type} data={props.row} />
+        return <RowActions type={type} data={props.row.original} />
       }
     })
   );
@@ -88,7 +97,7 @@ export function buildColumnFrom(
               }
             </div>
           }
-          return props.getValue();
+          return rawValue || "";
         },
         enableSorting: colDef.enableSorting,
         enableColumnFilter: colDef.isDate? false:colDef.enableColumnFilter

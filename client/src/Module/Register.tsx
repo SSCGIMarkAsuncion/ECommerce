@@ -63,7 +63,13 @@ export default function Register() {
             <InputPassword ref={password1Ref} required id="password" label="Password" validators={[checkPassword]} />
             <InputPassword required id="password2" label="Retype Password" validators={[validatePass2]} />
           </div>
-          <Button loading={loading} className="w-full my-4" type="submit">Register</Button>
+          <Button loading={loading} className="w-full mt-4" type="submit">Register</Button>
+          <div className="fraunces-regular">
+            <span>Already have an account? <a className="text-primary-900 font-semibold hover:underline" href="/register" onClick={(e) => {
+              e.preventDefault();
+              navigate("/login");
+            }}>Login</a></span>
+          </div>
         </form>
       </div>
     </div>

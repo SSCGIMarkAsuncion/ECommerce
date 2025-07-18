@@ -42,7 +42,13 @@ export default function Login() {
           <Input required id="email" label="Email"
             type="email" placeholder="john@email.com" />
           <InputPassword required id="password" label="Password" />
-          <Button loading={loading} className="w-full my-4" type="submit">Login</Button>
+          <Button loading={loading} className="w-full mt-4" type="submit">Login</Button>
+          <div className="fraunces-regular">
+            <span>No account? <a className="text-primary-900 font-semibold hover:underline" href="/register" onClick={(e) => {
+              e.preventDefault();
+              navigate("/register");
+            }}>Register</a></span>
+          </div>
         </form>
       </div>
     </div>

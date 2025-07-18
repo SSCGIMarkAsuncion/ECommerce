@@ -56,19 +56,19 @@ export default function Input(props: InputProps) {
   }, [props.validators, props.onStatus]);
   const delayedCallback = useDelayCallback(onValidate, 500);
 
-  return <div>
+  return <div hidden={props.hidden}>
     <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
     <div 
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
       onChange={(e) => delayedCallback(e)}
       className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
-     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950 has-[input:disabled]:bg-gray-600/75
-      has-[input:disabled]:text-gray-800 flex items-center ${props.className}`}>
+     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950 has-[input:read-only]:bg-gray-400
+      has-[input:read-only]:text-gray-600 flex items-center ${props.className}`}>
       <input
         {...props}
         name={props.id}
-        className="w-full outline-none" >
+        className="w-full outline-none read-only:pointer-events-none" >
       </input>
       {
         props.suffix

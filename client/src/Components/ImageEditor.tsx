@@ -1,0 +1,77 @@
+import { useCallback, useEffect, useRef, useState, type HTMLProps } from "react";
+import Input from "./Input";
+import Button from "./Button";
+import { IconXMark } from "../Utils/SVGIcons";
+
+export interface ImageEditorProps extends HTMLProps<HTMLDivElement> {
+  imgs: string[],
+  onChangeImgs: (imgs: string[]) => void
+};
+
+export function ImageEditor(props: ImageEditorProps) {
+  const [ imgs, setImgs ] = useState([ ...props.imgs ]);
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    props.onChangeImgs(imgs);
+  }, [imgs]);
+
+  const onRemove = useCallback((img: string) => {
+    setImgs((v) => {
+      return [ ...v.filter((i) => i === img) ];
+    });
+  }, []);
+
+  const onUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const fileUrls = Array.from(files);
+    alert("This Feature is Not Implemented Yet");
+    return;
+    console.log(fileUrls);
+    // @ts-ignore
+    setImgs((prev) => [...prev, ...fileUrls]);
+  }, []);
+
+  return <div className="m-2">
+    <div className="w-full rounded-md min-h-[10vh] border-2 border-dashed bg-gray-300 text-gray-600 border-gray-600 p-4 flex items-center justify-center" onClick={(e) => {
+      e.stopPropagation();
+      if (ref.current)
+        ref.current.click();
+    }}>
+      Press to upload Image/s <span className="text-red-800">&nbsp;(Not tested)</span>
+    </div>
+    <div className="flex flex-col md:flex-row flex-wrap gap-1 my-2">
+      {
+        imgs.map((img, i) => {
+          return <Image key={i} src={img} alt={img} title={img} editable onRemove={onRemove} />
+        })
+      }
+    </div>
+    <Input
+      ref={ref}
+      multiple hidden={true}
+      onChange={onUpload}
+      type="file" accept="image/png, image/jpeg" />
+  </div>;
+}
+
+export interface ImageProps extends HTMLProps<HTMLImageElement> {
+  editable: boolean
+  onRemove?: (img: string) => void
+};
+
+export function Image({ editable = false, ...props }: ImageProps) {
+  return <div className="bg-gray-200 w-max relative">
+    <img {...props} className={`m-auto max-w-[150px] md:max-w-1/2 h-auto ${props.className}`}/>
+    { editable && <Button pType="icon" className="absolute top-1 right-0 ml-auto w-8 h-8" onClick={(e) => {
+        e.stopPropagation();
+        if (props.onRemove)
+          props.onRemove(props.children as string);
+      }} >
+        <IconXMark className="fill-red-800" />
+      </Button>
+    }
+  </div>
+}

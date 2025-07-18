@@ -8,8 +8,22 @@ export interface Product {
   salePrice?: number,
   imgs: string[],
   tags: string[],
-  createdAt: Date,
-  updatedAt: Date
+  createdAt: Date | null,
+  updatedAt: Date | null
+};
+
+export function emptyProduct(): Product {
+  return {
+    id: "",
+    name: "",
+    description: "",
+    price: 0,
+    salePrice: 0,
+    imgs: [],
+    tags: [],
+    createdAt: null,
+    updatedAt: null
+  };
 };
 
 export function mapToProduct(obj: any): Product {

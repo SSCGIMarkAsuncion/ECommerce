@@ -5,7 +5,7 @@ import Navbar from "../Components/Navbar";
 import { Theme } from "../Utils/Theme";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
-import type { MError } from "../Utils/Error";
+import { MError } from "../Utils/Error";
 import FormError from "../Components/FormError";
 import FormHeader from "../Components/FormHeader";
 
@@ -26,11 +26,7 @@ export default function Login() {
         navigate("/");
       })
       .catch((err: MError) => {
-        const keys = Object.keys(err.msg)
-        let merrs: string[] = [];
-        keys.forEach((key) => {
-          merrs.push(err.msg[key]);
-        });
+        let merrs: string[] = MError.toErrorList(err);
         setLoading(false);
         setErrs(merrs);
       });

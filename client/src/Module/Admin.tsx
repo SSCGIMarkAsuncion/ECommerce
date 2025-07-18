@@ -4,10 +4,10 @@ import DataTable from "../Components/DataTable";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import Sidebar, { SidebarButton } from "../Components/Sidebar";
-import { IconBag, IconCart, IconMoneyWave, IconPercent, IconSpinner, IconUser } from "../Utils/SVGIcons";
-import { type TableData, type OpenableData, MODIFY_DATA_EVENT_NAME, type ModifyDataDetail } from "../Utils/DataBuilder";
+import { IconBag, IconCart, IconMoneyWave, IconSpinner, IconUser } from "../Utils/SVGIcons";
+import { type TableData, type OpenableData, MODIFY_DATA_EVENT_NAME, type ModifyDataDetail, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_ADD } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
-import { Modal, ModalEdit } from "../Components/Modal";
+import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
 
 
 export default function Admin() {
@@ -67,17 +67,23 @@ export default function Admin() {
     { mainContent }
     <Sidebar>
       <SidebarButton onClick={() => setSelectedData("products")} className="[&>svg]:w-4 [&>svg]:h-4"><IconBag />Products</SidebarButton>
-      <SidebarButton onClick={() => setSelectedData("promos")} className="[&>svg]:w-4 [&>svg]:h-4"><IconPercent />Promos</SidebarButton>
       <SidebarButton onClick={() => setSelectedData("orders")} className="[&>svg]:w-4 [&>svg]:h-4"><IconCart />Orders</SidebarButton>
       <SidebarButton onClick={() => setSelectedData("payments")} className="[&>svg]:w-4 [&>svg]:h-4"><IconMoneyWave />Payments</SidebarButton>
       <SidebarButton onClick={() => setSelectedData("users")} className="[&>svg]:w-4 [&>svg]:h-4"><IconUser />Users</SidebarButton>
     </Sidebar>
     <Navbar admin />
 
-    <Modal open={Boolean(editData)} onClick={() => setEditData(null)}>
-      { editData && <ModalEdit closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} /> }
-    </Modal>
-
+    { editData &&
+      <Modal onClick={() => setEditData(null)}>
+        { editData.action == MODIFY_DATA_ACTION_ADD &&
+          <ModalEdit closeModal={() => setEditData(null)} type={selectedData} data={null} /> 
+        }
+        { editData.action == MODIFY_DATA_ACTION_DELETE &&
+          <ModalDelete closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} />
+        }
+        { editData.action == MODIFY_DATA_ACTION_EDIT && <ModalEdit closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} /> }
+      </Modal>
+    }
   </>;
 }
 

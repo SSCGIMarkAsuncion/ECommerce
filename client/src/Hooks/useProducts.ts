@@ -33,18 +33,26 @@ export default function useProducts() {
     return {} as Product;
   };
 
-  const updateProduct = (id: string, update: Product) => {
-    return null;
+  const updateProduct = async (update: Product) => {
+    console.log("update", update);
+    throw new MError({ error: "Update" });
   }
 
-  const newProduct = (product: Product) => {
-    return null;
+  const newProduct = async (product: Product) => {
+    console.log("new", product);
+    throw new MError({ error: "new" });
+  }
+
+  const removeProduct = async (product: Product) => {
+    console.log("delete", product);
+    throw new MError({ error: "delete" });
   }
 
   return {
     getProducts,
     getProductsById,
     updateProduct,
-    newProduct
+    newProduct,
+    removeProduct
   };
 }

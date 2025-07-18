@@ -1,30 +1,42 @@
-import { useCallback, useState, type HTMLAttributes } from "react";
+import { useCallback, useEffect, useState, type HTMLAttributes } from "react";
 import type { OpenableData } from "../Utils/DataBuilder";
-import type { Product } from "../Models/Product";
+import { emptyProduct, type Product } from "../Models/Product";
 import Button from "./Button";
 import Input, { TextArea } from "./Input";
+import { EditorTags } from "./EditorTags";
+import useProducts from "../Hooks/useProducts";
+import { ImageEditor } from "./ImageEditor";
+import { MError } from "../Utils/Error";
+import FormError from "./FormError";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
 };
 
 export function Modal(props: ModalProps) {
-  return <div onClick={props.onClick} hidden={!props.open} className="fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
+  return <div onClick={props.onClick} className="overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
     {props.children}
   </div>;
 }
 
 export interface ModalEditProps {
   type: OpenableData,
-  data: any,
+  data: any | null,
   closeModal: () => void
 };
+
+function toDateTimeLocalString(date: Date | null) {
+  if (!date) {
+    return undefined;
+  }
+  return date.toISOString().slice(0,16);
+}
 
 export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
   let editComponent = null;
   switch (type) {
     case "products":
-      editComponent = <EditProduct closeModal={closeModal} data={data as Product} />
+      editComponent = <EditProduct closeModal={closeModal} data={data as Product || emptyProduct()} />
       break;
     case "promos":
     case "orders":
@@ -32,7 +44,21 @@ export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
     case "payments":
   };
 
-  return <div onClick={(e) => e.stopPropagation()} className="w-[80%] md:w-[90%] m-auto rounded-xs bg-white p-4 animate-slide-down">
+  useEffect(() => {
+    function close(e: KeyboardEvent) {
+      if (e.key == "Escape") {
+        closeModal();
+      }
+    }
+
+    window.addEventListener("keydown", close)
+    return () => {
+      window.removeEventListener("keydown", close);
+      console.log("keydown removed");
+    }
+  }, [])
+
+  return <div onClick={(e) => e.stopPropagation()} className="overflow-y-auto w-[80%] md:w-[90%] m-auto rounded-xs bg-white p-4 animate-slide-down">
     {editComponent}
   </div>;
 }
@@ -41,32 +67,129 @@ export interface EditProductProps {
   closeModal: () => void
 };
 
+export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
+  const [ loading, setLoading ] = useState(false);
+  const { removeProduct } = useProducts();
+  let deleteFn = null;
+  switch (type) {
+    case "products":
+      deleteFn = removeProduct;
+      break;
+    case "promos":
+    case "orders":
+    case "users":
+    case "payments":
+  };
+
+  const onDelete = () => {
+    setLoading(true);
+    if (deleteFn)
+      deleteFn(data);
+    closeModal();
+  };
+
+  useEffect(() => {
+    function close(e: KeyboardEvent) {
+      if (e.key == "Escape") {
+        closeModal();
+      }
+    }
+
+    window.addEventListener("keydown", close)
+    return () => {
+      window.removeEventListener("keydown", close);
+      console.log("keydown removed");
+    }
+  }, [])
+
+  return <div onClick={(e) => e.stopPropagation()} className="w-max m-auto rounded-xs bg-white p-4 animate-slide-down">
+    <h1 className="text-lg fraunces-regular">Are you sure you want to delete?</h1>
+  <div className="flex gap-1 text-xs mt-2">
+      <Button className="ml-auto" loading={loading} onClick={closeModal} pColor="whitePrimary">Cancel</Button>
+      <Button loading={loading} pColor="red" onClick={() => {
+        onDelete();
+      }}>Delete</Button>
+    </div>
+  </div>;
+}
+
 function EditProduct(props: EditProductProps) {
+  const { updateProduct, newProduct } = useProducts();
   const [ loading, setLoading ] = useState(false);
   const [ currData, setCurrData ] = useState({ ...props.data });
+  const [ err, setErr ] = useState<string[]>([]);
 
   const onSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+
     const form = e.currentTarget as HTMLFormElement;
     const fdata = new FormData(form);
-    console.log(fdata);
+    const json: any = Object.fromEntries(fdata.entries());
+    json.tags = currData.tags;
+    json.imgs = currData.imgs; // raw image base64
+    json.createdAt = currData.createdAt || new Date(Date.now());
+    json.updatedAt = new Date(Date.now());
+
+    if (json.id)
+      updateProduct(json as Product)
+      .catch((e: MError) => {
+        const merrs = MError.toErrorList(e);
+        setErr(merrs);
+      });
+    else
+      newProduct(json as Product)
+      .catch((e: MError) => {
+        const merrs = MError.toErrorList(e);
+        setErr(merrs);
+      });
+
+    setLoading(false);
+    // props.closeModal();
+  }, [currData]);
+
+  const onChangeTags = useCallback((tags: string[]) => {
+    console.log(currData.tags, tags);
+    setCurrData((v) => {
+      return {
+        ...v,
+        tags
+      };
+    });
   }, []);
 
-  return <>
+  const onChangeImgs = useCallback((imgs: string[]) => {
+    console.log(currData.imgs, imgs);
+    setCurrData((v) => {
+      return {
+        ...v,
+        imgs: imgs
+      };
+    });
+  }, []);
+
+  return <div className="overflow-y-auto">
   <h1 className="fraunces-regular text-4xl font-semibold text-primary-950">Product</h1>
   <form className="mt-4" onSubmit={onSubmit}>
+  <FormError errors={err} />
   <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
+  <div className="*:flex-1 flex gap-1">
+    <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
+    <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
+  </div>
   <Input id="name" type="text" required label="Name" className="text-sm" defaultValue={currData.name} />
   <TextArea label="Description" id="description" className="text-sm" defaultValue={currData.description} />
   <div className="*:flex-1 flex gap-1">
     <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
     <Input id="salePrice" type="number" required label="Sale Price (0 for no price reduction)" className="text-sm" defaultValue={currData.salePrice || 0} />
   </div>
+  <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
+  <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs}/>
   <div className="flex gap-1 text-xs mt-2">
     <Button className="ml-auto" loading={loading} onClick={props.closeModal} pColor="whitePrimary">Cancel</Button>
     <Button loading={loading} type="submit" pColor="green">Ok</Button>
   </div>
   </form>
   {/* <p>{JSON.stringify(data, null, 2)}</p> */}
-  </>
+  </div>
 }

@@ -27,6 +27,7 @@ export interface ModifyDataDetail {
 export const MODIFY_DATA_EVENT_NAME = "ModifyData";
 export const MODIFY_DATA_ACTION_DELETE = "delete";
 export const MODIFY_DATA_ACTION_EDIT = "edit";
+export const MODIFY_DATA_ACTION_ADD = "add";
 
 // export function buildRowsFrom(dataType: OpenableData, rawDatas: any[]) {
 //   const formattedData = rawDatas.map((data) => {

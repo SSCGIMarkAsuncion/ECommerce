@@ -2,7 +2,7 @@ import { type ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowMod
 import { useState, type HTMLAttributes, type HTMLProps } from "react";
 import Button from "./Button";
 import Input from "./Input";
-import { MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_EVENT_NAME, type OpenableData } from "../Utils/DataBuilder";
+import { MODIFY_DATA_ACTION_ADD, MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_EVENT_NAME, type OpenableData } from "../Utils/DataBuilder";
 import { IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
 
 export interface DataTableProps extends HTMLProps<HTMLElement> {
@@ -17,6 +17,17 @@ export default function DataTable(props: DataTableProps) {
   const [pageSize, setPageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const triggerAddEvent = () => {
+    const ev = new CustomEvent(MODIFY_DATA_EVENT_NAME, {
+      detail: {
+        action: MODIFY_DATA_ACTION_ADD,
+        dataType: "",
+        data: null
+      }
+    });
+    window.dispatchEvent(ev);
+  };
 
   const charsAscDesc = {
     asc: '⏶',
@@ -52,7 +63,9 @@ export default function DataTable(props: DataTableProps) {
   return <div className="p-4">
       <div className="flex gap-2 capitalize items-center">
         <h3 className="text-2xl">{props.title}</h3>
-        <Button className="m-2 ml-auto capitalize text-sm" pColor="green"><IconPlus className="w-4 h-4" /> Add</Button>
+        <Button onClick={() => {
+          triggerAddEvent();
+        }} className="m-2 ml-auto capitalize text-sm" pColor="green"><IconPlus className="w-4 h-4" /> Add</Button>
       </div>
       <div className="w-full rounded-lg overflow-y-hidden border-2 border-gray-200">
       <table className={`min-w-full table-fixed text-black`}>

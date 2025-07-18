@@ -3,6 +3,14 @@ export class MError {
   constructor(msg: any) {
     this.msg = msg;
   }
+  static toErrorList(err: MError) {
+    const keys = Object.keys(err.msg)
+    let merrs: string[] = [];
+    keys.forEach((key) => {
+      merrs.push(err.msg[key]);
+    });
+    return merrs;
+  }
 };
 
 // export class PromisedError {

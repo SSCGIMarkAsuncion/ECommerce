@@ -78,6 +78,7 @@ router.post("/login", async (req, res) => {
   }
 
   const jwtPayload = {
+    id: doc._id,
     email: doc.email,
     username: doc.username,
     role: doc.role

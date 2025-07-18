@@ -37,6 +37,7 @@ export default {
   getCollection,
   COLLECTIONS: {
     USERS: "users",
-    PRODUCTS: "products"
+    PRODUCTS: "products",
+    CARTS: "carts"
   }
 };

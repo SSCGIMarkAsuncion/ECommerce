@@ -9,6 +9,8 @@ import db from "./mongodb.js";
 const { client, connect } = db;
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";
+import cartRouter from "./routes/cart.js";
+import { authenticateJWT } from "./middleware/verify_token.js";
 
 const app = express();
 const port = 3000;
@@ -31,6 +33,7 @@ app.get('/', async (req, res) => {
 });
 app.use("/auth/", authRouter);
 app.use("/products/", productsRouter);
+app.use("/cart/", authenticateJWT, cartRouter);
 app.use((err, _, res, __) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });
 });

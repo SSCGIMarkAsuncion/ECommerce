@@ -6,6 +6,7 @@ export default class Products {
   salePrice = null;
   imgs = [];
   tags = [];
+  // likes = []; // list of user._id who liked this product
   createdAt = 0;
   updatedAt = 0;
 

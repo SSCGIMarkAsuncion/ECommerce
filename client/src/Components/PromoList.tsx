@@ -2,6 +2,7 @@ import React from "react";
 import type { Product } from "../Models/Product";
 import Button from "./Button";
 import Skeleton from "./Skeleton";
+import useCart from "../Hooks/useCart";
 
 export interface PromoListProps extends React.HTMLProps<HTMLDivElement> {
   promos: Product[]
@@ -28,6 +29,7 @@ export default function PromoList(props: PromoListProps) {
 
 export function Promo(props: PromoProps) {
   console.assert(props.promo.salePrice != undefined);
+  const { addToCart } = useCart();
 
   const isLeft = props.index % 2 === 0;
   const textAlign = isLeft? "text-initial":"text-right";

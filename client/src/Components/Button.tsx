@@ -10,21 +10,23 @@ export interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   loading?: boolean
 };
 
-export default function Button(props: ButtonProps) {
+export default function Button({ pColor, pType, loading,...props }: ButtonProps) {
   // console.log(props);
-  let style = Theme.button[props.pType || "filled"][props.pColor || "primary"];
-  let rounded = props.pType == "icon"? "rounded-full":Theme.rounded;
-  let padding = props.pType == "icon"? "p-2":"px-3 py-2"
+  let style = Theme.button[pType || "filled"][pColor || "primary"];
+  let rounded = pType == "icon"? "rounded-full":Theme.rounded;
+  let padding = pType == "icon"? "p-2":"px-3 py-2";
 
   const type: HTMLButtonTypes = (props.type || "button") as HTMLButtonTypes;
-  return <button type={type}
+  return <button
+   {...props}
+   type={type}
    onClick={props.onClick}
    className={`cursor-pointer font-medium
     flex items-center justify-center gap-2
     ${Theme.button.disabled}
     ${padding} ${rounded} ${style} ${Theme.transition} ${props.className || ""}`}
-    disabled={(props.disabled == undefined)? Boolean(props.loading):Boolean(props.disabled)}>
+    disabled={(props.disabled == undefined)? Boolean(loading):Boolean(props.disabled)}>
     { props.children || "" }
-    { props.loading && <IconSpinner className="h-5 w-5"/> }
+    { loading && <IconSpinner className="h-5 w-5"/> }
   </button>
 }

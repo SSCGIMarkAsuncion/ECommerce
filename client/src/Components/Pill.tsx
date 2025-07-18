@@ -8,15 +8,15 @@ export interface PillProps extends HTMLProps<HTMLDivElement> {
 };
 
 export function Pill(props: PillProps) {
-  const colors = ["bg-blue-400", "bg-green-400", "bg-red-400", "bg-amber-400", "bg-lime-400"];
-  let colIndex = 0;
-  if (typeof props.children == "string") {
-    colIndex = props.children.charCodeAt(0) % colors.length;
-  }
+  // const colors = ["bg-blue-400", "bg-green-400", "bg-red-400", "bg-amber-400", "bg-lime-400"];
+  // let colIndex = 0;
+  // if (typeof props.children == "string") {
+  //   colIndex = props.children.charCodeAt(0) % colors.length;
+  // }
 
   return <div
     {...props}
-    className={`py-1 px-2 text-center rounded-full flex gap-1 items-center ${colors[colIndex]} ${props.className}`}>
+    className={`py-1 px-2 text-center rounded-full flex gap-1 items-center bg-gray-400 ${props.className}`}>
     {props.children}
     { props.editable && <Button pType="icon" className="ml-auto w-6 h-6" onClick={(e) => {
         e.stopPropagation();

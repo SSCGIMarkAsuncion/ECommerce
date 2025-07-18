@@ -7,12 +7,14 @@ import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
 import Footer from "../Components/Footer";
 import useAuth from "../Hooks/useAuth";
+import { useNavigate } from "react-router";
 
 export default function Home() {
   useAuth().verifyAndSetUser();
   const { getPromo, getBestSellers } = usePromo();
   const [ promos, setPromos ] = useState<Product[]>([]);
   const [ bestSellers, setBestSellers ] = useState<Product[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getPromo()
@@ -34,7 +36,7 @@ export default function Home() {
         <h1 className="my-10 text-white tracking-wider font-medium text-shadow-black text-shadow-lg">
           Trade in Flavor,<br /> Brew Real Connection
         </h1>
-        <Button pColor="whitePrimary" className="text-lg">Explore now</Button>
+        <Button onClick={() => navigate("/products")} href="/products" pColor="whitePrimary" className="text-lg">Explore now</Button>
       </div>
     </div>
     <div id="promos" className="bg-primary-50 p-4">

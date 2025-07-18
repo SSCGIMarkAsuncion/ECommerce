@@ -1,4 +1,4 @@
-import type { Product } from "../Models/Product";
+import { mapToProduct, type Product } from "../Models/Product";
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
@@ -24,7 +24,9 @@ export default function useProducts() {
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
-      return resjson as Product[];
+      return resjson.map((obj: any) => {
+        return mapToProduct(obj);
+      });
     }
     throw new MError(resjson);
   };

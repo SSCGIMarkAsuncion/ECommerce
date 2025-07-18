@@ -1,7 +1,8 @@
-import { useCallback, useState, type HTMLProps, type ReactNode } from "react";
+import { useCallback, useRef, useState, type HTMLProps, type ReactNode } from "react";
 import { Theme } from "../Utils/Theme";
-import { IconEye, IconEyeSlash } from "../Utils/SVGIcons";
+import { IconEye, IconEyeSlash, IconSearch, IconXMark } from "../Utils/SVGIcons";
 import useDelayCallback from "../Hooks/useDelayCallback";
+import Button from "./Button";
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   suffix?: ReactNode,
@@ -62,9 +63,7 @@ export default function Input(props: InputProps) {
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
       onChange={(e) => delayedCallback(e)}
-      className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
-     data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950 has-[input:read-only]:bg-gray-400
-      has-[input:read-only]:text-gray-600 flex items-center ${props.className}`}>
+      className={`${Theme.transition} ${Theme.input("input")} ${props.className}`}>
       <input
         {...props}
         name={props.id}
@@ -116,13 +115,43 @@ export function TextArea(props: TextAreaProps) {
   return <div>
     <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
     <div 
-      className={`${Theme.transition} w-full rounded-md border-2 border-gray-500 py-1 px-2
-     data-[invalid=true]:border-red-700 has-[textarea:focus-within]:border-primary-950 has-[textarea:disabled]:bg-gray-600/75
-      has-[textarea:disabled]:text-gray-800 flex items-center ${props.className}`}>
+      className={`${Theme.transition} ${Theme.input("textarea")} ${props.className}`}>
       <textarea
         {...props}
         name={props.id}
         className="w-full outline-none" />
     </div>
+  </div>
+}
+
+export interface SearchbarProps extends HTMLProps<HTMLInputElement> {
+  onChangeFilter?: (filter: string) => void
+};
+
+export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
+  const ref = useRef<HTMLInputElement>(null);
+  const [ svalue, setSValue ] = useState("");
+
+  return <div
+    className={`${Theme.transition} ${Theme.input("input")} gap-2 ${props.className}`}>
+    <IconSearch className="w-4 h-4 fill-primary-950" />
+    <input
+      {...props}
+      ref={ref}
+      name={props.id}
+      onChange={(e) => {
+        const value = e.currentTarget.value;
+        if (onChangeFilter)
+          onChangeFilter(value);
+        setSValue(value);
+      }}
+      className="w-full outline-none" />
+    { svalue && <Button pType="icon" className="w-6 h-6" onClick={(e) => {
+      e.stopPropagation();
+      if (ref.current) {
+        ref.current.value = "";
+        setSValue("");
+      }
+    }}><IconXMark className="fill-red-800" /></Button> }
   </div>
 }

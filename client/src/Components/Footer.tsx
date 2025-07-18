@@ -3,7 +3,7 @@ import Link from "./Link";
 
 export default function Footer() {
   return <div className="bg-primary-950 p-1 text-white">
-    <div className="px-4 py-3 fraunces-regular text-md flex gap-3 mb-4">
+    <div className="px-4 py-3 fraunces-regular text-md flex flex-col items-center gap-4 md:flex-row mb-4">
       <div>
         <div className="flex flex-col gap-2 items-center">
           <img className="w-[32px] h-[32px] rounded-md" src="/Logo_2.svg" alt="icon" title="icon" />
@@ -24,7 +24,7 @@ export default function Footer() {
         </div>
       </div> */}
 
-      <div className="ml-auto">
+      <div className="md:ml-auto ml-[initial] flex flex-col items-center md:block">
         <h1 className="w-max">Contact us</h1>
         <div className="text-sm">
         <ul className="pl-2 *:my-2">

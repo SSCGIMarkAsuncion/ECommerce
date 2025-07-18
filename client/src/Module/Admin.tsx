@@ -4,10 +4,11 @@ import DataTable from "../Components/DataTable";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import Sidebar, { SidebarButton } from "../Components/Sidebar";
-import { IconBag, IconCart, IconMoneyWave, IconSpinner, IconUser } from "../Utils/SVGIcons";
+import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
 import { type TableData, type OpenableData, MODIFY_DATA_EVENT_NAME, type ModifyDataDetail, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_ADD } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
+import Loading from "../Components/Loading";
 
 
 export default function Admin() {
@@ -53,7 +54,7 @@ export default function Admin() {
 
   let mainContent = null;
   if (isLoading) {
-    mainContent = <LoadingData />;
+    mainContent = <Loading>Loading Data</Loading>;
   }
   else if (currentData) {
     mainContent = <DataTable title={selectedData} tableColumns={currentData.column} tableData={currentData.data} />
@@ -85,12 +86,6 @@ export default function Admin() {
       </Modal>
     }
   </>;
-}
-
-function LoadingData() {
-  return <div className="h-[calc(100%-var(--appbar-height))] w-full flex items-center justify-center gap-2">
-    <span>Loading data</span> <IconSpinner className="w-8 h-8 fill-primary-950" />
-  </div>
 }
 
 function NoContent() {

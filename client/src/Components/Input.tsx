@@ -151,6 +151,8 @@ export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
       if (ref.current) {
         ref.current.value = "";
         setSValue("");
+        if (onChangeFilter)
+          onChangeFilter("");
       }
     }}><IconXMark className="fill-red-800" /></Button> }
   </div>

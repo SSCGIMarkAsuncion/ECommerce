@@ -34,3 +34,19 @@ export function verifyRole(req, _, next) {
   }
   throw new MError(400, "Request Not Allowed");
 }
+
+/**
+ * Checks if token is admin or superadmin otherwise throw an error
+ * Throws error if token is missing or invalid.
+ * NOTE: Apply this middleware after authenticateJWT
+ * @param {import('express').Request} req
+ * @param {import('express').Response} _
+ * @param {import('express').NextFunction} next
+ */
+export function hasAdminRole(req, _, next) {
+  const tokenRole = req.tokenPayload.role;
+  if (tokenRole === ROLES.ADMIN || tokenRole === ROLES.SUPERADMIN) {
+    return next();
+  }
+  throw new MError(400, "Request not possible");
+}

@@ -1,11 +1,15 @@
 import express from "express";
-import db from "../mongodb.js";
 import parseQueryValue from "../utils/query.js";
 import { ObjectId } from "mongodb";
 import MError from "../error.js";
+import { authenticateJWT } from "../middleware/verify_token.js";
+import { hasAdminRole, verifyRole } from "../middleware/role.js";
+import { hasKeys } from "../utils/obj.js";
+import db from "../mongodb.js";
+import Products from "../schema/products.js";
+import ROLES from "../utils/roles.js";
 
-// let { createToken, verifyToken } = token;
-let { getCollection, COLLECTIONS } = db;
+const { getCollection, COLLECTIONS } = db;
 
 const router = express.Router();
 
@@ -63,6 +67,51 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   await rootHandler(req, res);
+});
+
+router.post("/add",
+  authenticateJWT,
+  hasAdminRole,
+  async (req, res) => {
+    let body = req.body;
+    const schema = Products.project();
+    schema._id = undefined;
+    schema.salePrice = undefined;
+    const collection = getCollection(COLLECTIONS.PRODUCTS);
+
+    if (Array.isArray(body)) {
+      body = body.map((d) => {
+        d.id = undefined;
+        return d;
+      });
+
+      if (!hasKeys(schema, body[0])) {
+        throw new MError(400, "Wrong Schema");
+      }
+
+      try {
+        await collection.insertMany(body);
+      }
+      catch (e) {
+        console.log(e);
+        throw new MError(400, "Failed to add products");
+      }
+    }
+    else {
+      body.id = undefined;
+      if (!hasKeys(schema, body)) {
+        throw new MError(400, "Wrong Schema");
+      }
+      try {
+        await collection.insertOne(body);
+      }
+      catch (e) {
+        console.log(e);
+        throw new MError(400, "Failed to add products");
+      }
+    }
+
+    res.status(200).send("");
 });
 
 export default router;

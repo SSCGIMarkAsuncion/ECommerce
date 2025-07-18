@@ -15,20 +15,24 @@ import { Theme } from "../Utils/Theme";
 
 export function Products() {
   useAuth().verifyAndSetUser();
+  const [ filter, setFilter ] = useState("");
 
   return <>
-    <div className="mt-[var(--appbar-height)] h-full p-2">
-      <ProductView />
+    <div className="mt-[var(--appbar-height)] min-h-full p-2">
+      <div className={`sticky top-[var(--appbar-height)] w-[70%] m-auto py-4 ${Theme.transition}`}>
+        <Searchbar className="fraunces-regular bg-white"
+        placeholder="Filter by name" onChangeFilter={(f) => setFilter(f)} />
+      </div>
+      <ProductView filter={filter} />
     </div>
     <Navbar />
     <Footer />
   </>;
 }
 
-function ProductView() {
+function ProductView({ filter = "" }) {
   const [ products, setProducts ] = useState<Product[]>([]);
   const [ filteredProducts, setFilteredProducts ] = useState<Product[]>([]);
-  const [ filter, setFilter ] = useState("");
   const { getProducts } = useProducts();
 
   useEffect(() => {
@@ -57,12 +61,8 @@ function ProductView() {
     return <Loading>Loading Products</Loading>
   }
 
-  return <div className="w-[80svw] h-full m-auto">
-    <div className={`sticky top-[var(--appbar-height)] py-4 ${Theme.transition}`}>
-      <Searchbar className="fraunces-regular bg-white"
-      placeholder="Filter by name" onChangeFilter={(f) => setFilter(f)} />
-    </div>
-    <div className="flex flex-wrap gap-2 px-8">
+  return <div className="w-[80svw] m-auto">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 px-8 py-2">
       {
         filter.length == 0? products.map((product) => {
           return <ProductItem key={product.id} product={product} />
@@ -81,27 +81,29 @@ export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
 function ProductItem({ product, ...props}: ProductItemProps) {
   const { addToCart } = useCart();
 
-  return <Card {...props} className="aspect-[1/1.3]">
+  return <Card {...props} className="w-full flex flex-col">
     <img src={product.imgs[0]} className="w-full h-[200px] object-cover"/>
-    <div className="p-2 text-sm text-center">
+    <div className="p-2 text-sm text-center flex flex-col flex-1">
       <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
       <p className={`fraunces-regular mb-2 text-primary-950`}>
         <span className={`${product.salePrice? "line-through":""}`}>PHP {product.price}</span>&nbsp;
         { product.salePrice && <span>PHP {product.salePrice}</span> }
       </p>
-      <div className="flex flex-wrap gap-1 text-xs mt-2">
-      {
-        product.tags.map((tag) => {
-          return <Pill key={tag}>{tag}</Pill>;
-        })
-      }
+      <div className="flex flex-row flex-wrap gap-1 text-xs mt-2">
+        {
+          product.tags.map((tag) => {
+            return <Pill key={tag}>{tag}</Pill>;
+          })
+        }
       </div>
+      <div className="mt-auto">
       <Button className="fraunces-regular w-full mt-4 text-sm"
         onClick={(e) => {
           e.stopPropagation();
           addToCart(product, 1);
         }}
       >Add to cart</Button>
+    </div>
     </div>
   </Card>
 }

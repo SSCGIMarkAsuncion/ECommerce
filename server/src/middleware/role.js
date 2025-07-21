@@ -4,7 +4,7 @@ import ROLES from "../utils/roles.js";
 const { verifyToken } = token;
 /**
  * Express middleware to validate JWT token and roles.
- * Throws error if token is missing or invalid.
+ * Throws error if token is invalid.
  * NOTE: Apply this middleware after authenticateJWT
  * @param {import('express').Request} req
  * @param {import('express').Response} _
@@ -12,6 +12,10 @@ const { verifyToken } = token;
  */
 export function verifyRole(req, _, next) {
   const roleReq = req.query.role;
+  if (req.tokenPayload == null) {
+    return next();
+  }
+
   const tokenRole = req.tokenPayload.role;
 
   switch (roleReq) {

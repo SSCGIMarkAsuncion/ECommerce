@@ -4,7 +4,7 @@ import encryption from "../encryption.js";
 import token from "../utils/jwt.js";
 import User from "../schema/user.js";
 import MError from "../error.js";
-import { authenticateJWT } from "../middleware/verify_token.js";
+import { authenticateJWT, authenticateJWTIfExist } from "../middleware/verify_token.js";
 import { verifyRole } from "../middleware/role.js";
 import ROLES from "../utils/roles.js";
 
@@ -15,14 +15,14 @@ const router = express.Router();
 
 // TODO add password validation on register
 router.post("/register",
- authenticateJWT,
+ authenticateJWTIfExist,
  verifyRole,
  async (req, res) => {
   const body = req.body;
   const role = req.query.role || ROLES.USER;
-  const tokenRole = req.tokenPayload.role;
+  const tokenRole = req.tokenPayload? req.tokenPayload.role:null;
 
-  if (role == ROLES.ADMIN && tokenRole != ROLES.SUPERADMIN) {
+  if ((role == ROLES.ADMIN || role == ROLES.SUPERADMIN) && tokenRole != ROLES.SUPERADMIN) {
     throw new MError(400, "Request Not Allowed");
   }
 
@@ -33,9 +33,13 @@ router.post("/register",
     role: role
   };
 
+
   const collection = getCollection(COLLECTIONS.USERS);
   const doc = await collection.findOne({
-    email: user.email
+    $or: [
+      { email: user.email },
+      { username: body.username }
+    ]
   }, {
     projection: { _id: 1 }
   });
@@ -44,8 +48,13 @@ router.post("/register",
     throw new MError(400, "User already exists");
   }
 
-  const result = await collection.insertOne(user);
-  // console.log(result);
+  try {
+    await collection.insertOne(user);
+  }
+  catch (e) {
+    throw new MError(400, "An error occured. Please try again.")
+  }
+  console.log("Registered", user);
 
   res.status(200).send("");
 });

@@ -22,7 +22,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
 }
 
 export interface CartContextAction {
-  type: "assign" | "remove" | "edit",
+  type: "assign" | "remove",
   cart: Cart | null,
 };
 

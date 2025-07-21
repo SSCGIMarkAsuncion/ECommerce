@@ -3,7 +3,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { CarouselBreakpoints, Theme } from '../Utils/Theme';
 import type { Product } from '../Models/Product';
 import { useCallback } from 'react';
-import Button from './Button';
+import { ButtonCart } from './CartButton';
 
 export default function BestSeller({ products }: { products: Product[] }) {
   const responsive = CarouselBreakpoints;
@@ -46,7 +46,7 @@ export function BestSellerItem({ product }: { product?: Product }) {
         <div className="p-2 md:p-3">
         <h3 className="fraunces-regular text-md text-primary-950 font-medium">PHP {product.price}</h3>
         <p className="fraunces-regular text-md text-primary-950 font-medium text-center mb-8">{product.name}</p>
-        <Button className="fraunces-regular w-full mt-auto text-sm">Add to cart</Button>
+        <ButtonCart product={product}/>
         </div>
       </>
     }

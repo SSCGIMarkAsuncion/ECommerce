@@ -65,8 +65,15 @@ export default function useProducts() {
   };
 
   const getBestSellers = async (): Promise<Product[]> => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    return dummyPromoProducts;
+    const bestSeller = encodeURI("best seller");
+    const res = await fetch(`${url}?tags=${bestSeller}`);
+    const resjson = await res.json() as any[];
+    if (res.status >= 200 && res.status < 399) {
+      return resjson.map((obj: any) => {
+        return mapToProduct(obj);
+      });
+    }
+    throw new MError(resjson);
   }
 
   return {

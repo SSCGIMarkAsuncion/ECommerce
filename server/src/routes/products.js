@@ -17,6 +17,7 @@ const router = express.Router();
 - Only works if :id does not exist
 filter=..;..
 tags=..;..
+isSale=1 // optional
 */
 
 /**
@@ -27,7 +28,10 @@ async function rootHandler(req, res) {
   const productId = req.params.id;
   const filter = parseQueryValue(req.query.filter);
   const tags = parseQueryValue(req.query.tags);
+  const isSale = req.query.isSale == '1';
+
   console.log("filter", filter, "tags", tags);
+
   const collection = getCollection(COLLECTIONS.PRODUCTS);
   if (productId) {
     const id = new ObjectId(productId)
@@ -51,6 +55,12 @@ async function rootHandler(req, res) {
   tags.forEach(tag =>
     orConditions.push({ tags: tag })
   );
+
+  if (isSale) {
+    orConditions.push({
+      salePrice: { $exists: true, $gt: 0 }
+    });
+  }
 
   let query = {};
   if (orConditions.length > 0) {

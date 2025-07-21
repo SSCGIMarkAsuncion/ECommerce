@@ -10,6 +10,7 @@ export default class Carts {
 
   static create(owner) {
     return {
+      _id: "",
       owner,
       products: [],
       status: "cart",

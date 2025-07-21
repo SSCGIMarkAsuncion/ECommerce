@@ -6,14 +6,12 @@ import useProducts from "../Hooks/useProducts";
 import Loading from "../Components/Loading";
 import { Card } from "../Components/Card";
 import { MError } from "../Utils/Error";
-import Button, { ButtonCart } from "../Components/Button";
+import { ButtonCart } from "../Components/CartButton";
 import { Pill } from "../Components/Pill";
 import useAuth from "../Hooks/useAuth";
 import { Searchbar } from "../Components/Input";
 import useCart from "../Hooks/useCart";
 import { Theme } from "../Utils/Theme";
-import { useCartContext } from "../Context/Cart";
-import { type CartItem } from "../Models/Cart";
 
 export function Products() {
   useAuth().verifyAndSetUser();
@@ -21,7 +19,7 @@ export function Products() {
 
   return <>
     <div className="mt-[var(--appbar-height)] min-h-full p-2">
-      <div className={`sticky top-[var(--appbar-height)] w-[70%] m-auto py-4 ${Theme.transition}`}>
+      <div className={`z-50 sticky top-[var(--appbar-height)] w-[70%] m-auto py-4 ${Theme.transition}`}>
         <Searchbar className="fraunces-regular bg-white"
         placeholder="Filter by name" onChangeFilter={(f) => setFilter(f)} />
       </div>
@@ -83,20 +81,6 @@ export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
 };
 
 function ProductItem({ product, ...props}: ProductItemProps) {
-  const { cart } = useCartContext();
-  const { addToCart } = useCart();
-  const [ cartItem, setCartItem ] = useState<CartItem | null>(null);
-
-  useEffect(() => {
-    console.log(cart?.products);
-
-    const item = cart?.products.filter((item) => {
-      return item.id == product.id;
-    })[0];
-
-    setCartItem(item || null);
-  }, [cart?.products]);
-
   return <Card {...props} className="w-full flex flex-col animate-appear">
     <img src={product.imgs[0]} className="w-full h-[200px] object-cover"/>
     <div className="p-2 text-sm text-center flex flex-col flex-1">
@@ -113,17 +97,7 @@ function ProductItem({ product, ...props}: ProductItemProps) {
         }
       </div>
       <div className="mt-auto">
-      <ButtonCart className="fraunces-regular w-full mt-4 text-sm"
-        cartAmount={cartItem?.amount}
-        onChangeCartAmount={(newAmount: number) => {
-          addToCart(product, newAmount);
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          addToCart(product, 1);
-        }}>
-        Add to cart
-      </ButtonCart>
+      <ButtonCart product={product}/>
     </div>
     </div>
   </Card>

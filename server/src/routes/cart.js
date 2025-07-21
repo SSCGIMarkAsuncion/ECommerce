@@ -11,7 +11,7 @@ const router = express.Router();
   param:
     :id = id of product
   query
-    amount = amount added (use - to decrease)
+    amount
 
 */
 
@@ -59,7 +59,7 @@ router.post("/add/:id",
     });
 
     if (id >= 0) {
-      products[id].amount += amount;
+      products[id].amount = amount;
       if (products[id].amount <= 0) {
         products.splice(id, 1);
       }
@@ -112,7 +112,7 @@ router.get("/", async (req, res) => {
       status: "cart"
     }, { sort: { updatedAt: -1 } });
 
-    console.log(doc);
+    console.log("cart::get", doc);
 
     res.status(200).send(doc);
   }

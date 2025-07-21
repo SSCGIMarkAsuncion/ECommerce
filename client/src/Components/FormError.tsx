@@ -9,10 +9,11 @@ export default function FormError(props: FormErrorProps) {
     return <></>;
   }
 
-  return <div className="mt-1 bg-red-400 border-2 border-dashed text-red-600 border-red-600 p-4 rounded-lg text-sm">
+  return <div
+   className="mt-1 bg-red-200 border-red-300 text-red-400 border-2 border-dashed p-4 rounded-lg text-sm flex flex-col gap-2 animate-appear">
     {
       props.errors.map((err, i) => {
-        return <p key={i} className="mb-2 animate-appear">{err}</p>;
+        return <p key={i}>{err}</p>;
       })
     }
   </div>

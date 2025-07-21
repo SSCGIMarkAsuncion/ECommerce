@@ -129,6 +129,7 @@ export interface SearchbarProps extends HTMLProps<HTMLInputElement> {
 };
 
 export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
+  const cb = onChangeFilter? useDelayCallback(onChangeFilter, 500):null;
   const ref = useRef<HTMLInputElement>(null);
   const [ svalue, setSValue ] = useState("");
 
@@ -141,8 +142,8 @@ export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
       name={props.id}
       onChange={(e) => {
         const value = e.currentTarget.value;
-        if (onChangeFilter)
-          onChangeFilter(value);
+        if (cb)
+          cb(value);
         setSValue(value);
       }}
       className="w-full outline-none" />
@@ -151,8 +152,8 @@ export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
       if (ref.current) {
         ref.current.value = "";
         setSValue("");
-        if (onChangeFilter)
-          onChangeFilter("");
+        if (cb)
+          cb("");
       }
     }}><IconXMark className="fill-red-800" /></Button> }
   </div>

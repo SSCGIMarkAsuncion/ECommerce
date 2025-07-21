@@ -2,20 +2,23 @@ import { useEffect, useState } from "react";
 import Button from "../Components/Button";
 import Navbar from "../Components/Navbar";
 import PromoList from "../Components/PromoList";
-import usePromo from "../Hooks/usePromo";
 import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
 import Footer from "../Components/Footer";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
+import useCart from "../Hooks/useCart";
+import useProducts from "../Hooks/useProducts";
 
 export default function Home() {
   useAuth().verifyAndSetUser();
-  const { getPromo, getBestSellers } = usePromo();
+  const { getCartsAndSetCarts } = useCart();
+  const { getPromo, getBestSellers } = useProducts();
   const [ promos, setPromos ] = useState<Product[]>([]);
   const [ bestSellers, setBestSellers ] = useState<Product[]>([]);
   const navigate = useNavigate();
 
+  getCartsAndSetCarts();
   useEffect(() => {
     getPromo()
       .then((promos) => {

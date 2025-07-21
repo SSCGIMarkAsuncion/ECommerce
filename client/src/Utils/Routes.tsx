@@ -5,11 +5,12 @@ import Login from "../Module/Login";
 import Register from "../Module/Register";
 import Admin from "../Module/Admin";
 import { Products } from "../Module/Products";
+import { CartContextProvider } from "../Context/Cart";
 
 export const ROUTER = createBrowserRouter([
   {
     path: "/",
-    element: <Home />
+    element: <CartContextProvider><Home /></CartContextProvider>
   },
   {
     path: "/login",
@@ -25,7 +26,7 @@ export const ROUTER = createBrowserRouter([
   },
   {
     path: "/products",
-    element: <Products />
+    element: <CartContextProvider><Products /></CartContextProvider>
   },
   {
     path: "*",

@@ -30,3 +30,36 @@ export default function Button({ pColor, pType, loading,...props }: ButtonProps)
     { loading && <IconSpinner className="h-5 w-5"/> }
   </button>
 }
+
+export interface ButtonCartProps extends ButtonProps {
+  cartAmount?: number,
+  onChangeCartAmount?: (amount: number) => void
+};
+
+export function ButtonCart(props: ButtonCartProps) {
+  const amount = props.cartAmount || 0;
+  if (amount >= 1) {
+    return <div className={`flex gap-1 justify-between items-center ${props.className}`}>
+      <Button onClick={() => {
+        if (props.onChangeCartAmount)
+          props.onChangeCartAmount(amount-1);
+      }}>-</Button>
+      {amount}
+      <Button onClick={() => {
+        if (props.onChangeCartAmount)
+          props.onChangeCartAmount(amount+1);
+      }}
+      >+</Button>
+    </div>
+  }
+
+  const btnProps = {
+    ...props,
+  };
+  delete btnProps.cartAmount;
+  delete btnProps.onChangeCartAmount;
+  return <Button
+    {...btnProps}>
+    {props.children}
+  </Button>
+}

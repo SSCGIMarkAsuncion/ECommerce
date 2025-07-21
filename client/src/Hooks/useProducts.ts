@@ -1,8 +1,10 @@
-import { mapToProduct, type Product } from "../Models/Product";
+import { dummyPromoProducts, mapToProduct, type Product } from "../Models/Product";
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
 export default function useProducts() {
+  const url = `${api}/products`;
+
   const getProducts = async (tags: string[], filters: string[], limit?: number, offset?: number) => {
     const queries = [];
 
@@ -20,7 +22,7 @@ export default function useProducts() {
       queries.push(soffset);
 
     const squeries = queries.join('&');
-    const res = await fetch(`${api}/products?${squeries}`);
+    const res = await fetch(`${url}?${squeries}`);
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
@@ -50,11 +52,30 @@ export default function useProducts() {
     throw new MError({ error: "delete" });
   }
 
+  const getPromo = async (): Promise<Product[]> => {
+    const res = await fetch(`${url}?isSale=1`);
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+    const resjson = await res.json() as any[];
+    if (res.status >= 200 && res.status < 399) {
+      return resjson.map((obj: any) => {
+        return mapToProduct(obj);
+      });
+    }
+    throw new MError(resjson);
+  };
+
+  const getBestSellers = async (): Promise<Product[]> => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return dummyPromoProducts;
+  }
+
   return {
     getProducts,
     getProductsById,
     updateProduct,
     newProduct,
-    removeProduct
+    removeProduct,
+    getPromo,
+    getBestSellers
   };
 }

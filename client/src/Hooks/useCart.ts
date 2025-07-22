@@ -10,8 +10,6 @@ export default function useCart() {
   const { cartDispatcher } = useCartContext();
 
   const addToCart = async (product: Product, amount: number): Promise<Cart> => {
-    // console.log("addToCart", product, amount);
-
     const samount = `?amount=${amount}`;
     const url = `${api}/cart/add/${product.id}/${samount}`;
     const res = await fetch(url, {
@@ -29,6 +27,25 @@ export default function useCart() {
     }
     throw new MError(resjson);
   };
+
+  const removeFromCart = async (product: Product) => {
+    const url = `${api}/cart/remove/${product.id}`;
+    const res = await fetch(url, {
+      method: "POST",
+      credentials: "include"
+    });
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status <= 399 ) {
+      const mappedCart = mapToCart(resjson);
+      console.log(mappedCart);
+      cartDispatcher({
+        type: "assign",
+        cart: mappedCart,
+      });
+      return mappedCart;
+    }
+    throw new MError(resjson);
+  }
 
   const getCarts = async (includeProductInfo?: boolean) => {
     const include = (includeProductInfo)? "?withProduct=1":"";
@@ -68,6 +85,7 @@ export default function useCart() {
   return {
     addToCart,
     getCarts,
-    getCartsAndSetCarts
+    getCartsAndSetCarts,
+    removeFromCart
   }
 }

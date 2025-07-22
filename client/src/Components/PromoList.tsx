@@ -3,6 +3,7 @@ import type { Product } from "../Models/Product";
 import Button from "./Button";
 import Skeleton from "./Skeleton";
 import useCart from "../Hooks/useCart";
+import { ButtonCart } from "./CartButton";
 
 export interface PromoListProps extends React.HTMLProps<HTMLDivElement> {
   promos: Product[]
@@ -29,8 +30,6 @@ export default function PromoList(props: PromoListProps) {
 
 export function Promo(props: PromoProps) {
   console.assert(props.promo.salePrice != undefined);
-  const { addToCart } = useCart();
-
   const isLeft = props.index % 2 === 0;
   const textAlign = isLeft? "text-initial":"text-right";
   const percentOff = Math.trunc(100 - (props.promo.salePrice!/props.promo.price * 100));
@@ -50,7 +49,7 @@ export function Promo(props: PromoProps) {
         </p>
         {/* <div className="mt-auto hidden md:block w-full"></div> */}
         <div className={`text-lg w-full ${isLeft? "":"flex justify-end"}`}>
-          <Button className="fraunces-regular">{`${percentOff}% Off Order now`}</Button>
+          <ButtonCart product={props.promo}>{`${percentOff}% Off Order now`}</ButtonCart>
         </div>
       </div>
     </div>

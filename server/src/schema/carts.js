@@ -10,13 +10,23 @@ export default class Carts {
 
   static create(owner) {
     return {
-      _id: "",
       owner,
       products: [],
       status: "cart",
       createdAt: new Date(Date.now()),
       updatedAt: new Date(Date.now())
     };
+  }
+
+  static aggregateGroup() {
+    return {
+      _id: "$_id",
+      owner: { $first: "$owner" },
+      status: { $first: "$status" },
+      createdAt: { $first: "$createdAt" },
+      updatedAt: { $first: "$updatedAt" },
+      products: { $push: "$products" }
+    }
   }
 
   static project() {

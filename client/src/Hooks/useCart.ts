@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useCartContext } from "../Context/Cart";
 import type Cart from "../Models/Cart";
 import { mapToCart } from "../Models/Cart";
-import type { Product } from "../Models/Product"
+import { mapToProduct, type Product } from "../Models/Product"
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
@@ -30,8 +30,9 @@ export default function useCart() {
     throw new MError(resjson);
   };
 
-  const getCarts = async () => {
-    const url = `${api}/cart/`;
+  const getCarts = async (includeProductInfo?: boolean) => {
+    const include = (includeProductInfo)? "?withProduct=1":"";
+    const url = `${api}/cart/${include}`;
     const res = await fetch(url, {
       credentials: "include"
     });
@@ -39,15 +40,21 @@ export default function useCart() {
     const resjson = await res.json();
     if (res.status >= 200 && res.status <= 399) {
       const cart = mapToCart(resjson);
-      // console.log("getCarts", cart);
+      if (includeProductInfo) {
+        const newProducts = cart.products.map((product) => {
+          const np = mapToProduct((product.product as any)[0]);
+          return { ...product, product: np };
+        });
+        cart.products = newProducts;
+      }
       return cart;
     }
     throw new MError(resjson);
   }
 
-  const getCartsAndSetCarts = () => {
+  const getCartsAndSetCarts = (includeProductInfo?: boolean) => {
     useEffect(() => {
-      getCarts()
+      getCarts(includeProductInfo)
         .then((cart) => {
           cartDispatcher({
             type: "assign",

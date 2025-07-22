@@ -41,7 +41,7 @@ export default function Navbar({ className = "", admin = false }) {
     }
   }, []);
 
-  return <div className={`${height} ${Theme.transition} ${bg} w-full px-3 flex items-center fixed top-0 left-0 text-white ${className}`}>
+  return <div className={`z-999 ${height} ${Theme.transition} ${bg} w-full px-3 flex items-center fixed top-0 left-0 text-white ${className}`}>
     {
       admin && 
       <Button onClick={() => {

@@ -61,7 +61,7 @@ export default function Register() {
             type="text" placeholder="john, john123, john_213" />
           <div className="my-2">
             <InputPassword ref={password1Ref} required id="password" label="Password" validators={[checkPassword]} />
-            <InputPassword required id="password2" label="Retype Password" validators={[validatePass2]} />
+            <InputPassword required id="password2" label="Confirm Password" validators={[validatePass2]} />
           </div>
           <Button loading={loading} className="w-full mt-4" type="submit">Register</Button>
           <div className="fraunces-regular">

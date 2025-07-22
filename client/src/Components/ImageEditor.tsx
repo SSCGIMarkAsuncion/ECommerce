@@ -35,7 +35,7 @@ export function ImageEditor(props: ImageEditorProps) {
   }, []);
 
   return <div className="m-2">
-    <div className="w-full rounded-md min-h-[10vh] border-2 border-dashed bg-gray-300 text-gray-600 border-gray-600 p-4 flex items-center justify-center" onClick={(e) => {
+    <div className="w-full rounded-md min-h-[10vh] border-2 border-dashed bg-gray-200 text-gray-400 border-gray-300 p-4 flex items-center justify-center" onClick={(e) => {
       e.stopPropagation();
       if (ref.current)
         ref.current.click();

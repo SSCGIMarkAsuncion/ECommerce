@@ -9,55 +9,47 @@ import { type TableData, type OpenableData, MODIFY_DATA_EVENT_NAME, type ModifyD
 import { useEditableData } from "../Hooks/useEditableData";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
 import Loading from "../Components/Loading";
+import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
+import { MError } from "../Utils/Error";
 
 
 export default function Admin() {
-  const [ selectedData, setSelectedData ] = useState<OpenableData>("products");
+  return <EditableDataContextProvider>
+    <Page />
+  </EditableDataContextProvider>
+}
+
+function Page() {
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ currentData, setCurrentData ] = useState<TableData | null>(null);
-  const [ editData, setEditData ] = useState<ModifyDataDetail | null>(null);
-  const { load: loadData } = useEditableData();
+  const {
+    actionType,
+    selectedData,
+    tableData
+  } = useEditableDataContext();
+  if (!actionType || !selectedData) throw new MError("Editable Data Context is null");
+
+  const currentData = tableData;
+
   const navigate = useNavigate();
   useAuth().verifyAndSetUser(() => {
     navigate("/");
-  });
-
-  useEffect(() => {
-    function onModify(e: CustomEvent<ModifyDataDetail>) {
-      console.log("onModify", e.detail);
-      setEditData(e.detail);
-    }
-
-    // @ts-ignore
-    window.addEventListener(MODIFY_DATA_EVENT_NAME, onModify);
-
-    return () => {
-      // @ts-ignore
-      window.removeEventListener(MODIFY_DATA_EVENT_NAME, onModify);
-    }
-  }, []);
+  }, false); // WARN: temp disable guard
 
   useEffect(() => {
     setIsLoading(true);
-
-    loadData(selectedData)
-      .then((tableData) => {
-        setCurrentData(tableData);
-        setIsLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-        setIsLoading(false);
-      });
-
   }, [selectedData]);
+
+  useEffect(() => {
+    if (tableData != null)
+        setIsLoading(false);
+  }, [tableData])
 
   let mainContent = null;
   if (isLoading) {
     mainContent = <Loading>Loading Data</Loading>;
   }
   else if (currentData) {
-    mainContent = <DataTable title={selectedData} tableColumns={currentData.column} tableData={currentData.data} />
+    mainContent = <DataTable title={selectedData.selectedData} tableColumns={currentData.column} tableData={currentData.data} />
   }
   else {
     mainContent = <NoContent />
@@ -67,24 +59,24 @@ export default function Admin() {
     <div className="mt-[var(--appbar-height)]"></div>
     { mainContent }
     <Sidebar>
-      <SidebarButton onClick={() => setSelectedData("products")} className="[&>svg]:w-4 [&>svg]:h-4"><IconBag />Products</SidebarButton>
-      <SidebarButton onClick={() => setSelectedData("orders")} className="[&>svg]:w-4 [&>svg]:h-4"><IconCart />Orders</SidebarButton>
-      <SidebarButton onClick={() => setSelectedData("payments")} className="[&>svg]:w-4 [&>svg]:h-4"><IconMoneyWave />Payments</SidebarButton>
-      <SidebarButton onClick={() => setSelectedData("users")} className="[&>svg]:w-4 [&>svg]:h-4"><IconUser />Users</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:w-4 [&>svg]:h-4"><IconBag />Products</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:w-4 [&>svg]:h-4"><IconCart />Orders</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:w-4 [&>svg]:h-4"><IconMoneyWave />Payments</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:w-4 [&>svg]:h-4"><IconUser />Users</SidebarButton>
     </Sidebar>
     <Navbar admin />
 
-    { editData &&
+    {/* { editData &&
       <Modal onClick={() => setEditData(null)}>
         { editData.action == MODIFY_DATA_ACTION_ADD &&
-          <ModalEdit closeModal={() => setEditData(null)} type={selectedData} data={null} /> 
+          <ModalEdit closeModal={() => setEditData(null)} type={selectedData.selectedData} data={null} /> 
         }
         { editData.action == MODIFY_DATA_ACTION_DELETE &&
           <ModalDelete closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} />
         }
         { editData.action == MODIFY_DATA_ACTION_EDIT && <ModalEdit closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} /> }
       </Modal>
-    }
+    } */}
   </>;
 }
 

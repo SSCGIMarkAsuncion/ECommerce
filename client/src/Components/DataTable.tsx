@@ -3,7 +3,7 @@ import { useState, type HTMLAttributes, type HTMLProps } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import { MODIFY_DATA_ACTION_ADD, MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_EVENT_NAME, type OpenableData } from "../Utils/DataBuilder";
-import { IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
+import { IconCaretDown, IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
 
 export interface DataTableProps extends HTMLProps<HTMLElement> {
   tableColumns: any[],
@@ -127,25 +127,25 @@ export default function DataTable(props: DataTableProps) {
           ))}
         </tbody>
       </table>
-      <div className="flex gap-4 items-center m-2 text-sm">
-        <div hidden={data.length < pageSize}>
+      <div hidden={data.length < pageSize} className="flex gap-4 items-center m-2 text-sm">
           <Button
+            className="w-8 aspect-square"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Prev
+            <IconCaretDown className="rotate-90" />
           </Button>
           <span>
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </span>
           <Button
+            className="w-8 aspect-square"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            <IconCaretDown className="rotate-[-90deg]" />
           </Button>
         </div>
-      </div>
       </div>
     </div>;
 }

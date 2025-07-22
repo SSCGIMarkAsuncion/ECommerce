@@ -15,6 +15,7 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Modal(props: ModalProps) {
   return <div onClick={props.onClick} className="overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
+    <div className="mt-[var(--appbar-height)]"></div>
     {props.children}
   </div>;
 }

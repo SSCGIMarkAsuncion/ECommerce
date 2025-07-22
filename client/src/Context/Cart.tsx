@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer, type ActionDispatch, type ReactNode } from "react";
 import type Cart from "../Models/Cart";
+import type { Product } from "../Models/Product";
 
 const CartContext = createContext<Cart | null>(null);
 const CartContextDispatcher = createContext<ActionDispatch<[action: CartContextAction]> | null>(null);
@@ -29,6 +30,26 @@ export interface CartContextAction {
 function reducer(prev: Cart | null, action: CartContextAction) {
   switch (action.type) {
     case "assign":
+      if (prev && action.cart) {
+        const map: any = {};
+        prev.products.forEach((cartItem) => {
+          map[cartItem.id] = cartItem;
+        });
+
+        const mappedProducts = action.cart.products.map((cartItem) => {
+          const mapItem = map[cartItem.id];
+          if (!mapItem) {
+            return cartItem;
+          }
+          return {
+            id: cartItem.id,
+            amount: cartItem.amount,
+            product: (cartItem.product || mapItem.product) as (Product | undefined)
+          };
+        });
+
+        action.cart.products = mappedProducts;
+      }
       return action.cart;
     case "remove":
       return null;

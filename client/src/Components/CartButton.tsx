@@ -7,7 +7,7 @@ import Button from "./Button";
 export function ButtonCart({ product }: { product: Product }) {
   const { cart } = useCartContext();
   const { addToCart } = useCart();
-  console.log(cart?.products, product);
+  // console.log(cart?.products, product);
   const cartItem = cart?.products.filter((item) => {
     return item.id == product.id;
   })[0];

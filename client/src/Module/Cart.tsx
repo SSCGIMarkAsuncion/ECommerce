@@ -15,7 +15,7 @@ export default function Cart() {
   const { getCartsAndSetCarts } = useCart();
   getCartsAndSetCarts(true);
 
-  console.log("Cart", cart?.products);
+  // console.log("Cart", cart?.products);
   return <>
     <div className="mt-[var(--appbar-height)]"></div>
     { cart?

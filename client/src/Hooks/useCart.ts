@@ -10,7 +10,7 @@ export default function useCart() {
   const { cartDispatcher } = useCartContext();
 
   const addToCart = async (product: Product, amount: number): Promise<Cart> => {
-    console.log("addToCart", product, amount);
+    // console.log("addToCart", product, amount);
 
     const samount = `?amount=${amount}`;
     const url = `${api}/cart/add/${product.id}/${samount}`;

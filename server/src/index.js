@@ -35,6 +35,7 @@ app.use("/auth/", authRouter);
 app.use("/products/", productsRouter);
 app.use("/cart/", authenticateJWT, cartRouter);
 app.use((err, _, res, __) => {
+  console.log("ERROR::", err);
   res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });
 });
 

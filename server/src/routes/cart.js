@@ -21,11 +21,10 @@ router.post("/add/:id",
     const uid = req.tokenPayload.id;
     const collection = getCollection(COLLECTIONS.CARTS);
     const productCollection = getCollection(COLLECTIONS.PRODUCTS);
-    /*** @type {string} */
-    const idProduct = req.params.id;
+    const idProduct = new ObjectId(req.params.id);
 
     let productDoc = await productCollection.findOne({
-      _id: new ObjectId(idProduct)
+      _id: idProduct
     });
     if (!productDoc) {
       throw new MError(400, "Product Does not exist");
@@ -55,7 +54,7 @@ router.post("/add/:id",
     /*** @type {any[]} */
     const products = doc.products;
     const id = products.findIndex((p) => {
-      return p.id == idProduct;
+      return p.id.toString() == idProduct.toString();
     });
 
     if (id >= 0) {
@@ -102,20 +101,58 @@ router.post("/add/:id",
   }
 );
 
+/*
+  query
+    withProduct=1
+      optional. Adds a products.product in Cart schema
+      and inserts the Product doc associated with products[n].id
+*/
 router.get("/", async (req, res) => {
     /*** @type {string} */
     const uid = req.tokenPayload.id;
     const collection = getCollection(COLLECTIONS.CARTS);
+    const withProduct = req.query.withProduct == '1';
 
-    const doc = await collection.findOne({
+    const match = {
       owner: new ObjectId(uid),
       status: "cart"
-    }, { sort: { updatedAt: -1 } });
+    };
+    if (!withProduct) {
+      const doc = await collection.findOne(match, { sort: { updatedAt: -1 } });
 
-    console.log("cart::get", doc);
+      console.log("cart::get", doc);
 
-    res.status(200).send(doc);
-  }
+      return res.status(200).send(doc);
+    }
+
+    const doc = await collection.aggregate([
+      { $match: match },
+      { $unwind: "$products" },
+      {
+        $lookup: {
+          from: COLLECTIONS.PRODUCTS,
+          foreignField: "_id",
+          localField: "products.id",
+          as: "productDetails"
+        }
+      },
+      {
+        $addFields: {
+          "products.product": "$productDetails"
+        }
+      },
+      {
+        $group: Carts.aggregateGroup()
+      }
+    ]).toArray();
+    // mongodb returns an array for products.product
+
+    if (doc == null || doc.length == 0) {
+      res.status(200).json(null);
+    }
+
+    res.status(200).json(doc[0]);
+}
 );
 
 export default router;

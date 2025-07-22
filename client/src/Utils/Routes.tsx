@@ -6,6 +6,7 @@ import Register from "../Module/Register";
 import Admin from "../Module/Admin";
 import { Products } from "../Module/Products";
 import { CartContextProvider } from "../Context/Cart";
+import Cart from "../Module/Cart";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ export const ROUTER = createBrowserRouter([
   {
     path: "/products",
     element: <CartContextProvider><Products /></CartContextProvider>
+  },
+  {
+    path: "/cart",
+    element: <CartContextProvider><Cart /></CartContextProvider>
   },
   {
     path: "*",

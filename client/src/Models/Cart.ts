@@ -1,3 +1,5 @@
+import type { Product } from "./Product"
+
 export default interface Cart {
   id: string,
   owner: string,
@@ -20,5 +22,6 @@ export function mapToCart(obj: any) {
 
 export interface CartItem {
   id: string,
-  amount: number
+  amount: number,
+  product?: Product
 }

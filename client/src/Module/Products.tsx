@@ -16,7 +16,9 @@ import { Theme } from "../Utils/Theme";
 export function Products() {
   useAuth().verifyAndSetUser();
   const [ filter, setFilter ] = useState("");
+  const { getCartsAndSetCarts } = useCart();
 
+  getCartsAndSetCarts();
   return <>
     <div className="mt-[var(--appbar-height)] min-h-full p-2">
       <div className={`z-50 sticky top-[var(--appbar-height)] w-[70%] m-auto py-4 ${Theme.transition}`}>
@@ -33,10 +35,8 @@ export function Products() {
 function ProductView({ filter = "" }) {
   const [ products, setProducts ] = useState<Product[]>([]);
   const [ filteredProducts, setFilteredProducts ] = useState<Product[]>([]);
-  const { getCartsAndSetCarts } = useCart();
   const { getProducts } = useProducts();
 
-  getCartsAndSetCarts();
   useEffect(() => {
     getProducts([],[filter])
       .then(p => {

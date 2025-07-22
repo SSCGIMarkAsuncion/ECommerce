@@ -7,8 +7,9 @@ import Button from "./Button";
 export function ButtonCart({ product }: { product: Product }) {
   const { cart } = useCartContext();
   const { addToCart } = useCart();
+  console.log(cart?.products, product);
   const cartItem = cart?.products.filter((item) => {
-    return item.id == product?.id;
+    return item.id == product.id;
   })[0];
 
   return <Btn className="fraunces-regular w-full mt-4 text-sm"

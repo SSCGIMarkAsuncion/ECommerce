@@ -5,7 +5,10 @@ import { IconXMark } from "../Utils/SVGIcons";
 
 export interface ImageEditorProps extends HTMLProps<HTMLDivElement> {
   imgs: string[],
-  onChangeImgs: (imgs: string[]) => void
+  onChangeImgs: (imgs: string[]) => void,
+  onProcessing?: () => void,
+  onProcessingDone?: () => void,
+  onErr?: () => void
 };
 
 export function ImageEditor(props: ImageEditorProps) {

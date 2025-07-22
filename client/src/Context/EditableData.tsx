@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { type OpenableData, type TableData } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
 
-export type ActionTypes = "none" | "new" | "edit" | "delete";
+export type ActionTypes = "none" | "new" | "edit" | "delete" | "add";
 type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
 
 const SelectedDataContext = createContext<{ selectedData: OpenableData, setSelectedData: Dispatcher<OpenableData> } | null>(null);

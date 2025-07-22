@@ -2,8 +2,9 @@ import { type ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowMod
 import { useState, type HTMLAttributes, type HTMLProps } from "react";
 import Button from "./Button";
 import Input from "./Input";
-import { MODIFY_DATA_ACTION_ADD, MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_EVENT_NAME, type OpenableData } from "../Utils/DataBuilder";
+import { type OpenableData } from "../Utils/DataBuilder";
 import { IconCaretDown, IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
+import { useEditableDataContext, type ActionTypes } from "../Context/EditableData";
 
 export interface DataTableProps extends HTMLProps<HTMLElement> {
   tableColumns: any[],
@@ -17,16 +18,10 @@ export default function DataTable(props: DataTableProps) {
   const [pageSize, setPageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const { actionType } = useEditableDataContext();
 
   const triggerAddEvent = () => {
-    const ev = new CustomEvent(MODIFY_DATA_EVENT_NAME, {
-      detail: {
-        action: MODIFY_DATA_ACTION_ADD,
-        dataType: "",
-        data: null
-      }
-    });
-    window.dispatchEvent(ev);
+    actionType?.setActionType("add");
   };
 
   const charsAscDesc = {
@@ -150,33 +145,22 @@ export default function DataTable(props: DataTableProps) {
     </div>;
 }
 
-
-export interface RowActionsProps extends HTMLAttributes<HTMLDivElement> {
-  data: any,
-  type: OpenableData
-};
-
-export function RowActions(props: RowActionsProps) {
+export function RowActions() {
+  const { actionType } = useEditableDataContext();
   const buttonSizes = "w-7 h-7";
-  const triggerEvent = (evType: string) => {
-    const ev = new CustomEvent(MODIFY_DATA_EVENT_NAME, {
-      detail: {
-        action: evType,
-        dataType: props.type,
-        data: props.data
-      }
-    });
-    window.dispatchEvent(ev);
+
+  const triggerEvent = (evType: ActionTypes) => {
+    actionType?.setActionType(evType);
   };
 
   return <div className="flex gap-2 justify-center">
     <Button onClick={(e) => {
       e.preventDefault();
-      triggerEvent(MODIFY_DATA_ACTION_EDIT);
+      triggerEvent("edit");
     }} pType="icon" className={buttonSizes} ><IconPen className="fill-green-800" /></Button>
     <Button onClick={(e) => {
       e.preventDefault();
-      triggerEvent(MODIFY_DATA_ACTION_DELETE);
+      triggerEvent("delete");
     }} pType="icon" className={buttonSizes} ><IconTrash className="fill-red-800" /></Button>
   </div>;
 }

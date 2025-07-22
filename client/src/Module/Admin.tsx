@@ -5,12 +5,10 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import Sidebar, { SidebarButton } from "../Components/Sidebar";
 import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
-import { type TableData, type OpenableData, MODIFY_DATA_EVENT_NAME, type ModifyDataDetail, MODIFY_DATA_ACTION_EDIT, MODIFY_DATA_ACTION_DELETE, MODIFY_DATA_ACTION_ADD } from "../Utils/DataBuilder";
-import { useEditableData } from "../Hooks/useEditableData";
-import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
 import Loading from "../Components/Loading";
 import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
 import { MError } from "../Utils/Error";
+import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
 
 
 export default function Admin() {
@@ -66,17 +64,17 @@ function Page() {
     </Sidebar>
     <Navbar admin />
 
-    {/* { editData &&
-      <Modal onClick={() => setEditData(null)}>
-        { editData.action == MODIFY_DATA_ACTION_ADD &&
-          <ModalEdit closeModal={() => setEditData(null)} type={selectedData.selectedData} data={null} /> 
+    { actionType.actionType !== "none" &&
+      <Modal onClick={() => actionType.setActionType("none")}>
+        { actionType.actionType == "add" &&
+          <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={null} /> 
         }
-        { editData.action == MODIFY_DATA_ACTION_DELETE &&
-          <ModalDelete closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} />
+        { actionType.actionType == "delete" &&
+          <ModalDelete closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData?.data} />
         }
-        { editData.action == MODIFY_DATA_ACTION_EDIT && <ModalEdit closeModal={() => setEditData(null)} type={editData.dataType} data={editData.data} /> }
+        { actionType.actionType == "edit" && <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData?.data} /> }
       </Modal>
-    } */}
+    }
   </>;
 }
 

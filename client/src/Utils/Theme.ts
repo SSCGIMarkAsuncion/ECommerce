@@ -27,7 +27,7 @@ export const Theme = {
     icon: {
       primary: "bg-none hover:bg-neutral-900/25 active:bg-neutral-900/25",
       green:  "",
-      red: "",
+      red: "bg-none hover:bg-red-900/25 active:bg-red-900/25",
       whitePrimary: ""
     },
   },

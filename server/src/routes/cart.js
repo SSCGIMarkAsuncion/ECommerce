@@ -101,6 +101,53 @@ router.post("/add/:id",
   }
 );
 
+router.post("/remove/:id",
+  async (req, res) => {
+    /*** @type {string} */
+    const uid = req.tokenPayload.id;
+    const collection = getCollection(COLLECTIONS.CARTS);
+    const idProduct = new ObjectId(req.params.id);
+
+    const ownerId = new ObjectId(uid);
+    /*** @type {Carts} */
+    let doc = await collection.findOne({
+      owner: ownerId,
+      status: "cart"
+    }, { sort: { updatedAt: -1 } });
+
+    if (!doc) {
+      return res.status(200).json({});
+    }
+
+    const newCartItems = doc.products.filter((item) => {
+      return item.id.toString() !== idProduct.toString();
+    });
+
+    try {
+      await collection.updateOne(
+        {
+          _id: doc._id
+        },
+        {
+          $set: {
+            products: newCartItems,
+            updatedAt: new Date(Date.now())
+          }
+        }
+      );
+    }
+    catch (e) {
+      console.log("ERR", e);
+      throw new MError(400, "An error occured when removing an item");
+    }
+
+    doc.products = newCartItems;
+
+    // returns the latest cart entry without the idProduct
+    res.status(200).json(doc);
+  }
+);
+
 /*
   query
     withProduct=1

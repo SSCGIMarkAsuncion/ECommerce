@@ -1,8 +1,7 @@
 import { type ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, type SortDirection, type SortingState, useReactTable } from "@tanstack/react-table";
-import { useState, type HTMLAttributes, type HTMLProps } from "react";
+import { useState, type HTMLProps } from "react";
 import Button from "./Button";
 import Input from "./Input";
-import { type OpenableData } from "../Utils/DataBuilder";
 import { IconCaretDown, IconPen, IconPlus, IconTrash } from "../Utils/SVGIcons";
 import { useEditableDataContext, type ActionTypes } from "../Context/EditableData";
 

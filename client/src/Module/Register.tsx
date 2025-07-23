@@ -38,11 +38,7 @@ export default function Register() {
         navigate("/");
       })
       .catch((err: MError) => {
-        const keys = Object.keys(err.msg)
-        let merrs: string[] = [];
-        keys.forEach((key) => {
-          merrs.push(err.msg[key]);
-        });
+        let merrs = err.toErrorList();
         setLoading(false);
         setErrs(merrs);
       });

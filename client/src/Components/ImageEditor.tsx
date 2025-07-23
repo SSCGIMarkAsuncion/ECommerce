@@ -2,17 +2,20 @@ import { useCallback, useEffect, useRef, useState, type HTMLProps } from "react"
 import Input from "./Input";
 import Button from "./Button";
 import { IconXMark } from "../Utils/SVGIcons";
+import useImageMedia from "../Hooks/useImageMedia";
+import type { MError } from "../Utils/Error";
 
 export interface ImageEditorProps extends HTMLProps<HTMLDivElement> {
   imgs: string[],
   onChangeImgs: (imgs: string[]) => void,
   onProcessing?: () => void,
   onProcessingDone?: () => void,
-  onErr?: () => void
+  onErr?: (e: MError) => void
 };
 
 export function ImageEditor(props: ImageEditorProps) {
   const [ imgs, setImgs ] = useState([ ...props.imgs ]);
+  const { upload } = useImageMedia();
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -25,16 +28,32 @@ export function ImageEditor(props: ImageEditorProps) {
     });
   }, []);
 
-  const onUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+  const onUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    const fileUrls = Array.from(files);
-    alert("This Feature is Not Implemented Yet");
-    return;
-    console.log(fileUrls);
-    // @ts-ignore
-    setImgs((prev) => [...prev, ...fileUrls]);
+    const files = e.target.files
+    if (!files) return;
+    const urls = Array.from(files);
+    if (urls.length <= 0) return;
+
+    const arrbuffer = await urls[0].arrayBuffer();
+    const rawbuffer = new Uint8Array(arrbuffer);
+
+    try {
+      if (props.onProcessing)
+        props.onProcessing();
+      const imageurl = await upload(rawbuffer);
+      setImgs((prev) => [...prev, imageurl as string]);
+      if (props.onProcessingDone)
+        props.onProcessingDone();
+    }
+    catch (e) {
+      if (props.onProcessingDone)
+        props.onProcessingDone();
+      if (props.onErr)
+        props.onErr(e as MError);
+    }
   }, []);
 
   return <div className="m-2">
@@ -43,7 +62,7 @@ export function ImageEditor(props: ImageEditorProps) {
       if (ref.current)
         ref.current.click();
     }}>
-      Press to upload Image/s <span className="text-red-800">&nbsp;(Not tested)</span>
+      Press to upload Image
     </div>
     <div className="flex flex-col md:flex-row flex-wrap gap-1 my-2">
       {
@@ -54,7 +73,7 @@ export function ImageEditor(props: ImageEditorProps) {
     </div>
     <Input
       ref={ref}
-      multiple hidden={true}
+      hidden={true}
       onChange={onUpload}
       type="file" accept="image/png, image/jpeg" />
   </div>;
@@ -66,8 +85,13 @@ export interface ImageProps extends HTMLProps<HTMLImageElement> {
 };
 
 export function Image({ editable = false, ...props }: ImageProps) {
+  const forwardProps = {
+    ...props,
+  };
+  delete forwardProps.onRemove;
+
   return <div className="bg-gray-200 w-max relative">
-    <img {...props} className={`m-auto max-w-[150px] md:max-w-1/2 h-auto ${props.className}`}/>
+    <img {...forwardProps} className={`m-auto max-w-[150px] md:max-w-1/2 h-auto ${props.className}`}/>
     { editable && <Button pType="icon" className="absolute top-1 right-0 ml-auto w-8 h-8" onClick={(e) => {
         e.stopPropagation();
         if (props.onRemove)

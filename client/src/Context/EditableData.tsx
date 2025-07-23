@@ -9,6 +9,7 @@ const SelectedDataContext = createContext<{ selectedData: OpenableData, setSelec
 const DataContext = createContext<TableData | null>(null);
 const ActionContext = createContext<{ actionType: ActionTypes, setActionType: Dispatcher<ActionTypes> } | null>(null);
 const CurrentDataContext = createContext<{ currentData: any, setCurrentData: Dispatcher<any> } | null>(null);
+const ReloadContext = createContext<() => void>(() => {});
 
 export function EditableDataContextProvider({ children }: { children: ReactNode }) {
   const [ actionType, setActionType ] = useState<ActionTypes>("none");
@@ -16,6 +17,7 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
   const { load: loadData } = useEditableData();
   const [ tableData, setTableData ] = useState<TableData | null>(null);
   const [ currentData, setCurrentData ] = useState<any | null>(null);
+  const [ reloadData, setReloaddata ] = useState<boolean>(false);
 
   useEffect(() => {
     if (actionType == "none") {
@@ -31,13 +33,15 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
       .catch((e) => {
         console.log(e);
       });
-  }, [selectedData]);
+  }, [selectedData, reloadData]);
 
   return <SelectedDataContext.Provider value={{ selectedData, setSelectedData }}>
     <DataContext.Provider value={tableData}>
       <ActionContext.Provider value={{ actionType, setActionType }}>
         <CurrentDataContext.Provider value={{ currentData, setCurrentData }}>
-        {children}
+        <ReloadContext.Provider value={() => setReloaddata(v => !v)}>
+          {children}
+        </ReloadContext.Provider>
         </CurrentDataContext.Provider>
       </ActionContext.Provider>
     </DataContext.Provider>
@@ -49,6 +53,7 @@ export function useEditableDataContext() {
     selectedData: useContext(SelectedDataContext),
     tableData: useContext(DataContext),
     actionType: useContext(ActionContext),
-    currentData: useContext(CurrentDataContext)
+    currentData: useContext(CurrentDataContext),
+    reload: useContext(ReloadContext)
   };
 }

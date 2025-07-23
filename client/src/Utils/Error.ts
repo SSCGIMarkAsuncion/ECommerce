@@ -3,23 +3,17 @@ export class MError {
   constructor(msg: any) {
     this.msg = msg;
   }
-  static toErrorList(err: MError) {
-    if (typeof err.msg == "string") {
-      return [err.msg];
+
+  toErrorList() {
+    if (typeof this.msg == "string") {
+      return [this.msg];
     }
 
-    const keys = Object.keys(err.msg)
+    const keys = Object.keys(this.msg)
     let merrs: string[] = [];
     keys.forEach((key) => {
-      merrs.push(err.msg[key]);
+      merrs.push(this.msg[key]);
     });
     return merrs;
   }
 };
-
-// export class PromisedError {
-//   msg: Promise<any>;
-//   constructor(msg: Promise<any>) {
-//     this.msg = msg;
-//   }
-// }

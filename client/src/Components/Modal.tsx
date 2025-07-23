@@ -8,6 +8,7 @@ import useProducts from "../Hooks/useProducts";
 import { ImageEditor } from "./ImageEditor";
 import { MError } from "../Utils/Error";
 import FormError from "./FormError";
+import { useEditableDataContext } from "../Context/EditableData";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -68,6 +69,7 @@ export interface EditProductProps {
 };
 
 export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
+  const { reload } = useEditableDataContext();
   const [ loading, setLoading ] = useState(false);
   const { removeProduct } = useProducts();
   let deleteFn = null;
@@ -85,6 +87,7 @@ export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
     setLoading(true);
     if (deleteFn)
       deleteFn(data);
+    reload();
     closeModal();
   };
 
@@ -104,7 +107,7 @@ export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
 
   return <div onClick={(e) => e.stopPropagation()} className="w-max m-auto rounded-xs bg-white p-4 animate-slide-down">
     <h1 className="text-lg fraunces-regular">Are you sure you want to delete?</h1>
-  <div className="flex gap-1 text-xs mt-2">
+    <div className="flex gap-1 text-xs mt-2">
       <Button className="ml-auto" loading={loading} onClick={closeModal} pColor="whitePrimary">Cancel</Button>
       <Button loading={loading} pColor="red" onClick={() => {
         onDelete();
@@ -115,37 +118,42 @@ export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
 
 function EditProduct(props: EditProductProps) {
   const { updateProduct, newProduct } = useProducts();
+  const { reload } = useEditableDataContext();
   const [ loading, setLoading ] = useState(false);
   const [ currData, setCurrData ] = useState({ ...props.data });
   const [ err, setErr ] = useState<string[]>([]);
 
-  const onSubmit = useCallback((e: React.FormEvent) => {
+  const onSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    if (err.length > 0) return;
     setLoading(true);
 
     const form = e.currentTarget as HTMLFormElement;
     const fdata = new FormData(form);
     const json: any = Object.fromEntries(fdata.entries());
+
+    // setup the body
     json.tags = currData.tags;
-    json.imgs = currData.imgs; // raw image base64
+    json.imgs = currData.imgs;
     json.createdAt = currData.createdAt || new Date(Date.now());
     json.updatedAt = new Date(Date.now());
 
-    if (json.id)
-      updateProduct(json as Product)
-      .catch((e: MError) => {
-        const merrs = MError.toErrorList(e);
-        setErr(merrs);
-      });
-    else
-      newProduct(json as Product)
-      .catch((e: MError) => {
-        const merrs = MError.toErrorList(e);
-        setErr(merrs);
-      });
+    try {
+      if (json.id)
+        await updateProduct(json as Product)
+      else
+        await newProduct(json as Product)
+    }
+    catch (e) {
+      const merrs = (e as MError).toErrorList();
+      setErr(merrs);
+      props.closeModal();
+      return;
+    }
 
     setLoading(false);
-    // props.closeModal();
+    props.closeModal();
+    reload();
   }, [currData]);
 
   const onChangeTags = useCallback((tags: string[]) => {
@@ -184,7 +192,14 @@ function EditProduct(props: EditProductProps) {
       <Input id="salePrice" type="number" required label="Sale Price (0 for no price reduction)" className="text-sm" defaultValue={currData.salePrice || 0} />
     </div>
     <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
-    <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs}/>
+    <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs} onProcessing={() => setLoading(true)} onProcessingDone={() => setLoading(false)}
+      onErr={(e) => {
+        const errs = e.toErrorList();
+        if (errs.length > 0) {
+          setErr(errs);
+        }
+      }}
+      />
     <div className="flex gap-1 text-xs mt-2">
       <Button className="ml-auto" loading={loading} onClick={props.closeModal} pColor="whitePrimary">Cancel</Button>
       <Button loading={loading} type="submit" pColor="green">Ok</Button>

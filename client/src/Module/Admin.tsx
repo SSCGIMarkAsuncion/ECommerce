@@ -31,7 +31,7 @@ function Page() {
   const navigate = useNavigate();
   useAuth().verifyAndSetUser(() => {
     navigate("/");
-  }, false); // WARN: temp disable guard
+  }, true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -40,7 +40,7 @@ function Page() {
   useEffect(() => {
     if (tableData != null)
         setIsLoading(false);
-  }, [tableData])
+  }, [tableData, actionType])
 
   let mainContent = null;
   if (isLoading) {
@@ -64,18 +64,31 @@ function Page() {
     </Sidebar>
     <Navbar admin />
 
-    { actionType.actionType !== "none" &&
-      <Modal onClick={() => actionType.setActionType("none")}>
-        { actionType.actionType == "add" &&
-          <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={null} /> 
-        }
-        { actionType.actionType == "delete" &&
-          <ModalDelete closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData?.data} />
-        }
-        { actionType.actionType == "edit" && <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData?.data} /> }
-      </Modal>
-    }
+    <Editor />
   </>;
+}
+
+function Editor() {
+  const {
+    actionType,
+    currentData,
+    selectedData,
+  } = useEditableDataContext();
+
+  if (!actionType || !selectedData || !currentData) return null;
+  if (actionType.actionType === "none") return null
+
+  console.log("Editor", currentData.currentData);
+
+  return <Modal onClick={() => actionType.setActionType("none")}>
+    {actionType.actionType == "add" &&
+      <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={null} />
+    }
+    {actionType.actionType == "delete" &&
+      <ModalDelete closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData.currentData} />
+    }
+    {actionType.actionType == "edit" && <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData.currentData} />}
+  </Modal>
 }
 
 function NoContent() {

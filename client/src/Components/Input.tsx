@@ -63,7 +63,7 @@ export default function Input(props: InputProps) {
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
       onChange={(e) => delayedCallback(e)}
-      className={`${Theme.transition} ${Theme.input("input")} ${props.className}`}>
+      className={`${Theme.transition} ${Theme.input} ${props.className}`}>
       <input
         {...props}
         name={props.id}
@@ -115,7 +115,7 @@ export function TextArea(props: TextAreaProps) {
   return <div>
     <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
     <div 
-      className={`${Theme.transition} ${Theme.input("textarea")} ${props.className}`}>
+      className={`${Theme.transition} ${Theme.textarea} ${props.className}`}>
       <textarea
         {...props}
         name={props.id}
@@ -134,7 +134,7 @@ export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
   const [ svalue, setSValue ] = useState("");
 
   return <div
-    className={`${Theme.transition} ${Theme.input("input")} gap-2 ${props.className}`}>
+    className={`${Theme.transition} ${Theme.input} gap-2 ${props.className}`}>
     <IconSearch className="w-4 h-4 fill-primary-950" />
     <input
       {...props}

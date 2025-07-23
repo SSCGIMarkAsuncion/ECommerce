@@ -145,12 +145,13 @@ export default function DataTable(props: DataTableProps) {
     </div>;
 }
 
-export function RowActions() {
-  const { actionType } = useEditableDataContext();
+export function RowActions({ data }: { data: any }) {
+  const { actionType, currentData } = useEditableDataContext();
   const buttonSizes = "w-7 h-7";
 
   const triggerEvent = (evType: ActionTypes) => {
     actionType?.setActionType(evType);
+    currentData?.setCurrentData(data);
   };
 
   return <div className="flex gap-2 justify-center">

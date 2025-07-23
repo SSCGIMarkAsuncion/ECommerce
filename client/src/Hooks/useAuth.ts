@@ -45,8 +45,8 @@ export default function useAuth() {
     throw new MError(resjson);
   };
 
-  const authLogout = async (cb: () => void) => {
-    await fetch(`${api}/auth/logout`, {
+  const authLogout = (cb: () => void) => {
+    fetch(`${api}/auth/logout`, {
       method: "GET",
       credentials: "include"
     });

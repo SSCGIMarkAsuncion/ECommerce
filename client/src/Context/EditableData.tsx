@@ -8,12 +8,20 @@ type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
 const SelectedDataContext = createContext<{ selectedData: OpenableData, setSelectedData: Dispatcher<OpenableData> } | null>(null);
 const DataContext = createContext<TableData | null>(null);
 const ActionContext = createContext<{ actionType: ActionTypes, setActionType: Dispatcher<ActionTypes> } | null>(null);
+const CurrentDataContext = createContext<{ currentData: any, setCurrentData: Dispatcher<any> } | null>(null);
 
 export function EditableDataContextProvider({ children }: { children: ReactNode }) {
   const [ actionType, setActionType ] = useState<ActionTypes>("none");
   const [ selectedData, setSelectedData ] = useState<OpenableData>("products");
   const { load: loadData } = useEditableData();
   const [ tableData, setTableData ] = useState<TableData | null>(null);
+  const [ currentData, setCurrentData ] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (actionType == "none") {
+      setCurrentData(null);
+    }
+  }, [actionType]);
 
   useEffect(() => {
     loadData(selectedData)
@@ -28,7 +36,9 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
   return <SelectedDataContext.Provider value={{ selectedData, setSelectedData }}>
     <DataContext.Provider value={tableData}>
       <ActionContext.Provider value={{ actionType, setActionType }}>
+        <CurrentDataContext.Provider value={{ currentData, setCurrentData }}>
         {children}
+        </CurrentDataContext.Provider>
       </ActionContext.Provider>
     </DataContext.Provider>
   </SelectedDataContext.Provider>
@@ -38,6 +48,7 @@ export function useEditableDataContext() {
   return {
     selectedData: useContext(SelectedDataContext),
     tableData: useContext(DataContext),
-    actionType: useContext(ActionContext)
+    actionType: useContext(ActionContext),
+    currentData: useContext(CurrentDataContext)
   };
 }

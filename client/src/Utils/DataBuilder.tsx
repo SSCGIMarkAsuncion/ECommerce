@@ -55,10 +55,10 @@ export function buildColumnFrom(
       id: "actions",
       enableResizing: false,
       maxSize: 100,
-      cell: _props => {
+      cell: props => {
         // console.log(props.row);
         // return <RowActions type={type} data={props.row.original} />
-        return <RowActions />;
+        return <RowActions data={props.row.original} />;
       }
     })
   );

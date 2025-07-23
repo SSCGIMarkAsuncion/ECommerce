@@ -31,12 +31,8 @@ export const Theme = {
       whitePrimary: ""
     },
   },
-  input: (element: "input" | "textarea") => {
-    return `w-full rounded-md border-2 border-gray-500
-     py-1 px-2 data-[invalid=true]:border-red-700
-     has-[${element}:focus-within]:border-primary-950 has-[${element}:read-only]:bg-gray-400 has-[${element}:read-only]:text-gray-600
-     flex items-center`;
-  }
+  input: "w-full rounded-md border-2 border-gray-500 py-1 px-2 data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950 has-[input:read-only]:bg-gray-200 has-[input:read-only]:text-gray-600 flex items-center",
+  textarea: "w-full rounded-md border-2 border-gray-500 py-1 px-2 data-[invalid=true]:border-red-700 has-[textarea:focus-within]:border-primary-950 has-[textarea:read-only]:bg-gray-400 has-[textarea:read-only]:text-gray-600 flex items-center"
 };
 
 export const CarouselBreakpoints = {

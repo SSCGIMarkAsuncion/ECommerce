@@ -24,7 +24,7 @@ export function ImageEditor(props: ImageEditorProps) {
 
   const onRemove = useCallback((img: string) => {
     setImgs((v) => {
-      return [ ...v.filter((i) => i === img) ];
+      return [ ...v.filter((i) => i !== img) ];
     });
   }, []);
 
@@ -64,7 +64,7 @@ export function ImageEditor(props: ImageEditorProps) {
     }}>
       Press to upload Image
     </div>
-    <div className="flex flex-col md:flex-row flex-wrap gap-1 my-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-1 my-2">
       {
         imgs.map((img, i) => {
           return <Image key={i} src={img} alt={img} title={img} editable onRemove={onRemove} />
@@ -90,12 +90,12 @@ export function Image({ editable = false, ...props }: ImageProps) {
   };
   delete forwardProps.onRemove;
 
-  return <div className="bg-gray-200 w-max relative">
+  return <div className="bg-gray-200 relative">
     <img {...forwardProps} className={`m-auto max-w-[150px] md:max-w-1/2 h-auto ${props.className}`}/>
     { editable && <Button pType="icon" className="absolute top-1 right-1 ml-auto w-8 h-8" onClick={(e) => {
         e.stopPropagation();
         if (props.onRemove)
-          props.onRemove(props.children as string);
+          props.onRemove(props.src as string);
       }} >
         <IconXMark className="fill-red-800" />
       </Button>

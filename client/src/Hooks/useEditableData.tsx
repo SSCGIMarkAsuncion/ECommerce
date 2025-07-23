@@ -1,4 +1,4 @@
-import { mapToProduct, PRODUCT_COLUMNS } from "../Models/Product";
+import { PRODUCT_COLUMNS } from "../Models/Product";
 import { buildColumnFrom, type OpenableData, type TableData } from "../Utils/DataBuilder";
 import useProducts from "./useProducts";
 
@@ -22,7 +22,13 @@ export function useEditableData() {
       case "users":
       case "payments":
     }
-    return null;
+
+    // empty arrays for loading is done but there is no data
+    // null for still loading data
+    return {
+      data: [],
+      column: []
+    };
   };
 
   const edit = (type: OpenableData, data: any) => {

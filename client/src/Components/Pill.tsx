@@ -16,7 +16,7 @@ export function Pill(props: PillProps) {
 
   return <div
     {...props}
-    className={`py-1 px-2 text-center rounded-full flex gap-1 items-center bg-gray-400 ${props.className}`}>
+    className={`py-1 px-2 text-center rounded-full flex gap-1 items-center bg-gray-300 ${props.className}`}>
     {props.children}
     { props.editable && <Button pType="icon" className="ml-auto w-6 h-6" onClick={(e) => {
         e.stopPropagation();

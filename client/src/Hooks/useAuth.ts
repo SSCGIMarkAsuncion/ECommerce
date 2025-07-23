@@ -67,10 +67,15 @@ export default function useAuth() {
     throw new MError(resjson);
   }
 
-  const verifyAndSetUser = (onFail?: () => void) => {
+  const verifyAndSetUser = (onFail?: () => void, adminOnly?: boolean) => {
     useEffect(() => {
       authVerify()
         .then((user: User) => {
+          if (adminOnly && user.role == "user") {
+            if (onFail)
+              onFail();
+            return;
+          }
           userDispatcher({ type: "assign", user });
         })
         .catch( e => {

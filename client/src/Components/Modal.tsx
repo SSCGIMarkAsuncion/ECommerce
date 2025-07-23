@@ -15,6 +15,7 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Modal(props: ModalProps) {
   return <div onClick={props.onClick} className="overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
+    <div className="mt-[var(--appbar-height)]"></div>
     {props.children}
   </div>;
 }
@@ -38,7 +39,6 @@ export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
     case "products":
       editComponent = <EditProduct closeModal={closeModal} data={data as Product || emptyProduct()} />
       break;
-    case "promos":
     case "orders":
     case "users":
     case "payments":
@@ -171,24 +171,24 @@ function EditProduct(props: EditProductProps) {
   return <div className="overflow-y-auto">
   <h1 className="fraunces-regular text-4xl font-semibold text-primary-950">Product</h1>
   <form className="mt-4" onSubmit={onSubmit}>
-  <FormError errors={err} />
-  <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
-  <div className="*:flex-1 flex gap-1">
-    <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
-    <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
-  </div>
-  <Input id="name" type="text" required label="Name" className="text-sm" defaultValue={currData.name} />
-  <TextArea label="Description" id="description" className="text-sm" defaultValue={currData.description} />
-  <div className="*:flex-1 flex gap-1">
-    <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
-    <Input id="salePrice" type="number" required label="Sale Price (0 for no price reduction)" className="text-sm" defaultValue={currData.salePrice || 0} />
-  </div>
-  <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
-  <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs}/>
-  <div className="flex gap-1 text-xs mt-2">
-    <Button className="ml-auto" loading={loading} onClick={props.closeModal} pColor="whitePrimary">Cancel</Button>
-    <Button loading={loading} type="submit" pColor="green">Ok</Button>
-  </div>
+    <FormError errors={err} />
+    <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
+    <div className="*:flex-1 flex gap-1">
+      <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
+      <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
+    </div>
+    <Input id="name" type="text" required label="Name" className="text-sm" defaultValue={currData.name} />
+    <TextArea label="Description" id="description" className="text-sm" defaultValue={currData.description} />
+    <div className="*:flex-1 flex gap-1">
+      <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
+      <Input id="salePrice" type="number" required label="Sale Price (0 for no price reduction)" className="text-sm" defaultValue={currData.salePrice || 0} />
+    </div>
+    <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
+    <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs}/>
+    <div className="flex gap-1 text-xs mt-2">
+      <Button className="ml-auto" loading={loading} onClick={props.closeModal} pColor="whitePrimary">Cancel</Button>
+      <Button loading={loading} type="submit" pColor="green">Ok</Button>
+    </div>
   </form>
   {/* <p>{JSON.stringify(data, null, 2)}</p> */}
   </div>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type HTMLAttributes } from "react";
 import type { OpenableData } from "../Utils/DataBuilder";
-import { emptyProduct, type Product } from "../Models/Product";
+import { emptyProduct, productFrom, type Product } from "../Models/Product";
 import Button from "./Button";
 import Input, { TextArea } from "./Input";
 import { EditorTags } from "./EditorTags";
@@ -135,13 +135,7 @@ function EditProduct(props: EditProductProps) {
 
     const form = e.currentTarget as HTMLFormElement;
     const fdata = new FormData(form);
-    const json: any = Object.fromEntries(fdata.entries());
-
-    // setup the body
-    json.tags = currData.tags;
-    json.imgs = currData.imgs;
-    json.createdAt = currData.createdAt || new Date(Date.now());
-    json.updatedAt = new Date(Date.now());
+    const json = productFrom(fdata, currData.tags, currData.imgs);
 
     try {
       if (json.id)

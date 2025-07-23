@@ -30,8 +30,8 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
 
   useEffect(() => {
     loadData(selectedData)
-      .then((tableData) => {
-        setTableData(tableData);
+      .then((data) => {
+        setTableData(data);
       })
       .catch((e) => {
         console.log(e);

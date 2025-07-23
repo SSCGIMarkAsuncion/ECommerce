@@ -38,15 +38,30 @@ export default function useProducts() {
   };
 
   const updateProduct = async (update: Product) => {
-    console.log("update", update);
-    throw new MError({ error: "Update" });
+    const res = await fetch(`${url}/update/${update.id}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(update)
+    });
+
+    if (res.status >= 200 && res.status <= 399) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
   }
 
   const newProduct = async (product: Product) => {
     const res = await fetch(`${url}/add`, {
       method: "POST",
       credentials: "include",
-      body: product as any
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(product)
     });
     
     if (res.status >= 200 && res.status <= 399) {

@@ -12,7 +12,7 @@ export function useEditableData() {
           break;
         // const rows = buildRowsFrom("products", products);
         const cols = buildColumnFrom("products", PRODUCT_COLUMNS);
-        console.log(cols, products);
+        // console.log(cols, products);
         return {
           column: cols,
           data: products

@@ -12,7 +12,7 @@ export interface DataTableProps extends HTMLProps<HTMLElement> {
 };
 
 export default function DataTable(props: DataTableProps) {
-  const [data] = useState(() => [...props.tableData]);
+  const data = props.tableData;
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

@@ -38,6 +38,7 @@ export function hasKeys(left, right) {
     if (right[key] == undefined) {
       continue;
     }
+    console.log(key);
     if (!map[key]) {
       return false;
     }

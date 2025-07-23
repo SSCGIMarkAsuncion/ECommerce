@@ -81,7 +81,7 @@ function Editor() {
   if (!actionType || !selectedData || !currentData) return null;
   if (actionType.actionType === "none") return null
 
-  console.log("Editor", currentData.currentData);
+  // console.log("Editor", currentData.currentData);
 
   return <Modal onClick={() => actionType.setActionType("none")}>
     {actionType.actionType == "add" &&

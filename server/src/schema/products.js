@@ -23,4 +23,14 @@ export default class Products {
       updatedAt: 1
     };
   }
+
+  static projectUpdate() {
+    return {
+      name: 1,
+      description: 1,
+      price: 1,
+      imgs: 1,
+      tags: 1,
+    };
+  }
 }

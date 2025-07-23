@@ -104,23 +104,28 @@ router.put("/update/:id",
     let body = req.body;
     if (!body) throw new MError(400, "Body is Empty");
 
-    const schema = Products.project();
-    schema._id = undefined;
-    schema.salePrice = undefined;
+    const schema = Products.projectUpdate();
+
     const collection = getCollection(COLLECTIONS.PRODUCTS);
     const productId = new ObjectId(req.params.id);
 
-    body.id = undefined;
-    const err = checkSchema(schema, body);
+    const copy = {
+      ...body,
+      id: undefined,
+      salePrice: undefined
+    };
+    // console.log(schema, copy);
+    const err = checkSchema(schema, copy);
     if (err) throw err;
 
     /*** @type {Products} */
     const set = {
-      updatedAt: (body.updatedAt)?  new Date(body.updatedAt):new Date(Date.now()),
+      updatedAt: new Date(Date.now()),
       name: body.name,
       description: body.description,
       imgs: body.imgs,
       price: body.price,
+      salePrice: body.salePrice
     };
     for (const key of Object.keys(set)) {
       const item = set[key];
@@ -128,6 +133,8 @@ router.put("/update/:id",
         delete set[key];
       }
     }
+
+    console.log("SET", set);
 
     try {
       await collection.updateOne(
@@ -139,7 +146,7 @@ router.put("/update/:id",
     }
     catch (e) {
       console.log("ERR", e);
-      throw new MError(400, "Error occured when updating document");
+      throw new MError(400, "Failed to update document");
     }
 
     return res.status(200).send("");
@@ -150,9 +157,7 @@ router.post("/add",
   hasAdminRole,
   async (req, res) => {
     let body = req.body;
-    const schema = Products.project();
-    schema._id = undefined;
-    schema.salePrice = undefined;
+    const schema = Products.projectUpdate();
     const collection = getCollection(COLLECTIONS.PRODUCTS);
 
     const isArray = Array.isArray(body);

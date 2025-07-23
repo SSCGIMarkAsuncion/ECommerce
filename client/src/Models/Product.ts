@@ -12,6 +12,17 @@ export interface Product {
   updatedAt: Date | null
 };
 
+export function productFrom(fdata: FormData, tags: string[], imgs: string[]) {
+  return {
+    id: fdata.get("id") || "",
+    name: fdata.get("name") || "",
+    description: fdata.get("description") || "",
+    price: Number(fdata.get("price")) || 0,
+    salePrice: Number(fdata.get("salePrice")) || null,
+    tags, imgs
+  };
+}
+
 export function emptyProduct(): Product {
   return {
     id: "",

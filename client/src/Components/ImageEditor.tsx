@@ -57,7 +57,7 @@ export function ImageEditor(props: ImageEditorProps) {
   }, []);
 
   return <div className="m-2">
-    <div className="w-full rounded-md min-h-[10vh] border-2 border-dashed bg-gray-200 text-gray-400 border-gray-300 p-4 flex items-center justify-center" onClick={(e) => {
+    <div className="w-full rounded-md min-h-[10vh] border-2 border-dashed bg-gray-200 text-gray-500 border-gray-400 p-4 flex items-center justify-center" onClick={(e) => {
       e.stopPropagation();
       if (ref.current)
         ref.current.click();
@@ -92,7 +92,7 @@ export function Image({ editable = false, ...props }: ImageProps) {
 
   return <div className="bg-gray-200 w-max relative">
     <img {...forwardProps} className={`m-auto max-w-[150px] md:max-w-1/2 h-auto ${props.className}`}/>
-    { editable && <Button pType="icon" className="absolute top-1 right-0 ml-auto w-8 h-8" onClick={(e) => {
+    { editable && <Button pType="icon" className="absolute top-1 right-1 ml-auto w-8 h-8" onClick={(e) => {
         e.stopPropagation();
         if (props.onRemove)
           props.onRemove(props.children as string);

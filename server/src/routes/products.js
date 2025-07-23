@@ -3,8 +3,8 @@ import parseQueryValue from "../utils/query.js";
 import { ObjectId } from "mongodb";
 import MError from "../error.js";
 import { authenticateJWT } from "../middleware/verify_token.js";
-import { hasAdminRole, verifyRole } from "../middleware/role.js";
-import { hasKeys } from "../utils/obj.js";
+import { hasAdminRole, hasSuperAdminRole, verifyRole } from "../middleware/role.js";
+import { checkSchema, hasKeys } from "../utils/obj.js";
 import db from "../mongodb.js";
 import Products from "../schema/products.js";
 import ROLES from "../utils/roles.js";
@@ -79,6 +79,72 @@ router.get("/:id", async (req, res) => {
   await rootHandler(req, res);
 });
 
+router.delete("/delete/:id",
+  authenticateJWT,
+  hasSuperAdminRole,
+  async (req, res) => {
+    const productId = new ObjectId(req.params.id);
+    const collection = getCollection(COLLECTIONS.PRODUCTS);
+    try {
+      await collection.deleteOne({
+        _id: productId
+      });
+    }
+    catch (e) {
+      throw new MError(400, `Failed to delete Product ${productId.toString()}. ${e}`)
+    }
+
+    return res.status(200).send("");
+});
+
+router.put("/update/:id",
+  authenticateJWT,
+  hasAdminRole,
+  async (req, res) => {
+    let body = req.body;
+    if (!body) throw new MError(400, "Body is Empty");
+
+    const schema = Products.project();
+    schema._id = undefined;
+    schema.salePrice = undefined;
+    const collection = getCollection(COLLECTIONS.PRODUCTS);
+    const productId = new ObjectId(req.params.id);
+
+    body.id = undefined;
+    const err = checkSchema(schema, body);
+    if (err) throw err;
+
+    /*** @type {Products} */
+    const set = {
+      updatedAt: (body.updatedAt)?  new Date(body.updatedAt):new Date(Date.now()),
+      name: body.name,
+      description: body.description,
+      imgs: body.imgs,
+      price: body.price,
+    };
+    for (const key of Object.keys(set)) {
+      const item = set[key];
+      if (item == undefined) {
+        delete set[key];
+      }
+    }
+
+    try {
+      await collection.updateOne(
+        { _id: productId },
+        {
+          $set: set
+        }
+      );
+    }
+    catch (e) {
+      console.log("ERR", e);
+      throw new MError(400, "Error occured when updating document");
+    }
+
+    return res.status(200).send("");
+});
+
 router.post("/add",
   authenticateJWT,
   hasAdminRole,
@@ -89,36 +155,39 @@ router.post("/add",
     schema.salePrice = undefined;
     const collection = getCollection(COLLECTIONS.PRODUCTS);
 
-    if (Array.isArray(body)) {
+    const isArray = Array.isArray(body);
+
+    if (isArray) {
       body = body.map((d) => {
         d.id = undefined;
+
+        d.createdAt = new Date(Date.now());
+        d.updatedAt = new Date(Date.now());
+
         return d;
       });
-
-      if (!hasKeys(schema, body[0])) {
-        throw new MError(400, "Wrong Schema");
-      }
-
-      try {
-        await collection.insertMany(body);
-      }
-      catch (e) {
-        console.log(e);
-        throw new MError(400, "Failed to add products");
-      }
+      const err = checkSchema(schema, body);
+      if (err) throw err;
     }
     else {
       body.id = undefined;
-      if (!hasKeys(schema, body)) {
-        throw new MError(400, "Wrong Schema");
+      body.createdAt = new Date(Date.now());
+      body.updatedAt = new Date(Date.now());
+      const err = checkSchema(schema, body);
+      if (err) throw err;
+    }
+
+    try {
+      if (isArray) {
+        await collection.insertMany(body);
       }
-      try {
+      else {
         await collection.insertOne(body);
       }
-      catch (e) {
-        console.log(e);
-        throw new MError(400, "Failed to add products");
-      }
+    }
+    catch (e) {
+      console.log(e);
+      throw new MError(400, "Failed to add products");
     }
 
     res.status(200).send("");

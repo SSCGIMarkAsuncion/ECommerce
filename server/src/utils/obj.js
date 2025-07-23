@@ -1,3 +1,26 @@
+import MError from "../error.js";
+/***
+ * @param {any} schema
+ * @param {any | any[]} obj
+ * @returns {MError | null}
+ */
+export function checkSchema(schema, obj) {
+  if (Array.isArray(obj)) {
+    for (const item of obj) {
+      if (!hasKeys(schema, item)) {
+        return new MError(400, "Wrong Schema");
+      }
+    }
+  }
+  else {
+    if (!hasKeys(schema, obj)) {
+      return new MError(400, "Wrong Schema");
+    }
+  }
+
+  return null;
+}
+
 export function hasKeys(left, right) {
   const map = {};
   const rightKeys = Object.keys(right);

@@ -1,4 +1,4 @@
-import { dummyPromoProducts, mapToProduct, type Product } from "../Models/Product";
+import { mapToProduct, type Product } from "../Models/Product";
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
@@ -43,13 +43,29 @@ export default function useProducts() {
   }
 
   const newProduct = async (product: Product) => {
-    console.log("new", product);
-    throw new MError({ error: "new" });
+    const res = await fetch(`${url}/add`, {
+      method: "POST",
+      credentials: "include",
+      body: product as any
+    });
+    
+    if (res.status >= 200 && res.status <= 399) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
   }
 
   const removeProduct = async (product: Product) => {
-    console.log("delete", product);
-    throw new MError({ error: "delete" });
+    const res = await fetch(`${url}/delete/${product.id}`, {
+      method: "DELETE",
+      credentials: "include"
+    });
+    if (res.status >= 200 && res.status <= 399) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
   }
 
   const getPromo = async (): Promise<Product[]> => {

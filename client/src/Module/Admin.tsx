@@ -9,6 +9,7 @@ import Loading from "../Components/Loading";
 import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
 import { MError } from "../Utils/Error";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
+import FormError from "../Components/FormError";
 
 
 export default function Admin() {
@@ -22,7 +23,8 @@ function Page() {
   const {
     actionType,
     selectedData,
-    tableData
+    tableData,
+    errors
   } = useEditableDataContext();
   if (!actionType || !selectedData) throw new MError("Editable Data Context is null");
 
@@ -55,6 +57,7 @@ function Page() {
 
   return <>
     <div className="mt-[var(--appbar-height)]"></div>
+    <FormError errors={errors?.errors || []} />
     { mainContent }
     <Sidebar>
       <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:w-4 [&>svg]:h-4"><IconBag />Products</SidebarButton>

@@ -2,7 +2,6 @@ import type { HTMLProps } from "react";
 import type { CartItem } from "../Models/Cart";
 import { Card } from "./Card";
 import { ButtonCart, ButtonCartDelete } from "./CartButton";
-import Skeleton from "./Skeleton";
 
 export interface CartItemProps extends HTMLProps<HTMLDivElement> {
   cartItem: CartItem
@@ -10,7 +9,7 @@ export interface CartItemProps extends HTMLProps<HTMLDivElement> {
 
 export default function CartItem(props: CartItemProps) {
   if (!props.cartItem.product) {
-    return <Skeleton className="w-full h-[150px]" />
+    return null;
   }
 
   const product = props.cartItem.product!;

@@ -1,5 +1,6 @@
 import token from "../utils/jwt.js";
 import MError from "../error.js";
+import ROLES from "../utils/roles.js";
 const { verifyToken } = token;
 /**
  * Guards the next handler if the token is invalid

@@ -32,7 +32,10 @@ router.post("/register",
     password: encryption.encrypt(body.password),
     role: role
   };
-
+  for (const key of Object.keys(user)) {
+    if (!user[key])
+        throw new MError(400, "Credentials is empty");
+  }
 
   const collection = getCollection(COLLECTIONS.USERS);
   const doc = await collection.findOne({
@@ -65,14 +68,15 @@ router.get("/verify", authenticateJWT, async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  // console.log(req.body);
-  // console.log(req.query);
-
   const body = req.body;
   const user = {
     email: body.email,
     password: encryption.encrypt(body.password)
   };
+  for (const key of Object.keys(user)) {
+    if (!user[key])
+        throw new MError(400, "Credentials is empty");
+  }
 
   const collection = getCollection(COLLECTIONS.USERS);
   const doc = await collection.findOne({

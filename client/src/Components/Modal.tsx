@@ -69,7 +69,7 @@ export interface EditProductProps {
 };
 
 export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
-  const { reload } = useEditableDataContext();
+  const { reload, errors } = useEditableDataContext();
   const [ loading, setLoading ] = useState(false);
   const { removeProduct } = useProducts();
   let deleteFn = null;
@@ -83,10 +83,15 @@ export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
     case "payments":
   };
 
-  const onDelete = () => {
+  const onDelete = async () => {
     setLoading(true);
-    if (deleteFn)
-      deleteFn(data);
+    try {
+      if (deleteFn)
+        deleteFn(data);
+    }
+    catch (e) {
+      errors?.setErrors((e as MError).toErrorList());
+    }
     reload();
     closeModal();
   };

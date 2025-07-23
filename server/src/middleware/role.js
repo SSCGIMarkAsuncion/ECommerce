@@ -54,3 +54,16 @@ export function hasAdminRole(req, _, next) {
   }
   throw new MError(400, "Request not possible");
 }
+
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} _
+ * @param {import('express').NextFunction} next
+ */
+export function hasSuperAdminRole(req, _, next) {
+  const tokenRole = req.tokenPayload.role;
+  if (tokenRole === ROLES.SUPERADMIN) {
+    return next();
+  }
+  throw new MError(400, "Request not possible");
+}

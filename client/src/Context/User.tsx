@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, type ActionDispatch, type ReactNode } from "react";
-import type { User } from "../Models/User";
+import User from "../Models/User";
 
 const UserContext = createContext<User | null>(null);
 const UserContextDispatcher = createContext<ActionDispatch<[action: UserContextAction]> | null>(null);

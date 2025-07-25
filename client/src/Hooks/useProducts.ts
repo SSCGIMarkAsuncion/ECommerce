@@ -1,11 +1,11 @@
-import { mapToProduct, type Product } from "../Models/Product";
+import { Product } from "../Models/Product";
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
 export default function useProducts() {
   const url = `${api}/products`;
 
-  const getProducts = async (tags: string[], filters: string[], limit?: number, offset?: number) => {
+  const getProducts = async (tags: string[], filters: string[], limit?: number, offset?: number): Promise<Product[]> => {
     const queries = [];
 
     const stags = tags.length>0? `tags=${tags.join(';')}`:"";
@@ -27,7 +27,7 @@ export default function useProducts() {
     const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
       return resjson.map((obj: any) => {
-        return mapToProduct(obj);
+        return new Product(obj);
       });
     }
     throw new MError(resjson);
@@ -44,7 +44,7 @@ export default function useProducts() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(update)
+      body: update.toJson()
     });
 
     if (res.status >= 200 && res.status <= 399) {
@@ -61,7 +61,7 @@ export default function useProducts() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(product)
+      body: product.toJson()
     });
     
     if (res.status >= 200 && res.status <= 399) {
@@ -89,7 +89,7 @@ export default function useProducts() {
     const resjson = await res.json() as any[];
     if (res.status >= 200 && res.status < 399) {
       return resjson.map((obj: any) => {
-        return mapToProduct(obj);
+        return new Product(obj);
       });
     }
     throw new MError(resjson);
@@ -101,7 +101,7 @@ export default function useProducts() {
     const resjson = await res.json() as any[];
     if (res.status >= 200 && res.status < 399) {
       return resjson.map((obj: any) => {
-        return mapToProduct(obj);
+        return new Product(obj);
       });
     }
     throw new MError(resjson);

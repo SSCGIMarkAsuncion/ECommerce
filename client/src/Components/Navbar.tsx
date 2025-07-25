@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from "react";
 import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 import { useUser } from "../Context/User";
 import useAuth from "../Hooks/useAuth";
-import { isAdmin } from "../Models/User";
 
 export default function Navbar({ className = "", admin = false }) {
   const navigate = useNavigate();
@@ -112,7 +111,7 @@ function NavbarMenu() {
          onClick={(e) => {
           e.stopPropagation();
         }}>
-          { user && isAdmin(user)?
+          { user && user.isAdmin()?
             <MenuItem href="/admin" className="block w-full">
               Admin Dashboard
             </MenuItem>:<></>

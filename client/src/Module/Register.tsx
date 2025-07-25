@@ -9,6 +9,7 @@ import type { MError } from "../Utils/Error";
 import { checkPassword } from "../Utils/FormValidators";
 import FormError from "../Components/FormError";
 import FormHeader from "../Components/FormHeader";
+import User from "../Models/User";
 
 export default function Register() {
   const [ errs, setErrs ] = useState<string[]>([]);
@@ -32,8 +33,9 @@ export default function Register() {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const data = new FormData(form);
+    const user = User.from(data);
     setLoading(true);
-    authRegister(data)
+    authRegister(user)
       .then(() => {
         navigate("/");
       })

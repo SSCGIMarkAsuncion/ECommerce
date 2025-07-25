@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 import { MError } from "../Utils/Error";
 import FormError from "../Components/FormError";
 import FormHeader from "../Components/FormHeader";
+import User from "../Models/User";
 
 export default function Login() {
   const [ errs, setErrs ] = useState<string[]>([]);
@@ -19,8 +20,9 @@ export default function Login() {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const data = new FormData(form);
+    const user = User.from(data);
     setLoading(true);
-    authLogin(data)
+    authLogin(user)
       .then((res) => {
         console.log(res);
         navigate("/");

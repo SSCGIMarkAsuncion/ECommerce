@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type HTMLAttributes } from "react";
 import type { OpenableData } from "../Utils/DataBuilder";
-import { emptyProduct, productFrom, type Product } from "../Models/Product";
+import { Product } from "../Models/Product";
 import Button from "./Button";
 import Input, { TextArea } from "./Input";
 import { EditorTags } from "./EditorTags";
@@ -38,7 +38,7 @@ export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
   let editComponent = null;
   switch (type) {
     case "products":
-      editComponent = <EditProduct closeModal={closeModal} data={data as Product || emptyProduct()} />
+      editComponent = <EditProduct closeModal={closeModal} data={data as Product || Product.empty()} />
       break;
     case "orders":
     case "users":
@@ -135,13 +135,13 @@ function EditProduct(props: EditProductProps) {
 
     const form = e.currentTarget as HTMLFormElement;
     const fdata = new FormData(form);
-    const json = productFrom(fdata, currData.tags, currData.imgs);
+    const product = Product.from(fdata, currData.tags, currData.imgs);
 
     try {
-      if (json.id)
-        await updateProduct(json as Product)
+      if (product.id)
+        await updateProduct(product)
       else
-        await newProduct(json as Product)
+        await newProduct(product)
     }
     catch (e) {
       const merrs = (e as MError).toErrorList();

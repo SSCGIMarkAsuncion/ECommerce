@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useUser } from "../Context/User";
 import { MError } from "../Utils/Error";
-import type { User } from "../Models/User";
+import User from "../Models/User";
 
 const api = import.meta.env.VITE_API;
 // const host = encodeURI(import.meta.env.VITE_HOST);
@@ -9,15 +9,14 @@ const api = import.meta.env.VITE_API;
 export default function useAuth() {
   const { userDispatcher } = useUser();
 
-  const authLogin = async (data: FormData) => {
-    const json = Object.fromEntries(data.entries());
+  const authLogin = async (data: User) => {
     const res = await fetch(`${api}/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(json)
+      body: data.toJson()
     });
 
     const resjson = await res.json();
@@ -27,15 +26,14 @@ export default function useAuth() {
     throw new MError(resjson);
   };
 
-  const authRegister = async(data: FormData) => {
-    const json = Object.fromEntries(data.entries());
+  const authRegister = async(data: User) => {
     const res = await fetch(`${api}/auth/register`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(json)
+      body: data.toJson()
     });
 
     if (res.status >= 200 && res.status < 300) {
@@ -62,7 +60,7 @@ export default function useAuth() {
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
-      return resjson;
+      return new User(resjson);
     }
     throw new MError(resjson);
   }

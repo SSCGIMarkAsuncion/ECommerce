@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useCartContext } from "../Context/Cart";
-import type Cart from "../Models/Cart";
-import { mapToCart } from "../Models/Cart";
-import { mapToProduct, type Product } from "../Models/Product"
+import Cart from "../Models/Cart";
+import { Product } from "../Models/Product"
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
@@ -18,7 +17,7 @@ export default function useCart() {
     });
     const resjson = await res.json();
     if (res.status >= 200 && res.status <= 399 ) {
-      const mappedCart = mapToCart(resjson);
+      const mappedCart = new Cart(resjson);
       cartDispatcher({
         type: "assign",
         cart: mappedCart,
@@ -36,7 +35,7 @@ export default function useCart() {
     });
     const resjson = await res.json();
     if (res.status >= 200 && res.status <= 399 ) {
-      const mappedCart = mapToCart(resjson);
+      const mappedCart = new Cart(resjson);
       console.log(mappedCart);
       cartDispatcher({
         type: "assign",
@@ -56,10 +55,10 @@ export default function useCart() {
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status <= 399) {
-      const cart = mapToCart(resjson);
+      const cart = new Cart(resjson);
       if (includeProductInfo) {
         const newProducts = cart.products.map((product) => {
-          const np = mapToProduct((product.product as any)[0]);
+          const np = new Product((product.product as any)[0]);
           return { ...product, product: np };
         });
         cart.products = newProducts;

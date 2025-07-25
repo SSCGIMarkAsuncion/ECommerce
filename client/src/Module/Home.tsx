@@ -37,7 +37,7 @@ export default function Home() {
         <h1 className="my-10 text-white tracking-wider font-medium text-shadow-black text-shadow-lg">
           Trade in Flavor,<br /> Brew Real Connection
         </h1>
-        <Button onClick={() => navigate("/products")} href="/products" pColor="whitePrimary" className="text-lg">Explore now</Button>
+        <Button onClick={() => navigate("/products") } href="/products" pColor="whitePrimary" className="text-lg">Explore now</Button>
       </div>
     </div>
     <div id="promos" className="bg-primary-50 p-4">

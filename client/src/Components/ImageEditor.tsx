@@ -90,8 +90,8 @@ export function Image({ editable = false, ...props }: ImageProps) {
   };
   delete forwardProps.onRemove;
 
-  return <div className="bg-gray-200 relative">
-    <img {...forwardProps} className={`m-auto max-w-[150px] md:max-w-1/2 h-auto ${props.className}`}/>
+  return <div className="bg-gray-200 relative flex items-center">
+    <img {...forwardProps} className={`m-auto object-cover ${props.className}`}/>
     { editable && <Button pType="icon" className="absolute top-1 right-1 ml-auto w-8 h-8" onClick={(e) => {
         e.stopPropagation();
         if (props.onRemove)

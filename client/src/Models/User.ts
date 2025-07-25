@@ -23,7 +23,7 @@ export default class User {
 
   static from(form: FormData) {
     return new User({
-      id: form.get("id"),
+      _id: form.get("id"),
       username: form.get("username"),
       email: form.get("email"),
       password: form.get("password"),

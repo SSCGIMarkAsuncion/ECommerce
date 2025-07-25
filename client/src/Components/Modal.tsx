@@ -9,6 +9,7 @@ import { ImageEditor } from "./ImageEditor";
 import { MError } from "../Utils/Error";
 import FormError from "./FormError";
 import { useEditableDataContext } from "../Context/EditableData";
+import { useNotification } from "../Context/Notify";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -127,6 +128,7 @@ function EditProduct(props: EditProductProps) {
   const [ loading, setLoading ] = useState(false);
   const [ currData, setCurrData ] = useState({ ...props.data });
   const [ err, setErr ] = useState<string[]>([]);
+  const notify = useNotification();
 
   const onSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,7 +193,13 @@ function EditProduct(props: EditProductProps) {
       <Input id="salePrice" type="number" required label="Sale Price (0 for no price reduction)" className="text-sm" defaultValue={currData.salePrice || 0} />
     </div>
     <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
-    <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs} onProcessing={() => setLoading(true)} onProcessingDone={() => setLoading(false)}
+    <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs} onProcessing={() => {
+      setLoading(true);
+      notify("info", "Image uploading");
+    }} onProcessingDone={() => {
+      setLoading(false);
+      notify("info", "Image uploaded");
+    }}
       onErr={(e) => {
         const errs = e.toErrorList();
         if (errs.length > 0) {

@@ -25,7 +25,7 @@ export class Product {
 
   static empty() {
     return new Product({
-      id: "",
+      _id: "",
       name: "",
       description: "",
       price: 0,
@@ -39,7 +39,7 @@ export class Product {
 
   static from(fdata: FormData, tags: string[], imgs: string[]) {
     return new Product({
-      id: fdata.get("id") || "",
+      _id: fdata.get("id") || "",
       name: fdata.get("name") || "",
       description: fdata.get("description") || "",
       price: Number(fdata.get("price")) || 0,

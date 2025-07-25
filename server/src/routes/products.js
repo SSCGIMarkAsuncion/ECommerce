@@ -114,7 +114,6 @@ router.put("/update/:id",
       id: undefined,
       salePrice: undefined
     };
-    // console.log(schema, copy);
     const err = checkSchema(schema, copy);
     if (err) throw err;
 
@@ -132,6 +131,10 @@ router.put("/update/:id",
       if (item == undefined) {
         delete set[key];
       }
+    }
+    if (set.imgs.length == 0) {
+      // do not overwrite images if the update is length 0
+      delete set.imgs
     }
 
     console.log("SET", set);

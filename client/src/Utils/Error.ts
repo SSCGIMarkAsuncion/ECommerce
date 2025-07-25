@@ -1,6 +1,10 @@
 export class MError {
   msg: any;
   constructor(msg: any) {
+    if (msg instanceof MError) {
+      this.msg = msg.msg;
+      return;
+    }
     this.msg = msg;
   }
 

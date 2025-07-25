@@ -5,7 +5,6 @@ import { IconBars, IconCart, IconSearch, IconSidebar } from "../Utils/SVGIcons";
 import { useCallback, useEffect, useState } from "react";
 import { MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 import { useUser } from "../Context/User";
-import useAuth from "../Hooks/useAuth";
 
 export default function Navbar({ className = "", admin = false }) {
   const navigate = useNavigate();
@@ -70,8 +69,7 @@ export default function Navbar({ className = "", admin = false }) {
 
 function NavbarMenu() {
   const [ isOpen, setOpen ] = useState(true);
-  const { user, userDispatcher } = useUser();
-  const { authLogout } = useAuth();
+  const { user, userDispatcher: { logout }} = useUser();
   const navigate = useNavigate();
 
   const toggle = useCallback((e: React.MouseEvent<HTMLElement>) => {
@@ -118,13 +116,9 @@ function NavbarMenu() {
           }
           <MenuItem className="block w-full" onClick={(e) => {
             toggle(e);
-            authLogout(() => {
-              userDispatcher({
-                type: "remove", user: null
-              });
-              navigate("/");
-            }
-          )}}>Logout</MenuItem>
+            logout();
+            navigate("/");
+          }}>Logout</MenuItem>
         </SubMenu>
       }
     </SlidingMenuContent>

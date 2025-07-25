@@ -7,6 +7,7 @@ import Admin from "../Module/Admin";
 import { Products } from "../Module/Products";
 import { CartContextProvider } from "../Context/Cart";
 import Cart from "../Module/Cart";
+import { AdminOnly, AuthenticatedOnly } from "../Context/User";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -23,7 +24,9 @@ export const ROUTER = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Admin />
+    element: <AdminOnly>
+      <Admin />
+    </AdminOnly>
   },
   {
     path: "/products",
@@ -31,7 +34,11 @@ export const ROUTER = createBrowserRouter([
   },
   {
     path: "/cart",
-    element: <CartContextProvider><Cart /></CartContextProvider>
+    element: <AuthenticatedOnly>
+      <CartContextProvider>
+        <Cart />
+      </CartContextProvider>
+    </AuthenticatedOnly>
   },
   {
     path: "*",

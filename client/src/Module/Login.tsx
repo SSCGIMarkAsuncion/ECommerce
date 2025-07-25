@@ -3,18 +3,18 @@ import Button from "../Components/Button";
 import Input, { InputPassword } from "../Components/Input";
 import Navbar from "../Components/Navbar";
 import { Theme } from "../Utils/Theme";
-import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import { MError } from "../Utils/Error";
 import FormError from "../Components/FormError";
 import FormHeader from "../Components/FormHeader";
 import User from "../Models/User";
+import { useUser } from "../Context/User";
 
 export default function Login() {
   const [ errs, setErrs ] = useState<string[]>([]);
   const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
-  const { authLogin } = useAuth();
+  const { userDispatcher: { login }} = useUser();
 
   const onSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -22,9 +22,8 @@ export default function Login() {
     const data = new FormData(form);
     const user = User.from(data);
     setLoading(true);
-    authLogin(user)
-      .then((res) => {
-        console.log(res);
+    login(user)
+      .then(() => {
         navigate("/");
       })
       .catch((err: MError) => {

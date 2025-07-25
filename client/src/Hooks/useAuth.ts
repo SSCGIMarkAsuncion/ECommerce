@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useUser } from "../Context/User";
 import { MError } from "../Utils/Error";
 import User from "../Models/User";
 
@@ -7,8 +5,6 @@ const api = import.meta.env.VITE_API;
 // const host = encodeURI(import.meta.env.VITE_HOST);
 
 export default function useAuth() {
-  const { userDispatcher } = useUser();
-
   const authLogin = async (data: User) => {
     const res = await fetch(`${api}/auth/login`, {
       method: "POST",
@@ -21,7 +17,7 @@ export default function useAuth() {
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
-      return resjson;
+      return new User(resjson);
     }
     throw new MError(resjson);
   };
@@ -59,36 +55,16 @@ export default function useAuth() {
     });
 
     const resjson = await res.json();
-    if (res.status >= 200 && res.status < 300) {
+    if (res.status >= 200 && res.status < 399) {
       return new User(resjson);
     }
     throw new MError(resjson);
   }
 
-  const verifyAndSetUser = (onFail?: () => void, adminOnly?: boolean) => {
-    useEffect(() => {
-      authVerify()
-        .then((user: User) => {
-          if (adminOnly && user.role == "user") {
-            if (onFail)
-              onFail();
-            return;
-          }
-          userDispatcher({ type: "assign", user });
-        })
-        .catch( e => {
-          console.log("ERR", e);
-          if (onFail)
-            onFail();
-        });
-    }, []);
-  };
-
   return {
     authLogin,
     authLogout,
     authVerify,
-    authRegister,
-    verifyAndSetUser
+    authRegister
   }
 }

@@ -5,13 +5,11 @@ import PromoList from "../Components/PromoList";
 import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
 import Footer from "../Components/Footer";
-import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import useCart from "../Hooks/useCart";
 import useProducts from "../Hooks/useProducts";
 
 export default function Home() {
-  useAuth().verifyAndSetUser();
   const { getCartsAndSetCarts } = useCart();
   const { getPromo, getBestSellers } = useProducts();
   const [ promos, setPromos ] = useState<Product[]>([]);

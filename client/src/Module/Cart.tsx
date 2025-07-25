@@ -2,16 +2,12 @@ import { useNavigate } from "react-router";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import CartItem from "../Components/CartItem";
-import useAuth from "../Hooks/useAuth";
 import useCart from "../Hooks/useCart";
 import { useCartContext } from "../Context/Cart";
 import Button from "../Components/Button";
 
 export default function Cart() {
   const navigate = useNavigate();
-  useAuth().verifyAndSetUser(() => {
-    navigate("/login");
-  });
   const { cart } = useCartContext();
   const { getCartsAndSetCarts } = useCart();
   getCartsAndSetCarts(true);

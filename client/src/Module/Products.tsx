@@ -5,16 +5,13 @@ import { type Product } from "../Models/Product";
 import useProducts from "../Hooks/useProducts";
 import Loading from "../Components/Loading";
 import { Card } from "../Components/Card";
-import { MError } from "../Utils/Error";
 import { ButtonCart } from "../Components/CartButton";
 import { Pill } from "../Components/Pill";
-import useAuth from "../Hooks/useAuth";
 import { Searchbar } from "../Components/Input";
 import useCart from "../Hooks/useCart";
 import { Theme } from "../Utils/Theme";
 
 export function Products() {
-  useAuth().verifyAndSetUser();
   const [ filter, setFilter ] = useState("");
   const { getCartsAndSetCarts } = useCart();
 
@@ -43,7 +40,7 @@ function ProductView({ filter = "" }) {
         setFilteredProducts(p);
       })
       .catch(e => {
-        const errs = MError.toErrorList(e);
+        const errs = e.toErrorList();
         console.log(errs);
       });
   }, [filter]);
@@ -54,7 +51,7 @@ function ProductView({ filter = "" }) {
         setProducts(p);
       })
       .catch(e => {
-        const errs = MError.toErrorList(e);
+        const errs = e.toErrorList();
         console.log(errs);
       });
   }, []);

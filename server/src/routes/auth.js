@@ -19,6 +19,7 @@ router.post("/register",
  verifyRole,
  async (req, res) => {
   const body = req.body;
+  console.log("/register::BODY", body);
   const role = req.query.role || ROLES.USER;
   const tokenRole = req.tokenPayload? req.tokenPayload.role:null;
 
@@ -69,6 +70,7 @@ router.get("/verify", authenticateJWT, async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const body = req.body;
+  console.log("/login::BODY", body);
   const user = {
     email: body.email,
     password: encryption.encrypt(body.password)

@@ -1,8 +1,20 @@
-import { createContext, useContext, useReducer, type ActionDispatch, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import User from "../Models/User";
+import useAuth from "../Hooks/useAuth";
+import { MError } from "../Utils/Error";
+import { useNavigate } from "react-router";
 
-const UserContext = createContext<User | null>(null);
-const UserContextDispatcher = createContext<ActionDispatch<[action: UserContextAction]> | null>(null);
+// NULL = has not been checked yet
+// MError = has been verified but is invalid
+// User = TOKEN is valid
+export type TUserContext = User | null;
+export interface TUserContextDispatcher {
+  login: (user: User) => Promise<void>,
+  logout: () => void,
+  error: MError | null
+};
+const UserContext = createContext<TUserContext>(null);
+const UserContextDispatcher = createContext<TUserContextDispatcher | null>(null);
 
 export function useUser() {
   return {
@@ -12,26 +24,83 @@ export function useUser() {
 }
 
 export function UserContextProvider({ children }: { children: ReactNode }) {
-  const [ initial, dispatcher ] = useReducer(reducer, null!);
+  const [ user, setUser ] = useState<TUserContext>(null);
+  const [ error, setError ] = useState<MError | null>(null);
+  const { authVerify, authLogout, authLogin } = useAuth();
 
-  return <UserContext.Provider value={initial}>
-    <UserContextDispatcher.Provider value={dispatcher}>
+  const logout = async () => {
+    authLogout(() => {
+      setUser(null);
+      setError(null);
+    });
+  };
+
+  const login = async (user: User) => {
+    const u = await authLogin(user);
+    setUser(u);
+  };
+
+  useEffect(() => {
+    async function a() {
+      try {
+        const user = await authVerify();
+        setUser(user);
+        setError(null);
+      }
+      catch (e) {
+        console.log("ERR::AUTH", e);
+        setError(new MError(e));
+      }
+    }
+    a();
+  }, [])
+
+  return <UserContext.Provider value={user}>
+    <UserContextDispatcher.Provider value={{
+      error,
+      logout,
+      login
+    }}>
       {children}
     </UserContextDispatcher.Provider>
   </UserContext.Provider>
 }
 
-export interface UserContextAction {
-  type: "assign" | "remove",
-  user: User | null
-};
+// use after UserContextProvider
+export function AdminOnly({ children }: { children: ReactNode }) {
+  const { user, userDispatcher: { error } } = useUser();
+  const navigate = useNavigate();
 
-function reducer(prev: User | null, action: UserContextAction) {
-  switch (action.type) {
-    case "assign":
-      return action.user;
-    case "remove":
-      return null;
+  useEffect(() => {
+    if (error || (user && !user.isAdmin())) {
+      navigate("/login");
+    }
+  }, [error, user]);
+
+  if (error || !user) {
+    return null;
   }
-  return prev;
+
+  return <>
+    {children}
+  </>;
+}
+
+export function AuthenticatedOnly({ children }: { children: ReactNode }) {
+  const { userDispatcher: { error } } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      navigate("/");
+    }
+  }, [error]);
+
+  if (error) {
+    return null;
+  }
+
+  return <>
+    {children}
+  </>;
 }

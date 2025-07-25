@@ -1,7 +1,5 @@
-import useAuth from "../Hooks/useAuth";
 import Navbar from "../Components/Navbar";
 import DataTable from "../Components/DataTable";
-import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import Sidebar, { SidebarButton } from "../Components/Sidebar";
 import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
@@ -29,11 +27,6 @@ function Page() {
   if (!actionType || !selectedData) throw new MError("Editable Data Context is null");
 
   const currentData = tableData;
-
-  const navigate = useNavigate();
-  useAuth().verifyAndSetUser(() => {
-    navigate("/");
-  }, true);
 
   useEffect(() => {
     setIsLoading(true);

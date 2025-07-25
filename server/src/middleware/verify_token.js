@@ -1,6 +1,5 @@
 import token from "../utils/jwt.js";
 import MError from "../error.js";
-import ROLES from "../utils/roles.js";
 const { verifyToken } = token;
 /**
  * Guards the next handler if the token is invalid
@@ -12,12 +11,12 @@ const { verifyToken } = token;
 export function authenticateJWT(req, _, next) {
   const token = req.cookies.TOKEN;
   if (!token) {
-    throw new MError(400, "No Token");
+    throw new MError(401, "No Token");
   }
   const decoded = verifyToken(token);
   // console.log(decoded);
   if (decoded == null) {
-    throw new MError(400, "Token Invalid");
+    throw new MError(401, "Token Invalid");
   }
   req.tokenPayload = decoded;
   next();

@@ -110,7 +110,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  res.cookie("TOKEN", ":removed:", {
+  res.clearCookie("TOKEN", {
     maxAge: 300,
     secure: true,
     httpOnly: true

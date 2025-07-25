@@ -14,7 +14,6 @@ const router = express.Router();
     amount
 
 */
-
 router.post("/add/:id",
   async (req, res) => {
     /*** @type {string} */
@@ -148,6 +147,22 @@ router.post("/remove/:id",
   }
 );
 
+router.get("/checkout/:id", async (req, res) => {
+  const uid = req.tokenPayload.id;
+  const collection = getCollection(COLLECTIONS.CARTS);
+  const cartId = new ObjectId(req.params.id);
+
+  const match = {
+    _id: cartId,
+    owner: uid,
+    status: "cart"
+  };
+  const doc = await collection.findOne(match, { sort: { updatedAt: -1 } });
+  if (doc == null) {
+    throw new MError(400, "CartId does not exists");
+  }
+});
+
 /*
   query
     withProduct=1
@@ -155,51 +170,50 @@ router.post("/remove/:id",
       and inserts the Product doc associated with products[n].id
 */
 router.get("/", async (req, res) => {
-    /*** @type {string} */
-    const uid = req.tokenPayload.id;
-    const collection = getCollection(COLLECTIONS.CARTS);
-    const withProduct = req.query.withProduct == '1';
+  /*** @type {string} */
+  const uid = req.tokenPayload.id;
+  const collection = getCollection(COLLECTIONS.CARTS);
+  const withProduct = req.query.withProduct == '1';
 
-    const match = {
-      owner: new ObjectId(uid),
-      status: "cart"
-    };
-    if (!withProduct) {
-      const doc = await collection.findOne(match, { sort: { updatedAt: -1 } });
+  const match = {
+    owner: new ObjectId(uid),
+    status: "cart"
+  };
+  if (!withProduct) {
+    const doc = await collection.findOne(match, { sort: { updatedAt: -1 } });
 
-      console.log("cart::get", doc);
+    console.log("cart::get", doc);
 
-      return res.status(200).send(doc);
-    }
+    return res.status(200).send(doc);
+  }
 
-    const doc = await collection.aggregate([
-      { $match: match },
-      { $unwind: "$products" },
-      {
-        $lookup: {
-          from: COLLECTIONS.PRODUCTS,
-          foreignField: "_id",
-          localField: "products.id",
-          as: "productDetails"
-        }
-      },
-      {
-        $addFields: {
-          "products.product": "$productDetails"
-        }
-      },
-      {
-        $group: Carts.aggregateGroup()
+  const doc = await collection.aggregate([
+    { $match: match },
+    { $unwind: "$products" },
+    {
+      $lookup: {
+        from: COLLECTIONS.PRODUCTS,
+        foreignField: "_id",
+        localField: "products.id",
+        as: "productDetails"
       }
-    ]).toArray();
-    // mongodb returns an array for products.product
-
-    if (doc == null || doc.length == 0) {
-      res.status(200).json(null);
+    },
+    {
+      $addFields: {
+        "products.product": "$productDetails"
+      }
+    },
+    {
+      $group: Carts.aggregateGroup()
     }
+  ]).toArray();
+  // mongodb returns an array for products.product
 
-    res.status(200).json(doc[0]);
-}
-);
+  if (doc == null || doc.length == 0) {
+    res.status(200).json(null);
+  }
+
+  res.status(200).json(doc[0]);
+});
 
 export default router;

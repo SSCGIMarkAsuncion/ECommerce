@@ -1,9 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import User from "../Models/User";
 import useAuth from "../Hooks/useAuth";
-import { MError } from "../Utils/Error";
 import { useNavigate } from "react-router";
-import Loading from "../Components/Loading";
 
 // NULL = has not been checked yet
 // MError = has been verified but is invalid
@@ -46,7 +44,6 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function a() {
       try {
-        console.log("verifying");
         const user = await authVerify();
         setUser(user);
         // setError(null);
@@ -59,9 +56,6 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
     }
     a();
   }, [])
-
-  if (loading)
-    return <Loading>Authenticating</Loading>
 
   return <UserContext.Provider value={user}>
     <UserContextDispatcher.Provider value={{
@@ -87,10 +81,6 @@ export function AdminOnly({ children }: { children: ReactNode }) {
     }
   }, [loading, user]);
 
-  if (loading) {
-    return null;
-  }
-
   return <>
     {children}
   </>;
@@ -106,10 +96,6 @@ export function AuthenticatedOnly({ children }: { children: ReactNode }) {
       navigate("/");
     }
   }, [user, loading]);
-
-  if (loading) {
-    return null;
-  }
 
   return <>
     {children}

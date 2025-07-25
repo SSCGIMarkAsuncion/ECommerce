@@ -42,6 +42,7 @@ export default function Home() {
     </div>
     <div id="bestsellers" className="bg-primary-600 p-4">
       <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium"> Best Sellers </h1>
+      {/* TODO: fix size of cards */}
       <BestSeller products={bestSellers} />
     </div>
     <Navbar />

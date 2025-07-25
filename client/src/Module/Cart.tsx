@@ -22,7 +22,7 @@ export default function Cart() {
             })
           }
         </div>
-        <div className="flex-[initial] w-[90%] mx-auto md:mx-[initial] md:flex-1 text-md">
+        <div className="flex-[initial] md:flex-1 w-[90%] mx-auto md:mx-[initial] text-md">
           <Card className="p-2 hover:bg-[initial]!">
             <span>Breadown here</span>
             <Button className="mt-4 w-full" onClick={() => {

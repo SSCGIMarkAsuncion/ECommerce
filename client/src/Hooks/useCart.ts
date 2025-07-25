@@ -81,6 +81,9 @@ export default function useCart() {
     }, []);
   };
 
+  const calculateCart = async () => {
+  };
+
   return {
     addToCart,
     getCarts,

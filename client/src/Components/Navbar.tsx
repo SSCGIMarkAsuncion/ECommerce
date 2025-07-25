@@ -19,7 +19,6 @@ export default function Navbar({ className = "", admin = false }) {
       setSidebarOpen(false);
     }
 
-    const root = document.querySelector("#root");
     window.addEventListener("SidebarClose", handleSidebarClose);
 
     return () => {

@@ -1,12 +1,11 @@
-export type ButtonColorStyles = "primary" | "whitePrimary" | "green" | "red";
+export type ButtonColorStyles = "primary" | "whitePrimary" | "green" | "red" | "none";
 export type ButtonType = "filled" | "outline" | "icon";
 
 export const Theme = {
   rounded: "rounded-xs",
   appbar: {
     classHeight: "h-[var(--appbar-height)]",
-    normalBackground: "bg-primary-900",
-    scrolledBackground: "bg-primary-900"
+    background: "bg-primary-900",
   },
   transition: "transition-all ease-in duration-200",
   button: {
@@ -22,13 +21,15 @@ export const Theme = {
       primary: "bg-inherit hover:bg-primary-900 active:bg-primary-900 text-primary-900 hover:text-white active:text-white border-2 border-primary-900",
       green:  "",
       red: "",
+      none:  "",
       whitePrimary: "bg-inherit hover:bg-white active:bg-white text-white hover:text-primary-900 active:text-primary-900 border-2 border-white"
     },
     icon: {
-      primary: "bg-none hover:bg-neutral-900/25 active:bg-neutral-900/25",
+      primary: "bg-none hover:bg-primary-500/25 active:bg-primary-500/25",
       green:  "",
+      none:  "",
       red: "bg-none hover:bg-red-900/25 active:bg-red-900/25",
-      whitePrimary: ""
+      whitePrimary: "bg-none hover:bg-gray-500/25 active:bg-gray-500/25"
     },
   },
   input: "w-full rounded-md border-2 border-gray-500 py-1 px-2 data-[invalid=true]:border-red-700 has-[input:focus-within]:border-primary-950 has-[input:read-only]:bg-gray-200 has-[input:read-only]:text-gray-600 flex items-center",

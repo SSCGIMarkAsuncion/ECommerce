@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import User from "../Models/User";
 import useAuth from "../Hooks/useAuth";
 import { MError } from "../Utils/Error";
@@ -28,17 +28,17 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
   const [ error, setError ] = useState<MError | null>(null);
   const { authVerify, authLogout, authLogin } = useAuth();
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     authLogout(() => {
       setUser(null);
       setError(null);
     });
-  };
+  }, []);
 
-  const login = async (user: User) => {
+  const login = useCallback(async (user: User) => {
     const u = await authLogin(user);
     setUser(u);
-  };
+  }, []);
 
   useEffect(() => {
     async function a() {
@@ -87,16 +87,16 @@ export function AdminOnly({ children }: { children: ReactNode }) {
 }
 
 export function AuthenticatedOnly({ children }: { children: ReactNode }) {
-  const { userDispatcher: { error } } = useUser();
+  const { user, userDispatcher: { error } } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (error) {
+    if (error || !user) {
       navigate("/");
     }
-  }, [error]);
+  }, [error, user]);
 
-  if (error) {
+    if (error || !user) {
     return null;
   }
 

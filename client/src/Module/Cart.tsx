@@ -12,7 +12,6 @@ export default function Cart() {
   const { getCartsAndSetCarts } = useCart();
   getCartsAndSetCarts(true);
 
-  // console.log("Cart", cart?.products);
   return <>
     <div className="mt-[var(--appbar-height)]"></div>
     { cart?
@@ -23,7 +22,7 @@ export default function Cart() {
             return <CartItem key={item.id} cartItem={item} />
           })
         }
-        <Button className="mt-4 text-lg" href="/checkout" onClick={() => {
+        <Button className="mt-4 text-lg w-full" href="/checkout" onClick={() => {
           navigate("/checkout");
         }}>Checkout</Button>
       </div>

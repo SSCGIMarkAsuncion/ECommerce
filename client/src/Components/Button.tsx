@@ -1,6 +1,7 @@
 import type React from "react";
 import { Theme, type ButtonColorStyles, type ButtonType } from "../Utils/Theme";
 import { IconSpinner } from "../Utils/SVGIcons";
+import { useNavigate } from "react-router";
 
 type HTMLButtonTypes = "button" | "submit" | "reset" | undefined;
 
@@ -11,13 +12,14 @@ export interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
 };
 
 export default function Button({ pColor, pType, loading,...props }: ButtonProps) {
+  const navigate = useNavigate();
   // console.log(props);
   let style = Theme.button[pType || "filled"][pColor || "primary"];
   let rounded = pType == "icon"? "rounded-full":Theme.rounded;
   let padding = pType == "icon"? "p-2":"px-3 py-2";
 
   const type: HTMLButtonTypes = (props.type || "button") as HTMLButtonTypes;
-  return <button
+  const btn = <button
    {...props}
    type={type}
    onClick={props.onClick}
@@ -29,4 +31,13 @@ export default function Button({ pColor, pType, loading,...props }: ButtonProps)
     { props.children || "" }
     { loading && <IconSpinner className="h-5 w-5"/> }
   </button>
+
+  if (props.href) {
+    return <a href={props.href} onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      navigate(props.href!);
+    }} className={props.className}>{btn}</a>
+  }
+  return <>{btn}</>
 }

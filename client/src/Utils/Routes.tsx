@@ -24,9 +24,11 @@ export const ROUTER = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminOnly>
-      <Admin />
-    </AdminOnly>
+    element: <CartContextProvider>
+      <AdminOnly>
+        <Admin />
+      </AdminOnly>
+    </CartContextProvider>
   },
   {
     path: "/products",
@@ -35,7 +37,7 @@ export const ROUTER = createBrowserRouter([
   {
     path: "/cart",
     element: <AuthenticatedOnly>
-      <CartContextProvider>
+      <CartContextProvider withProductInfo={true}>
         <Cart />
       </CartContextProvider>
     </AuthenticatedOnly>

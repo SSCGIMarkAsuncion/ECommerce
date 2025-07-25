@@ -8,14 +8,11 @@ import { Card } from "../Components/Card";
 import { ButtonCart } from "../Components/CartButton";
 import { Pill } from "../Components/Pill";
 import { Searchbar } from "../Components/Input";
-import useCart from "../Hooks/useCart";
 import { Theme } from "../Utils/Theme";
 
 export function Products() {
   const [ filter, setFilter ] = useState("");
-  const { getCartsAndSetCarts } = useCart();
 
-  getCartsAndSetCarts();
   return <>
     <div className="mt-[var(--appbar-height)] min-h-full p-2">
       <div className={`z-50 sticky top-[var(--appbar-height)] w-[70%] m-auto py-4 ${Theme.transition}`}>

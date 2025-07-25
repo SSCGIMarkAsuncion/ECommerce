@@ -1,8 +1,6 @@
 import React from "react";
 import type { Product } from "../Models/Product";
-import Button from "./Button";
 import Skeleton from "./Skeleton";
-import useCart from "../Hooks/useCart";
 import { ButtonCart } from "./CartButton";
 
 export interface PromoListProps extends React.HTMLProps<HTMLDivElement> {

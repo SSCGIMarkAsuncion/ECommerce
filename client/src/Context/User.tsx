@@ -3,6 +3,7 @@ import User from "../Models/User";
 import useAuth from "../Hooks/useAuth";
 import { MError } from "../Utils/Error";
 import { useNavigate } from "react-router";
+import Loading from "../Components/Loading";
 
 // NULL = has not been checked yet
 // MError = has been verified but is invalid
@@ -11,7 +12,8 @@ export type TUserContext = User | null;
 export interface TUserContextDispatcher {
   login: (user: User) => Promise<void>,
   logout: () => void,
-  error: MError | null
+  // error: MError | null,
+  loading: boolean
 };
 const UserContext = createContext<TUserContext>(null);
 const UserContextDispatcher = createContext<TUserContextDispatcher | null>(null);
@@ -25,13 +27,14 @@ export function useUser() {
 
 export function UserContextProvider({ children }: { children: ReactNode }) {
   const [ user, setUser ] = useState<TUserContext>(null);
-  const [ error, setError ] = useState<MError | null>(null);
+  // const [ error, setError ] = useState<MError | null>(null);
+  const [ loading, setLoading ] = useState(true);
   const { authVerify, authLogout, authLogin } = useAuth();
 
   const logout = useCallback(async () => {
     authLogout(() => {
       setUser(null);
-      setError(null);
+      // setError(null);
     });
   }, []);
 
@@ -43,23 +46,29 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function a() {
       try {
+        console.log("verifying");
         const user = await authVerify();
         setUser(user);
-        setError(null);
+        // setError(null);
       }
       catch (e) {
-        console.log("ERR::AUTH", e);
-        setError(new MError(e));
+        console.log("ERR::CONTEXT_AUTH", e);
+        // setError(new MError(e));
       }
+      setLoading(false);
     }
     a();
   }, [])
 
+  if (loading)
+    return <Loading>Authenticating</Loading>
+
   return <UserContext.Provider value={user}>
     <UserContextDispatcher.Provider value={{
-      error,
+      // error,
       logout,
-      login
+      login,
+      loading
     }}>
       {children}
     </UserContextDispatcher.Provider>
@@ -68,16 +77,17 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
 
 // use after UserContextProvider
 export function AdminOnly({ children }: { children: ReactNode }) {
-  const { user, userDispatcher: { error } } = useUser();
+  const { user, userDispatcher: { loading } } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (error || (user && !user.isAdmin())) {
+    if (loading) return;
+    if (!user || (user && !user.isAdmin())) {
       navigate("/login");
     }
-  }, [error, user]);
+  }, [loading, user]);
 
-  if (error || !user) {
+  if (loading) {
     return null;
   }
 
@@ -87,16 +97,17 @@ export function AdminOnly({ children }: { children: ReactNode }) {
 }
 
 export function AuthenticatedOnly({ children }: { children: ReactNode }) {
-  const { user, userDispatcher: { error } } = useUser();
+  const { user, userDispatcher: { loading } } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (error || !user) {
+    if (loading) return;
+    if (!user) {
       navigate("/");
     }
-  }, [error, user]);
+  }, [user, loading]);
 
-    if (error || !user) {
+  if (loading) {
     return null;
   }
 

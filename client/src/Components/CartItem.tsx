@@ -15,10 +15,15 @@ export default function CartItem(props: CartItemProps) {
   const product = props.cartItem.product!;
 
   // console.log(product);
-  return <Card className="relative fraunces-regular flex gap-2 md:items-center text-2xl h-[200px]">
+  return <Card className="relative fraunces-regular flex gap-2 md:items-center text-xl h-[200px]">
     <img src={product.imgs[0]} alt="/Logo.svg" className="w-auto h-full" />
     <div className="h-full flex flex-col gap-1 flex-1">
-      <h1 className="max-w-[initial] md:max-w-[25vw] text-wrap my-4">{product.name}</h1>
+      <div className="py-2">
+        <p className="text-md">
+          <span className="line-through">PHP {props.cartItem.product!.price}</span>&nbsp;PHP {props.cartItem.product!.salePrice}
+        </p>
+        <p className="text-wrap my-4">{product.name}</p>
+      </div>
       <div className="flex-1"></div>
       <div className="text-3xl md:text-2xl w-full md:w-[8em] md:ml-auto p-2">
         <ButtonCart product={product} className="mt-auto"/>

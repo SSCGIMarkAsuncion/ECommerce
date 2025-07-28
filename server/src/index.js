@@ -5,8 +5,8 @@ import cors from "cors";
 import { connect as configureMongoDb } from "./mongodb.js";
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";
-// import cartRouter from "./routes/cart.js";
-// import fileRouter from "./routes/file.js";
+import cartRouter from "./routes/cart.js";
+import fileRouter from "./routes/file.js";
 import { authenticateJWT } from "./middleware/verify_token.js";
 import { configureCloudinary } from "./cloudinary.js";
 
@@ -32,8 +32,8 @@ app.get('/', async (req, res) => {
 });
 app.use("/auth/", authRouter);
 app.use("/products/", productsRouter);
-// app.use("/cart/", authenticateJWT, cartRouter);
-// app.use("/file/", authenticateJWT, fileRouter);
+app.use("/cart/", cartRouter);
+app.use("/file/", authenticateJWT, fileRouter);
 app.use((err, _, res, __) => {
   console.log("ERROR::", err);
   res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });

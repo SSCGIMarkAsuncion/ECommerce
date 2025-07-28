@@ -1,42 +1,53 @@
-export default class Carts {
-  _id = null;
-  owner = "";
-  /*** @type {{id: string, amount: number}[]} */
-  products = [];
-  /*** @type {"done" | "cart"} */
-  status = "";
-  createdAt = 0;
-  updatedAt = 0;
+import mongoose, { mongo } from "mongoose";
+import { COLLECTIONS } from "../mongodb.js";
 
-  static create(owner) {
-    return {
-      owner,
-      products: [],
-      status: "cart",
-      createdAt: new Date(Date.now()),
-      updatedAt: new Date(Date.now())
-    };
-  }
+export const CartItemSchema = new mongoose.Schema({
+  id: {
+    type: mongoose.Types.ObjectId,
+    ref: "product",
+    required: true
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
+  // product: {
+  //   type: mongoose.Types.ObjectId,
+  //   ref: "product",
+  //   required: false,
+  //   default: undefined
+  // }
+}, {_id: false});
 
-  static aggregateGroup() {
+/**
+ * @param {any[]} items is CartItem with id(product) populated
+ * @returns {any[]}
+ */
+export function mapCartItems(items) {
+  return items.map((item) => {
     return {
-      _id: "$_id",
-      owner: { $first: "$owner" },
-      status: { $first: "$status" },
-      createdAt: { $first: "$createdAt" },
-      updatedAt: { $first: "$updatedAt" },
-      products: { $push: "$products" }
+      id: item.id._id,
+      amount: item.amount,
+      product: item.id
     }
-  }
-
-  static project() {
-    return {
-      _id: 1,
-      owner: 1,
-      products: 1,
-      status: 1,
-      createdAt: 1,
-      updatedAt: 1
-    };
-  }
+  });
 }
+
+export const CartSchema = new mongoose.Schema({
+  owner: {
+    type: mongoose.Types.ObjectId,
+    ref: "user",
+    required: true
+  },
+  products: {
+    type: [CartItemSchema],
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ["done", "cart"],
+    default: "cart"
+  }
+}, { timestamps: true });
+
+export const Cart = mongoose.model("cart", CartSchema, COLLECTIONS.CARTS);

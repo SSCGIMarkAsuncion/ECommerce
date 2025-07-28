@@ -96,17 +96,17 @@ export async function PutProduct(req, res) {
       delete set[key];
     }
   }
-  if (set.imgs.length == 0) {
+  if (set.imgs && set.imgs.length == 0) {
     // do not overwrite images if the update is length 0
     delete set.imgs
   }
 
   console.log("PutProduct::set", set);
   try {
-    const updatedDoc = await Product.findOneAndUpdate(
+    await Product.findOneAndUpdate(
       productId, set,
       {
-        returnDocument: true,
+        new: true,
         runValidators: true,
       }
     );
@@ -123,7 +123,7 @@ export async function PutProduct(req, res) {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-export default async function PostProduct(req, res) {
+export async function PostProduct(req, res) {
   let body = req.body;
   if (!body) throw new MError(400, "Body is Empty");
 

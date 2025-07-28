@@ -5,7 +5,9 @@ dotenv.config();
 const secret = Buffer.from(process.env.JWT_SECRET, 'hex');
 const algo = process.env.JWT_ALGO;
 
-function createToken(payload) {
+export const TOKEN_KEY = "AUTH_TOKEN";
+
+export function createToken(payload) {
   const token = jwt.sign(
     payload, secret, {
       algorithm: algo,
@@ -15,7 +17,7 @@ function createToken(payload) {
   return token;
 }
 
-function verifyToken(token) {
+export function verifyToken(token) {
   try {
     const decoded = jwt.verify(token, secret, {
       algorithms: algo
@@ -28,8 +30,3 @@ function verifyToken(token) {
 
   return null;
 }
-
-export default {
-  createToken,
-  verifyToken
-};

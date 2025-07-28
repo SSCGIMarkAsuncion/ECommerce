@@ -1,43 +1,23 @@
-import { Collection, MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from "dotenv";
+dotenv.config();
+import mongoose from "mongoose";
 
-let mongoClient = null;
+const connectionString = process.env.MONGODB_CONNECTION_STRING;
+const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 
-async function connect(uri) {
-  if (!mongoClient) {
-    mongoClient = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      }
-    });
-    await mongoClient.connect();
-    await mongoClient.db("admin").command({ ping: 1 });
+
+export async function connect() {
+  try {
+    await mongoose.connect(connectionString, clientOptions);
+  }
+  catch (e) {
+    console.log("MONGODB::connect", e);
+    await mongoose.disconnect();
   }
 }
 
-/** @returns {MongoClient} */
-function client() {
-  if (!mongoClient) {
-    throw Error("MongoDB is null");
-  }
-
-  return mongoClient;
-}
-
-/** @returns {Collection<Document>} */
-function getCollection(collection) {
-  const dbclient = client();
-  return dbclient.db("ecommerce").collection(collection);
-}
-
-export default {
-  client,
-  connect,
-  getCollection,
-  COLLECTIONS: {
-    USERS: "users",
-    PRODUCTS: "products",
-    CARTS: "carts"
-  }
+export const COLLECTIONS = {
+  USERS: "users",
+  PRODUCTS: "products",
+  CARTS: "carts"
 };

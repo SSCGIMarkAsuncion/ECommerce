@@ -1,7 +1,6 @@
 import MError from "../error.js";
-import token from "../utils/jwt.js";
 import ROLES from "../utils/roles.js";
-const { verifyToken } = token;
+
 /**
  * Express middleware to validate JWT token and roles.
  * Throws error if token is invalid.

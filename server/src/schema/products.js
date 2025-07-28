@@ -1,36 +1,33 @@
-export default class Products {
-  id = null;
-  name = "";
-  description = "";
-  price = 0;
-  salePrice = null;
-  imgs = [];
-  tags = [];
-  // likes = []; // list of user._id who liked this product
-  createdAt = 0;
-  updatedAt = 0;
+import mongoose from "mongoose";
+import { COLLECTIONS } from "../mongodb.js";
 
-  static project() {
-    return {
-      _id: 1,
-      name: 1,
-      description: 1,
-      price: 1,
-      salePrice: 1,
-      imgs: 1,
-      tags: 1,
-      createdAt: 1,
-      updatedAt: 1
-    };
-  }
+export const ProductSchema = new mongoose.Schema({
+  name: {
+    required: true,
+    type: String
+  },
+  description: String,
+  price: {
+    type: Number,
+    required: true
+  },
+  salePrice: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  imgs: {
+    type: [String],
+    validate: {
+      validator: function(v) {
+        return v.length >= 1
+      },
+      message: _ => `products.imgs must contain at least 1 image`
+    },
+  },
+  tags: {
+    type: [String],
+  },
+}, { timestamps: true });
 
-  static projectUpdate() {
-    return {
-      name: 1,
-      description: 1,
-      price: 1,
-      imgs: 1,
-      tags: 1,
-    };
-  }
-}
+export const Product = mongoose.model("product", ProductSchema, COLLECTIONS.PRODUCTS);

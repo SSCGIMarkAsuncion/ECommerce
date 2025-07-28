@@ -13,7 +13,7 @@ const key = Buffer.from(hexkey, "hex");
 const iv = Buffer.from(hexiv, "hex");
 
 /** @param {string} raw */
-function encrypt(raw) {
+export function encrypt(raw) {
   const cipher = createCipheriv(algorithm, key, iv);
 
   let encrypted = cipher.update(raw, "utf8", "hex");
@@ -23,15 +23,10 @@ function encrypt(raw) {
 }
 
 /** @param {string} encryptedHex */
-function decrypt(encryptedHex) {
+export function decrypt(encryptedHex) {
   const decipher = createDecipheriv(algorithm, key, iv);
 
   let decrypted = decipher.update(encryptedHex, "hex", "utf-8");
   decrypted += decipher.final("utf-8");
   return decrypted;
 }
-
-export default {
-  encrypt,
-  decrypt
-};

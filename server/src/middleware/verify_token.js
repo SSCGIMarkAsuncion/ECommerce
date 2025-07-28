@@ -1,6 +1,5 @@
-import token from "../utils/jwt.js";
+import { TOKEN_KEY, verifyToken } from "../utils/jwt.js";
 import MError from "../error.js";
-const { verifyToken } = token;
 /**
  * Guards the next handler if the token is invalid
  * Throws error if token is missing or invalid.
@@ -9,7 +8,7 @@ const { verifyToken } = token;
  * @param {import('express').NextFunction} next
  */
 export function authenticateJWT(req, _, next) {
-  const token = req.cookies.TOKEN;
+  const token = req.cookies[TOKEN_KEY];
   if (!token) {
     throw new MError(401, "No Token");
   }
@@ -31,7 +30,7 @@ export function authenticateJWT(req, _, next) {
  * @param {import('express').NextFunction} next
  */
 export function authenticateJWTIfExist(req, _, next) {
-  const token = req.cookies.TOKEN;
+  const token = req.cookies[TOKEN_KEY];
   if (token == null) {
     req.tokenPayload = null;
     return next();

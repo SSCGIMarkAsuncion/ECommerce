@@ -2,22 +2,18 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-import dotenv from "dotenv";
-dotenv.config();
-
-import db from "./mongodb.js";
-const { connect } = db;
+import { connect as configureMongoDb } from "./mongodb.js";
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";
-import cartRouter from "./routes/cart.js";
-import fileRouter from "./routes/file.js";
+// import cartRouter from "./routes/cart.js";
+// import fileRouter from "./routes/file.js";
 import { authenticateJWT } from "./middleware/verify_token.js";
 import { configureCloudinary } from "./cloudinary.js";
 
 const app = express();
 const port = 3000;
 
-connect(process.env.MONGODB_CONNECTION_STRING);
+configureMongoDb();
 configureCloudinary();
 
 app.use(morgan("dev"));
@@ -36,8 +32,8 @@ app.get('/', async (req, res) => {
 });
 app.use("/auth/", authRouter);
 app.use("/products/", productsRouter);
-app.use("/cart/", authenticateJWT, cartRouter);
-app.use("/file/", authenticateJWT, fileRouter);
+// app.use("/cart/", authenticateJWT, cartRouter);
+// app.use("/file/", authenticateJWT, fileRouter);
 app.use((err, _, res, __) => {
   console.log("ERROR::", err);
   res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });

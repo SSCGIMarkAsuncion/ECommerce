@@ -1,17 +1,25 @@
-export default class User {
-  _id = null;
-  username = "";
-  email = "";
-  password = "";
-  role = "";
+import mongoose from "mongoose";
+import { COLLECTIONS } from "../mongodb.js";
 
-  static project() {
-    return {
-      _id: 1,
-      username: 1,
-      email: 1,
-      password: 1,
-      role: 1
-    };
-  }
-}
+export const UserSchema = new mongoose.Schema({
+  username: {
+    required: true,
+    type: String,
+  },
+  email: {
+    required: true,
+    type: String,
+  },
+  password: {
+    required: true,
+    type: String
+  },
+  role: {
+    type: String,
+    enum: ["user", "admin", "superadmin"],
+    default: "user"
+  },
+}, { timestamps: true }
+);
+
+export const User = mongoose.model("user", UserSchema, COLLECTIONS.USERS);

@@ -35,9 +35,11 @@ export function Promo(props: PromoProps) {
   return <div className="md:w-[90%] lg:w-[70%] md:m-auto">
     <h2 className={`fraunces-regular text-3xl text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>
     <div className={`md:flex md:gap-2 ${isLeft? "flex-row":"flex-row-reverse"}`}>
+
       <div className={`w-full my-4 md:my-0`}>
         <img src={props.promo.imgs[0]} className="w-[50%] md:w-[40vw] lg:w-[30vw] m-auto shadow-xs/30 shadow-black" />
       </div>
+
       <div className={`md:flex flex-col text-lg md:text-xl lg:text-2xl ${textAlign}`}>
         <p className={`fraunces-regular mb-2 text-primary-950`}>
           <span className="line-through">PHP {props.promo.price}</span>&nbsp;PHP {props.promo.salePrice}

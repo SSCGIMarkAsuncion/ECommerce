@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
+import { encrypt } from "../encryption.js";
 
 export const UserSchema = new mongoose.Schema({
   username: {
@@ -21,5 +22,10 @@ export const UserSchema = new mongoose.Schema({
   },
 }, { timestamps: true }
 );
+
+UserSchema.pre("save", function(next) {
+  this.password = encrypt(this.password);
+  next();
+});
 
 export const User = mongoose.model("user", UserSchema, COLLECTIONS.USERS);

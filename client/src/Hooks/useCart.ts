@@ -12,7 +12,7 @@ export default function useCart() {
     const samount = `?amount=${amount}`;
     const url = `${api}/cart/add/${product.id}/${samount}`;
     const res = await fetch(url, {
-      method: "POST",
+      method: "PUT",
       credentials: "include"
     });
     const resjson = await res.json();
@@ -58,7 +58,7 @@ export default function useCart() {
       const cart = new Cart(resjson);
       if (includeProductInfo) {
         const newProducts = cart.products.map((product) => {
-          const np = new Product((product.product as any)[0]);
+          const np = new Product(product.product);
           return { ...product, product: np };
         });
         cart.products = newProducts;

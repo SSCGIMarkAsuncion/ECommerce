@@ -20,7 +20,7 @@ export async function PostRegister(req, res) {
   const user = {
     email: body.email,
     username: body.username,
-    password: body.password? encrypt(body.password):null,
+    password: body.password,
     role: role
   };
   for (const key of Object.keys(user)) {

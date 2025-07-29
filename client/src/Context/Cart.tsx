@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, type ActionDispatch, 
 import type Cart from "../Models/Cart";
 import type { Product } from "../Models/Product";
 import useCart from "../Hooks/useCart";
+import { useUser } from "./User";
 
 const CartContext = createContext<Cart | null>(null);
 const CartContextDispatcher = createContext<ActionDispatch<[action: CartContextAction]> | null>(null);
@@ -16,6 +17,7 @@ export function useCartContext() {
 export function CartContextProvider({ children, withProductInfo = false }: { children: ReactNode, withProductInfo?: boolean }) {
   const [ initial, dispatcher ] = useReducer(reducer, null);
   // const [ loading, setLoading ] = useState(true);
+  const { user } = useUser();
   const { getCarts } = useCart();
 
   useEffect(() => {
@@ -32,8 +34,15 @@ export function CartContextProvider({ children, withProductInfo = false }: { chi
       }
       // setLoading(false);
     }
+    if (!user) {
+      console.log("remove");
+      dispatcher({
+        type: "remove", cart: null
+      });
+      return;
+    }
     a();
-  }, []);
+  }, [user]);
 
   return <CartContext.Provider value={initial}>
     <CartContextDispatcher.Provider value={dispatcher}>

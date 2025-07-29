@@ -2,32 +2,42 @@ import { IconEnvelope, IconLocationPin, IconPhone } from "../Utils/SVGIcons";
 import Link from "./Link";
 
 export default function Footer() {
-  return <div className="bg-primary-950 p-1 text-white">
-    <div className="px-4 py-3 fraunces-regular text-md flex flex-col items-center gap-4 md:flex-row mb-4">
-      <div>
-        <div className="flex flex-col gap-2 items-center">
-          <img className="w-[32px] h-[32px] rounded-md" src="/Logo_2.svg" alt="icon" title="icon" />
-          <h1>Kape Kalakal</h1>
+  return <div className="bg-primary-900 p-1 text-white">
+    <div className="px-2 py-2 tracking-wide fraunces-regular text-md flex flex-col items-center gap-4 sm:flex-row mb-4">
+      <div className="w-max m-auto md:m-[initial] md:w-[initial]">
+        <div className="flex gap-2 items-center justify-center md:justify-normal mb-4">
+          <img className="size-9 rounded-md" src="/Logo_2.svg" alt="icon" title="icon" />
+          <p>Kape Kalakal</p>
         </div>
-        <p className="text-sm text-center">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
+        <p className="text-sm w-[20em] text-center md:text-left">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
+      </div>
+      <div className="ml-auto"></div>
+
+      <div className="w-max m-auto md:m-[initial] md:w-[initial]">
+        <h1 className="w-max mb-4">Navigation</h1>
+        <ul className="text-sm *:my-2 text-gray-300 [&_svg]:fill-gray-100">
+          <li>
+            <Link href="/products">
+              Products
+            </Link>
+          </li>
+          <li>
+            <Link href="/#contactus">
+              Contact us
+            </Link>
+          </li>
+          <li>
+            <Link href="/aboutus">
+              About us
+            </Link>
+          </li>
+        </ul>
       </div>
 
-      {/* <div>
-        <h1 className="text-sm">Navigation</h1>
-        <div className="text-sm">
-        <ul className="pl-2">
-          <li><Link href="/#home">Home</Link></li>
-          <li><Link href="/#promos">Promos</Link></li>
-          <li><Link href="/#bestseller">Best Sellers</Link></li>
-          <li><Link href="/products">Products</Link></li>
-        </ul>
-        </div>
-      </div> */}
 
-      <div className="md:ml-auto ml-[initial] flex flex-col items-center md:block">
-        <h1 className="w-max">Contact us</h1>
-        <div className="text-sm">
-        <ul className="pl-2 *:my-2">
+      <div className="w-max m-auto md:m-[initial] md:w-[initial]">
+        <h1 className="w-max mb-4">Contact us</h1>
+        <ul className="pl-2 text-sm *:my-2 text-gray-300 [&_svg]:fill-gray-100">
           <li>
             <Link href="tel:09212312213">
               <IconPhone className="w-[12px] h-auto" />
@@ -47,10 +57,9 @@ export default function Footer() {
             </Link>
           </li>
         </ul>
-        </div>
       </div>
 
     </div>
-    <p className="italic text-sm fraunces-regular">&copy; 2025 Kape Kalakal. All Rights Reserved.</p>
+    <p className="italic text-xs fraunces-regular">&copy; 2025 Kape Kalakal. All Rights Reserved.</p>
   </div>
 }

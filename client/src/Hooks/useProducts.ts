@@ -11,7 +11,7 @@ export interface Sort {
 export default function useProducts() {
   const url = `${api}/products`;
 
-  const getProducts = async (tags: string[], filters: string[], sort?: Sort): Promise<Product[]> => {
+  const getProducts = async (tags: string[], filters: string[], isSale: boolean = false, sort?: Sort): Promise<Product[]> => {
     const queries = [];
 
     if (tags.length>0)
@@ -20,8 +20,10 @@ export default function useProducts() {
       queries.push(`filter=${filters.join(';')}`);
     if (sort)
       queries.push(`sortBy=${sort.by}&sortType${sort.type}`);
+    if (isSale)
+      queries.push("isSale=1");
 
-    const squeries = queries.join('&');
+    const squeries = encodeURI(queries.join('&'));
     const res = await fetch(`${url}?${squeries}`);
 
     const resjson = await res.json();

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type HTMLProps, type ReactNode } from "react";
 import { Product } from "../Models/Product";
 import useProducts from "../Hooks/useProducts";
+import { useSearchParams } from "react-router";
 
 export const QUERY_BOOL_PROMO = "promo";
 export const QUERY_BOOL_BESTSELLER = "bestseller";
@@ -32,6 +33,7 @@ export function ProductContextProvider({ children }: { children: ReactNode }) {
   const { getProducts } = useProducts();
 
   const [ loading, setLoading ] = useState(false);
+  const [ searchParams, _ ] = useSearchParams();
   const [ product, setProduct ] = useState<Product[]>([]);
   // unused
   const [ filter, setFilter ] = useState<Filter>({
@@ -43,7 +45,13 @@ export function ProductContextProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     async function a() {
       try {
-        const products = await getProducts([], [filter.filter]);
+        const filter = searchParams.get(QUERY_STR_FILTER) || "";
+        const tags = [];
+        const isPromo = searchParams.get(QUERY_BOOL_PROMO) == '1';
+        if (searchParams.get(QUERY_BOOL_BESTSELLER) == '1')
+          tags.push("best seller");
+
+        const products = await getProducts(tags, [filter], isPromo);
         setProduct(products);
       }
       catch (e) {
@@ -52,7 +60,7 @@ export function ProductContextProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     }
     a();
-  }, [filter]);
+  }, [searchParams]);
 
   return <ProductContext.Provider value={product}>
     <ProductDispatcherContext.Provider value={{

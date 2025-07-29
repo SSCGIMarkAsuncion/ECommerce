@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { useProductContext } from "../Context/Product";
 import { SortButton, Toggle } from "./Button";
 import { Searchbar } from "./Input";
 import type { SortType } from "../Hooks/useProducts";
@@ -8,7 +7,6 @@ import { QUERY_BOOL_BESTSELLER, QUERY_BOOL_PROMO, QUERY_STR_DATE, QUERY_STR_FILT
 
 export function ProductFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const { productdispatcher: { setFilter } } = useProductContext();
   const [ filter, setFilter ] = useState<{
     filter: string,
     promo: boolean,

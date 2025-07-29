@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type HTMLProps, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type HTMLProps, type ReactNode } from "react";
 import { Theme } from "../Utils/Theme";
 import { IconEye, IconEyeSlash, IconSearch, IconXMark } from "../Utils/SVGIcons";
 import useDelayCallback from "../Hooks/useDelayCallback";
@@ -129,31 +129,32 @@ export interface SearchbarProps extends HTMLProps<HTMLInputElement> {
 };
 
 export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
-  const cb = onChangeFilter? useDelayCallback(onChangeFilter, 500):null;
+  const cb = onChangeFilter? useDelayCallback(onChangeFilter, 300):null;
   const ref = useRef<HTMLInputElement>(null);
   const [ svalue, setSValue ] = useState("");
 
+  useEffect(() => {
+    if (cb)
+      cb(svalue)
+  }, [svalue]);
+
   return <div
-    className={`${Theme.transition} ${Theme.input} gap-2 ${props.className}`}>
-    <IconSearch className="w-4 h-4 fill-primary-950" />
+    className={`relative ${Theme.transition} ${Theme.input} gap-2 ${props.className}`}>
+    <IconSearch className="size-4 fill-primary-950" />
     <input
       {...props}
       ref={ref}
       name={props.id}
       onChange={(e) => {
         const value = e.currentTarget.value;
-        if (cb)
-          cb(value);
         setSValue(value);
       }}
       className="w-full outline-none" />
-    { svalue && <Button pType="icon" className="w-6 h-6" onClick={(e) => {
+    { svalue && <Button pType="icon" pColor="red" className="size-7 absolute right-2" onClick={(e) => {
       e.stopPropagation();
       if (ref.current) {
         ref.current.value = "";
         setSValue("");
-        if (cb)
-          cb("");
       }
     }}><IconXMark className="fill-red-800" /></Button> }
   </div>

@@ -1,4 +1,4 @@
-export type ButtonColorStyles = "primary" | "whitePrimary" | "green" | "red" | "none";
+export type ButtonColorStyles = "primary" | "whitePrimary" | "green" | "red" | "none" | "nonePrimary";
 export type ButtonType = "filled" | "outline" | "icon";
 
 export const Theme = {
@@ -15,6 +15,7 @@ export const Theme = {
       green: "bg-green-800 hover:brightness-[1.6] active:brightness-[1.6] text-white",
       red: "bg-red-800 hover:brightness-[1.6] active:brightness-[1.6] text-white",
       none:  "bg-none hover:bg-primary-600/25 active:bg-primary-600/25 text-white",
+      nonePrimary:  "bg-none hover:bg-primary-600/25 active:bg-primary-600/25 text-primary-900",
       whitePrimary: "bg-white hover:brightness-[0.6] active:brightness-[0.6] text-primary-900",
     },
     outline: {
@@ -22,6 +23,7 @@ export const Theme = {
       green:  "",
       red: "",
       none:  "",
+      nonePrimary:  "",
       whitePrimary: "bg-inherit hover:bg-white active:bg-white text-white hover:text-primary-900 active:text-primary-900 border-2 border-white"
     },
     icon: {
@@ -29,6 +31,7 @@ export const Theme = {
       green:  "",
       none:  "",
       red: "bg-none hover:bg-red-900/25 active:bg-red-900/25",
+      nonePrimary:  "",
       whitePrimary: "bg-none hover:bg-gray-500/25 active:bg-gray-500/25"
     },
   },

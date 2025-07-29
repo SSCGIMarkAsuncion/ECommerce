@@ -8,6 +8,7 @@ import { Products } from "../Module/Products";
 import { CartContextProvider } from "../Context/Cart";
 import Cart from "../Module/Cart";
 import { AdminOnly, AuthenticatedOnly } from "../Context/User";
+import { ProductContextProvider } from "../Context/Product";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -32,7 +33,11 @@ export const ROUTER = createBrowserRouter([
   },
   {
     path: "/products",
-    element: <CartContextProvider><Products /></CartContextProvider>
+    element: <ProductContextProvider>
+      <CartContextProvider>
+        <Products />
+      </CartContextProvider>
+    </ProductContextProvider>
   },
   {
     path: "/cart",

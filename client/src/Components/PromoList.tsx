@@ -2,6 +2,8 @@ import React from "react";
 import type { Product } from "../Models/Product";
 import Skeleton from "./Skeleton";
 import { ButtonCart } from "./CartButton";
+import { BgSkewedRect } from "../Utils/SVGIcons";
+import Price from "./Price";
 
 export interface PromoListProps extends React.HTMLProps<HTMLDivElement> {
   promos: Product[]
@@ -20,38 +22,38 @@ export default function PromoList(props: PromoListProps) {
         return <Skeleton key={i} className="w-full h-[30vw] bg-primary-100"/>
       })
       :props.promos.map((promo, i) => {
-        return <Promo key={promo.id} promo={promo} index={i} />
+        return <PromoItem key={promo.id} promo={promo} index={i} />
       })
   }
   </div>
 }
 
-export function Promo(props: PromoProps) {
+export function PromoItem(props: PromoProps) {
   console.assert(props.promo.salePrice != undefined);
   const isLeft = props.index % 2 === 0;
   const textAlign = isLeft? "text-initial":"text-right";
   const percentOff = Math.trunc(100 - (props.promo.salePrice!/props.promo.price * 100));
 
-  return <div className="md:w-[90%] lg:w-[70%] md:m-auto">
-    <h2 className={`fraunces-regular text-3xl text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>
-    <div className={`md:flex md:gap-2 ${isLeft? "flex-row":"flex-row-reverse"}`}>
+  return <div className="w-full sm:w-[90%] lg:w-[70%] m-auto">
+    <h2 className={`fraunces-regular text-3xl tracking-wide text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>
+    <div className={`mb-4 block md:flex md:gap-2 ${isLeft? "flex-row":"flex-row-reverse"}`}>
 
-      <div className={`w-full my-4 md:my-0`}>
-        <img src={props.promo.imgs[0]} className="w-[50%] md:w-[40vw] lg:w-[30vw] m-auto shadow-xs/30 shadow-black" />
+      <div className="p-8 relative">
+        <BgSkewedRect className="absolute top-[50%] left-[50%] translate-[-50%] aspect-[3/4] size-[18em] sm:size-[28em]"/>
+        <img src={props.promo.imgs[0]} className={`aspect-[3/4]! max-w-[190px] sm:max-w-[320px] ${!isLeft? "rotate-3":"rotate-[-3deg]"} object-cover m-auto shadow-xs shadow-black`} />
       </div>
 
-      <div className={`md:flex flex-col text-lg md:text-xl lg:text-2xl ${textAlign}`}>
-        <p className={`fraunces-regular mb-2 text-primary-950`}>
-          <span className="line-through">PHP {props.promo.price}</span>&nbsp;PHP {props.promo.salePrice}
-        </p>
+      <div className={`md:flex flex-col md:justify-center text-lg md:text-xl lg:text-2xl ${textAlign}`}>
+        <Price price={props.promo.price} promoPrice={props.promo.salePrice} />
         <p className={`fraunces-regular text-md md:text-lg lg:text-xl mb-2 text-primary-950`}>
           {props.promo.description}
         </p>
         {/* <div className="mt-auto hidden md:block w-full"></div> */}
         <div className={`text-lg w-full ${isLeft? "":"flex justify-end"}`}>
-          <ButtonCart product={props.promo}>{`${percentOff}% Off Order now`}</ButtonCart>
+          <ButtonCart product={props.promo} className="max-w-[15em] md:max-w-auto mt-4">{`${percentOff}% Off Order now`}</ButtonCart>
         </div>
       </div>
+
     </div>
   </div>
 }

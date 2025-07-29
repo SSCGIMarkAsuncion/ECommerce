@@ -37,12 +37,11 @@ export default function Home() {
         <Button onClick={() => navigate("/products") } href="/products" pColor="whitePrimary" className="text-lg">Explore now</Button>
       </div>
     </div>
-    <div id="promos" className="bg-primary-50 p-4">
+    <div id="promos" className="bg-primary-50 md:p-4">
       <PromoList promos={promos} />
     </div>
-    <div id="bestsellers" className="bg-primary-500 p-4">
-      <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium"> Best Sellers </h1>
-      {/* TODO: fix size of cards */}
+    <div id="bestsellers" className="bg-primary-300 p-4">
+      <h1 className="my-5 fraunces-regular text-primary-950 text-center text-4xl font-medium tracking-wide"> Best Sellers </h1>
       <BestSeller products={bestSellers} />
     </div>
     <Navbar />

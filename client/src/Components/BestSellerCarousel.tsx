@@ -4,6 +4,7 @@ import { CarouselBreakpoints, Theme } from '../Utils/Theme';
 import type { Product } from '../Models/Product';
 import { useCallback } from 'react';
 import { ButtonCart } from './CartButton';
+import { Card } from './Card';
 
 export default function BestSeller({ products }: { products: Product[] }) {
   const responsive = CarouselBreakpoints;
@@ -15,8 +16,8 @@ export default function BestSeller({ products }: { products: Product[] }) {
     ssr={true}
     infinite={false}
     transitionDuration={500}
-    containerClass="w-full min-h-[300px]"
-    itemClass="h-full min-h-[inherit]"
+    containerClass="w-full"
+    itemClass=""
     // removeArrowOnDeviceType={["tablet", "mobile"]}
     responsive={responsive}>
     {
@@ -34,21 +35,21 @@ export default function BestSeller({ products }: { products: Product[] }) {
 export function BestSellerItem({ product }: { product?: Product }) {
   const onOpen = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    console.log("Open item", product);
+    // console.log("Open item", product);
   }, []);
 
-  return <div className={`${product? "":"animate-pulse"} bg-zinc-50 min-h-[inherit] h-full mx-2 p-1 ${Theme.rounded}`}
-   onClick={onOpen}>
+  return <Card className={`${product? "":"animate-pulse"} mx-2 ${Theme.rounded}`}
+    onClick={onOpen}>
     {
       product &&
       <>
         <img src={product?.imgs[0]} className="w-full aspect-square object-cover" />
         <div className="p-2 md:p-3">
-        <h3 className="fraunces-regular text-md text-primary-950 font-medium">PHP {product.price}</h3>
-        <p className="fraunces-regular text-md text-primary-950 font-medium text-center mb-8">{product.name}</p>
-        <ButtonCart product={product}/>
+          <p className="fraunces-regular text-md text-primary-950 font-medium">PHP {product.price}</p>
+          <p className="fraunces-regular text-md text-primary-950 font-medium text-center mb-8">{product.name}</p>
+          <ButtonCart product={product}/>
         </div>
       </>
     }
-  </div>
+  </Card>
 }

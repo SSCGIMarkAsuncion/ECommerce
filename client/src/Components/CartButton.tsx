@@ -5,6 +5,7 @@ import type { Product } from "../Models/Product";
 import type { ButtonProps } from "./Button";
 import Button from "./Button";
 import { IconTrash } from "../Utils/SVGIcons";
+import { useNotification } from "../Context/Notify";
 
 export interface ButtonCartProps extends HTMLProps<HTMLDivElement> {
   product: Product
@@ -18,7 +19,7 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
     return item.id == product.id;
   })[0];
 
-  return <Btn className="fraunces-regular w-full mt-4"
+  return <Btn className={`fraunces-regular w-full ${props.className}`}
     cartAmount={cartItem?.amount}
     onChangeCartAmount={(newAmount: number) => {
       addToCart(product, newAmount);
@@ -32,12 +33,14 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
 }
 
 export function ButtonCartDelete({ product, ...props }: ButtonCartProps) {
+  const notify = useNotification();
   const { removeFromCart } = useCart();
 
   return <Button
    onClick={(e) => {
     e.stopPropagation();
     removeFromCart(product);
+    notify("info", `Deleted ${product.name} from cart`);
    }}
    pType="icon" pColor="red" className={props.className}>
     <IconTrash className="fill-red-800"/>

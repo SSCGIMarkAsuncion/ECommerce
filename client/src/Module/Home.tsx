@@ -40,8 +40,8 @@ export default function Home() {
     <div id="promos" className="bg-primary-50 md:p-4">
       <PromoList promos={promos} />
     </div>
-    <div id="bestsellers" className="bg-primary-300 p-4">
-      <h1 className="my-5 fraunces-regular text-primary-950 text-center text-4xl font-medium tracking-wide"> Best Sellers </h1>
+    <div id="bestsellers" className="bg-primary-600 p-4">
+      <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium tracking-wide"> Best Sellers </h1>
       <BestSeller products={bestSellers} />
     </div>
     <Navbar />

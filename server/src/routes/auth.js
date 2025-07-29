@@ -3,6 +3,7 @@ import { authenticateJWT, authenticateJWTIfExist } from "../middleware/verify_to
 import { verifyRole } from "../middleware/role.js";
 import { PostRegister } from "../controllers/register.js";
 import { PostLogin } from "../controllers/login.js";
+import { TOKEN_KEY } from "../utils/jwt.js";
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.get("/verify", authenticateJWT, async (req, res) => {
 });
 
 router.get("/logout", async (_req, res) => {
-  res.clearCookie("TOKEN", {
+  res.clearCookie(TOKEN_KEY, {
     secure: true,
     httpOnly: true
   });

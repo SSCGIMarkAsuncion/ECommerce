@@ -77,7 +77,7 @@ export function AdminOnly({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loading) return;
     if (!user || (user && !user.isAdmin())) {
-      navigate("/login");
+      navigate("/");
     }
   }, [loading, user]);
 

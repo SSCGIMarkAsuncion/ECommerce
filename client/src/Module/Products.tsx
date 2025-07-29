@@ -9,6 +9,7 @@ import { ButtonCart } from "../Components/CartButton";
 import { Pill } from "../Components/Pill";
 import { Searchbar } from "../Components/Input";
 import { Theme } from "../Utils/Theme";
+import Price from "../Components/Price";
 
 export function Products() {
   const [ filter, setFilter ] = useState("");
@@ -79,10 +80,7 @@ function ProductItem({ product, ...props}: ProductItemProps) {
     <img src={product.imgs[0]} className="w-full h-[200px] object-cover"/>
     <div className="p-2 text-sm text-center flex flex-col flex-1">
       <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
-      <p className={`fraunces-regular mb-2 text-primary-950`}>
-        <span className={`${product.salePrice? "line-through":""}`}>PHP {product.price}</span>&nbsp;
-        { product.salePrice && <span>PHP {product.salePrice}</span> }
-      </p>
+      <Price price={product.price} promoPrice={product.salePrice} promoTextSize="text-xs"/>
       <div className="flex flex-row flex-wrap gap-1 text-xs mt-2">
         {
           product.tags.map((tag) => {
@@ -91,7 +89,7 @@ function ProductItem({ product, ...props}: ProductItemProps) {
         }
       </div>
       <div className="mt-auto">
-      <ButtonCart product={product}/>
+      <ButtonCart product={product} className="mt-4"/>
     </div>
     </div>
   </Card>

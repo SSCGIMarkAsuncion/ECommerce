@@ -63,7 +63,7 @@ function ProductItem({ product, ...props}: ProductItemProps) {
       </div>
     </div>
     {
-      product.discount &&
+      product.discount > 0 &&
       <div className="aspect-square w-8 flex items-center justify-center bg-primary-900 text-white absolute top-2 left-2 shadow-sm/75 shadow-black">
         <p className="my-auto font-bold">%</p>
       </div>

@@ -38,6 +38,7 @@ export async function GetProduct(req, res) {
 
   // Build $or query for partial matches
   let orConditions = [];
+  let andConditions = [];
   filter.forEach(f => {
     orConditions.push({ name: { $regex: f, $options: "i" } });
     orConditions.push({ description: { $regex: f, $options: "i" } });
@@ -47,17 +48,24 @@ export async function GetProduct(req, res) {
   );
 
   if (isSale) {
-    orConditions.push({
+    andConditions.push({
       discount: { $exists: true, $gt: 0 }
     });
   }
 
   let query = {};
   if (orConditions.length > 0) {
-    query = { $or: orConditions };
+    query["$or"] = orConditions;
+  }
+  if (andConditions.length > 0) {
+    query["$and"] = andConditions;
   }
   let optSort = null;
 
+  let aggregate = [];
+  aggregate.push({
+    $match: query
+  });
   if (sortBy) {
     let sortType = 1;
     if (sort == "desc")
@@ -70,18 +78,39 @@ export async function GetProduct(req, res) {
         }
         break;
       case "price":
-        throw new MError(400, "sorting by price is not implemented yet")
-        // optSort = {
-        //   price: sortType,
-        //   salePrice: sortType
-        // }
+        optSort = {
+          discountedPrice: sortType
+        };
+        aggregate.push({
+          $addFields: {
+            discountedPrice: {
+              $cond: {
+                if: { $gt: ["$discount", 0] },
+                then: {
+                  $multiply: [
+                    "$price",
+                    { $subtract: [1, { $divide: ["$discount", 100] }] }
+                  ]
+                },
+                else: "$price"
+              }
+            }
+          }
+        });
         break;
     }
   }
+  if (optSort)
+    aggregate.push({
+      $sort: optSort
+    });
 
-  const docs = await Product.find(query, null, {
-    sort: optSort
-  });
+  console.log(aggregate);
+
+  const docs = await Product.aggregate(aggregate);
+  // const docs = await Product.aggregate(aggregate).find(query, null, {
+  //   sort: optSort
+  // });
   return res.status(200).json(docs);
 }
 

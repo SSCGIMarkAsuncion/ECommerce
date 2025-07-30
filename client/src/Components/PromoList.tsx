@@ -32,7 +32,7 @@ export function PromoItem(props: PromoProps) {
   console.assert(props.promo.discount != undefined);
   const isLeft = props.index % 2 === 0;
   const textAlign = isLeft? "text-initial":"text-right";
-  const percentOff = Math.trunc(100 - (props.promo.discount!/props.promo.price * 100));
+  const percentOff = props.promo.discount;
 
   return <div className="w-full sm:w-[90%] lg:w-[70%] m-auto">
     <h2 className={`fraunces-regular text-3xl tracking-wide text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>

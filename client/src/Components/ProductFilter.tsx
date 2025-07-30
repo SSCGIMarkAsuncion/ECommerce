@@ -34,7 +34,7 @@ export function ProductFilter() {
     if (filter.bestSeller)
       queries.push(`${QUERY_BOOL_BESTSELLER}=1`)
 
-    setSearchParams(`?${queries.join('&')}`);
+    setSearchParams(`?${queries.join('&')}`, { replace: true });
   }, [filter]);
 
   return <>

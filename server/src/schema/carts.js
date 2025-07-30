@@ -4,9 +4,31 @@ import { COLLECTIONS } from "../mongodb.js";
 export class Checkout {
   /** @type {({ productId: string, price: number })[]} */
   products = [];
+  subtotal = 0;
+  vatRate = 12;
+  vatAmount = 0;
+  itemsAmount = 0;
   total = 0;
-  // cart with populated CartItem.id
-  constructor(cart) {
+
+  /** @param {CartItemSchema[]} cartItems with populated id */
+  constructor(cartItems) {
+    this.products = cartItems;
+
+    this.products.forEach((cartItem) => {
+      const product = cartItem.id;
+      // console.log(this.subtotal, product.price, product.discount);
+      if (product.discount && product.discount >= 0) {
+        const percent = 1 - (product.discount / 100);
+        const discountedPrice = Math.trunc(product.price * percent * 100) / 100;
+        this.subtotal += (discountedPrice * cartItem.amount);
+      }
+      else {
+        this.subtotal += (product.price * cartItem.amount);
+      }
+      this.itemsAmount += cartItem.amount;
+    });
+    this.vatAmount = Math.trunc(this.subtotal * (this.vatRate / 100) * 100) / 100;
+    this.total = this.subtotal + this.vatAmount;
   }
 };
 

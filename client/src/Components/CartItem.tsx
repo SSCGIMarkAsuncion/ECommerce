@@ -15,18 +15,20 @@ export default function CartItem(props: CartItemProps) {
 
   const product = props.cartItem.product!;
 
-  return <Card className="relative fraunces-regular flex gap-2 md:items-center text-xl h-[200px]">
-    <img src={product.imgs[0]} alt="/Logo.svg" className="w-auto h-full" />
+  return <Card className="relative aspect-[9/5] h-[200px] fraunces-regular flex gap-2 text-md md:text-lg">
+    <div className="w-[35%] md:w-[30%] bg-gray-100">
+      <img src={product.imgs[0]} alt="/Logo.svg" className="m-auto w-auto h-full" />
+    </div>
     <div className="h-full flex flex-col gap-1 flex-1">
       <div className="py-2">
-        <Price price={product.price} promoPrice={product.discount} />
         <p className="text-wrap my-4">{product.name}</p>
       </div>
       <div className="flex-1"></div>
-      <div className="text-3xl md:text-2xl w-full md:w-[8em] md:ml-auto p-2">
+      <Price price={product.price} promoPrice={product.discount} />
+      <div className="w-full md:w-[8em] pb-2">
         <ButtonCart product={product} className="mt-auto"/>
       </div>
     </div>
-    <ButtonCartDelete product={product} className="w-8 h-8 absolute top-2 right-2" />
+    <ButtonCartDelete product={product} className="size-7 absolute top-2 right-2" />
   </Card>
 }

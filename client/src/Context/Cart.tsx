@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useReducer, type ActionDispatch, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useReducer, useState, type ActionDispatch, type ReactNode } from "react";
 import type Cart from "../Models/Cart";
 import type { Product } from "../Models/Product";
 import useCart from "../Hooks/useCart";
 import { useUser } from "./User";
+import Loading from "../Components/Loading";
 
 const CartContext = createContext<Cart | null>(null);
 const CartContextDispatcher = createContext<ActionDispatch<[action: CartContextAction]> | null>(null);
@@ -16,12 +17,13 @@ export function useCartContext() {
 
 export function CartContextProvider({ children, withProductInfo = false }: { children: ReactNode, withProductInfo?: boolean }) {
   const [ initial, dispatcher ] = useReducer(reducer, null);
-  // const [ loading, setLoading ] = useState(true);
+  const [ loading, setLoading ] = useState(false);
   const { user } = useUser();
   const { getCarts } = useCart();
 
   useEffect(() => {
     async function a() {
+      setLoading(true);
       try {
         const cart = await getCarts(withProductInfo)
         dispatcher({
@@ -32,7 +34,7 @@ export function CartContextProvider({ children, withProductInfo = false }: { chi
       catch(e) {
         console.log("ERR::CONTEXT_CART", e);
       }
-      // setLoading(false);
+      setLoading(false);
     }
     if (!user) {
       console.log("remove");
@@ -43,6 +45,10 @@ export function CartContextProvider({ children, withProductInfo = false }: { chi
     }
     a();
   }, [user]);
+
+  if (loading) {
+    return <Loading></Loading>;
+  }
 
   return <CartContext.Provider value={initial}>
     <CartContextDispatcher.Provider value={dispatcher}>

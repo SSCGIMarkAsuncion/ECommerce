@@ -28,7 +28,7 @@ export const ProductSchema = new mongoose.Schema({
       validator: function(v) {
         return v.length >= 1
       },
-      message: _ => `products.imgs must contain at least 1 image`
+      message: _ => `imgs must contain at least 1 link`
     },
   },
   tags: {

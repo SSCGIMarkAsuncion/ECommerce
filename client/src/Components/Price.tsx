@@ -1,4 +1,5 @@
 import type { HTMLProps } from "react";
+import { toCurrency } from "../Utils/Currency";
 
 export interface PriceProps extends HTMLProps<HTMLParagraphElement> {
   price: number,
@@ -12,7 +13,7 @@ export default function Price({ price, promoPrice, promoTextSize = "text-sm",...
   const hasDiscount = promoPrice && promoPrice > 0;
 
   return <p className={`fraunces-regular text-primary-950 ${props.className}`}>
-    { hasDiscount? <> <span className={`align-top line-through ${promoTextSize}`}>PHP {price}</span></>:<></> }
-    <span>PHP {hasDiscount? discountedPrice:price}</span>
+    { hasDiscount? <> <span className={`align-top line-through ${promoTextSize}`}>{toCurrency(price)}</span></>:<></> }
+    <span>{toCurrency(hasDiscount? discountedPrice:price)}</span>
   </p>
 }

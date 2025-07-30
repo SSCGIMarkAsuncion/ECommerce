@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useCartContext } from "../Context/Cart";
-import Cart from "../Models/Cart";
+import Cart, { Checkout } from "../Models/Cart";
 import { Product } from "../Models/Product"
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
@@ -81,13 +81,23 @@ export default function useCart() {
     }, []);
   };
 
-  const calculateCart = async () => {
+  const checkout = async () => {
+    const res = await fetch(`${api}/cart/checkout`,{
+      credentials: "include"
+    });
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status <= 399 ) {
+      return new Checkout(resjson);
+    }
+    throw new MError(resjson);
   };
 
   return {
     addToCart,
     getCarts,
     getCartsAndSetCarts,
-    removeFromCart
+    removeFromCart,
+    checkout
   }
 }

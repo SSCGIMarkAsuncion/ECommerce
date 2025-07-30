@@ -1,5 +1,5 @@
 import MError from '../error.js';
-import { Cart, mapCartItems } from '../schema/carts.js';
+import { Cart, Checkout, mapCartItems } from '../schema/carts.js';
 import { Product } from '../schema/products.js';
 import { ObjectId } from "mongodb";
 
@@ -134,5 +134,6 @@ export async function GetCheckout(req, res) {
     throw new MError(400, "No Cart for this user.");
   }
 
-  return res.status(200).json(cart);
+  const checkout = new Checkout(cart.products);
+  return res.status(200).json(checkout);
 }

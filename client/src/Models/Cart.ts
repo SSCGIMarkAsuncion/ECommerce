@@ -23,3 +23,19 @@ export default class Cart {
     this.updatedAt = obj.updatedAt? new Date(obj.updatedAt):null;
   }
 };
+
+export class Checkout {
+  subtotal: number;
+  vatRate: number;
+  vatAmount: number;
+  itemsAmount: number;
+  total: number;
+
+  constructor(obj: any) {
+    this.subtotal = obj.subtotal;
+    this.vatRate = obj.vatRate;
+    this.vatAmount = obj.vatAmount;
+    this.itemsAmount = obj.itemsAmount;
+    this.total = obj.total;
+  }
+}

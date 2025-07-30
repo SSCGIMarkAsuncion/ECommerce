@@ -56,7 +56,7 @@ export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
     window.addEventListener("keydown", close)
     return () => {
       window.removeEventListener("keydown", close);
-      console.log("keydown removed");
+      // console.log("keydown removed");
     }
   }, [])
 
@@ -158,7 +158,7 @@ function EditProduct(props: EditProductProps) {
   }, [currData]);
 
   const onChangeTags = useCallback((tags: string[]) => {
-    console.log(currData.tags, tags);
+    // console.log(currData.tags, tags);
     setCurrData((v) => {
       return {
         ...v,
@@ -168,7 +168,7 @@ function EditProduct(props: EditProductProps) {
   }, []);
 
   const onChangeImgs = useCallback((imgs: string[]) => {
-    console.log(currData.imgs, imgs);
+    // console.log(currData.imgs, imgs);
     setCurrData((v) => {
       return {
         ...v,

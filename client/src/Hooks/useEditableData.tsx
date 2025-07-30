@@ -7,7 +7,9 @@ export function useEditableData() {
   const load = async (type: OpenableData): Promise<TableData | null> => {
     switch (type) {
       case "products":
-        const products = await getProducts([], []);
+        const products = await getProducts([], [], false, {
+          by: "date", type: "desc"
+        });
         if (products.length == 0)
           break;
         // const rows = buildRowsFrom("products", products);

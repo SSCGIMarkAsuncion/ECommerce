@@ -8,7 +8,8 @@ import { EditableDataContextProvider, useEditableDataContext } from "../Context/
 import { MError } from "../Utils/Error";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
 import FormError from "../Components/FormError";
-
+import { Theme } from "../Utils/Theme";
+import SearchIcon from "../assets/Search.svg"
 
 export default function Admin() {
   return <EditableDataContextProvider>
@@ -53,6 +54,7 @@ function Page() {
     <FormError errors={errors?.errors || []} />
     { mainContent }
     <Sidebar>
+      <h1 className="text-white text-lg px-2">Data</h1>
       <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:w-4 [&>svg]:h-4"><IconBag />Products</SidebarButton>
       <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:w-4 [&>svg]:h-4"><IconCart />Orders</SidebarButton>
       <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:w-4 [&>svg]:h-4"><IconMoneyWave />Payments</SidebarButton>
@@ -88,7 +90,11 @@ function Editor() {
 }
 
 function NoContent() {
-  return <div className="h-[calc(100%-var(--appbar-height))] w-full flex items-center justify-center gap-2">
-    <p className="text-lg text-primary-950 font-semibold fraunces-regular">No Content</p>
+  return <div
+   className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
+    <img src={SearchIcon} className="size-20"/>
+    <div>
+      <p className="mt-2">No Data Found</p>
+    </div>
   </div>
 }

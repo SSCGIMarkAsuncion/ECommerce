@@ -3,7 +3,7 @@ import { SortButton, Toggle } from "./Button";
 import { Searchbar } from "./Input";
 import type { SortType } from "../Hooks/useProducts";
 import { useSearchParams } from "react-router";
-import { QUERY_BOOL_BESTSELLER, QUERY_BOOL_PROMO, QUERY_STR_DATE, QUERY_STR_FILTER, QUERY_STR_PRICE } from "../Context/Product";
+import { QUERY_BOOL_BESTSELLER, QUERY_BOOL_PROMO, QUERY_STR_DATE, QUERY_STR_FILTER, QUERY_STR_PRICE, QUERY_STR_SORT } from "../Context/Product";
 
 export function ProductFilter() {
   const [searchParams, setSearchParams] = useSearchParams();

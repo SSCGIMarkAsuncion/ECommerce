@@ -1,3 +1,4 @@
+import { QUERY_STR_SORT, QUERY_STR_SORTBY } from "../Context/Product";
 import { Product } from "../Models/Product";
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
@@ -19,7 +20,7 @@ export default function useProducts() {
     if (filters.length>0)
       queries.push(`filter=${filters.join(';')}`);
     if (sort)
-      queries.push(`sortBy=${sort.by}&sortType${sort.type}`);
+      queries.push(`${QUERY_STR_SORTBY}=${sort.by}&${QUERY_STR_SORT}=${sort.type}`);
     if (isSale)
       queries.push("isSale=1");
 

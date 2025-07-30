@@ -6,12 +6,15 @@ import type { ButtonProps } from "./Button";
 import Button from "./Button";
 import { IconTrash } from "../Utils/SVGIcons";
 import { useNotification } from "../Context/Notify";
+import { useUser } from "../Context/User";
 
 export interface ButtonCartProps extends HTMLProps<HTMLDivElement> {
   product: Product
 };
 
 export function ButtonCart({ product, ...props }: ButtonCartProps) {
+  const { user } = useUser();
+  const notify = useNotification();
   const { cart } = useCartContext();
   const { addToCart } = useCart();
   // console.log(cart?.products, product);
@@ -22,10 +25,18 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
   return <Btn className={`fraunces-regular w-full ${props.className}`}
     cartAmount={cartItem?.amount}
     onChangeCartAmount={(newAmount: number) => {
+      if (user == null) {
+        notify("error", "Please login first before adding to cart.");
+        return;
+      }
       addToCart(product, newAmount);
     }}
     onClick={(e) => {
       e.stopPropagation();
+      if (user == null) {
+        notify("error", "Please login first before adding to cart.");
+        return;
+      }
       addToCart(product, 1);
     }}>
     {props.children || "Add to cart"}

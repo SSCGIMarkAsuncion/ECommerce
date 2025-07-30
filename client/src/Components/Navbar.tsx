@@ -119,14 +119,18 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
 
     {/* FOR >=LAPTOP */}
     <div className="hidden md:flex items-center fraunces-regular text-sm gap-2">
-      { type !== "product" &&
+      {/* { type !== "product" &&
         <>
           <div className="flex-1"></div>
           <A href="/products">Products</A>
           <A href="/#contact">Contact Us</A>
           <A href="/aboutus">About Us</A>
         </>
-      }
+      } */}
+      <div className="flex-1"></div>
+      <A href="/products">Products</A>
+      <A href="/#contact">Contact Us</A>
+      <A href="/aboutus">About Us</A>
       <div className="flex-1"></div>
       <div hidden={!user} className="relative">
         <Button href="/cart" pType="icon" pColor="whitePrimary" className="size-8"><IconCart /></Button>

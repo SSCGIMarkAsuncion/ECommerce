@@ -8,6 +8,8 @@ import MError from '../error.js';
 filter=..;..
 tags=..;..
 isSale=1 // optional
+sby=string // sort by
+s=string // sort type "asc" | "desc"
 */
 /** 
  * @param {import('express').Request} req
@@ -18,6 +20,8 @@ export async function GetProduct(req, res) {
   const filter = parseQueryValue(req.query.filter);
   const tags = parseQueryValue(req.query.tags);
   const isSale = req.query.isSale == '1';
+  const sortBy = req.query.sby || "";
+  const sort = req.query.s || "asc";
 
   console.log("filter", filter, "tags", tags);
 
@@ -52,8 +56,31 @@ export async function GetProduct(req, res) {
   if (orConditions.length > 0) {
     query = { $or: orConditions };
   }
+  let optSort = null;
 
-  const docs = await Product.find(query);
+  if (sortBy) {
+    let sortType = 1;
+    if (sort == "desc")
+      sortType = -1;
+
+    switch (sortBy) {
+      case "date":
+        optSort = {
+          updatedAt: sortType
+        }
+        break;
+      case "price":
+        optSort = {
+          price: sortType,
+          salePrice: sortType
+        }
+        break;
+    }
+  }
+
+  const docs = await Product.find(query, null, {
+    sort: optSort
+  });
   return res.status(200).json(docs);
 }
 

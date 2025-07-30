@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Product } from "../Models/Product";
-import useProducts from "../Hooks/useProducts";
+import useProducts, { type Sort } from "../Hooks/useProducts";
 import { useSearchParams } from "react-router";
 
 export const QUERY_BOOL_PROMO = "promo";
 export const QUERY_BOOL_BESTSELLER = "bestseller";
 export const QUERY_STR_FILTER = "q";
+export const QUERY_STR_SORTBY = "sby";
+export const QUERY_STR_SORT = "s";
 export const QUERY_STR_DATE = "date";
 export const QUERY_STR_PRICE = "price";
 
@@ -51,7 +53,25 @@ export function ProductContextProvider({ children }: { children: ReactNode }) {
         if (searchParams.get(QUERY_BOOL_BESTSELLER) == '1')
           tags.push("best seller");
 
-        const products = await getProducts(tags, [filter], isPromo);
+        let sby = "";
+        let sort = "asc";
+        if (searchParams.has(QUERY_STR_DATE)) {
+          sby = "date";
+          sort = searchParams.get(QUERY_STR_DATE)!;
+        }
+        else if (searchParams.has(QUERY_STR_PRICE)) {
+          sby = "price";
+          sort = searchParams.get(QUERY_STR_PRICE)!;
+        }
+        let optSort: null | Sort = null;
+        if (sby) {
+          optSort = {
+            by: sby,
+            type: sort
+          } as Sort;
+        }
+
+        const products = await getProducts(tags, [filter], isPromo, optSort!);
         setProduct(products);
       }
       catch (e) {

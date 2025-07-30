@@ -8,6 +8,8 @@ import { ButtonCart } from "../Components/CartButton";
 import Price from "../Components/Price";
 import { useProductContext } from "../Context/Product";
 import { ProductFilter } from "../Components/ProductFilter";
+import { Theme } from "../Utils/Theme";
+import SearchIcon from "../assets/Search.svg"
 
 export function Products() {
   return <>
@@ -19,7 +21,7 @@ export function Products() {
         <ProductFilter />
       </div>
     </div>
-    <Navbar />
+    <Navbar type="product" />
     <Footer />
   </>;
 }
@@ -27,19 +29,23 @@ export function Products() {
 function ProductView() {
   const {
     products,
+    productdispatcher: { loading }
   } = useProductContext();
 
-  if (products.length == 0) {
+  if (loading) {
     return <Loading>Loading Products</Loading>
   }
 
-  return <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
-    {
-      products.map((product) => {
-        return <ProductItem key={product.id} product={product} />
-      })
-    }
-  </div>
+  return<>
+    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
+      {
+        products.map((product) => {
+          return <ProductItem key={product.id} product={product} />
+        })
+      }
+    </div>
+    { products.length == 0 && <NoResults /> }
+  </>
 }
 
 export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
@@ -52,10 +58,11 @@ function ProductItem({ product, ...props}: ProductItemProps) {
     <div className="p-2 text-sm flex flex-col flex-1 gap-4">
       <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
       <div className="mt-auto">
-        {/* <Price price={product.price} promoPrice={product.salePrice} promoTextSize="text-xs" className="font-medium text-right"/> */}
-        <ButtonCart product={product} >
+        <Price price={product.price} promoPrice={product.salePrice} promoTextSize="text-xs" className="font-medium text-right"/>
+        <ButtonCart product={product} />
+        {/* <ButtonCart product={product} >
           <Price price={product.price} promoPrice={product.salePrice} promoTextSize="text-xs" className="font-medium text-white"/>
-        </ButtonCart>
+        </ButtonCart> */}
       </div>
     </div>
     {
@@ -65,4 +72,15 @@ function ProductItem({ product, ...props}: ProductItemProps) {
       </div>
     }
   </Card>
+}
+
+function NoResults() {
+  return <div
+   className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
+    <img src={SearchIcon} className="size-20"/>
+    <div>
+      <p className="mt-2">No Results Found</p>
+      <p className="text-primary-500 text-sm">We can't find any item matching your search</p>
+    </div>
+  </div>
 }

@@ -44,7 +44,7 @@ export function ProductFilter() {
       }));
      }} />
     <div>
-      <ul className="flex gap-2 mt-1">
+      <ul className="flex mt-1">
         <li><Toggle initial={filter.promo} onBtnToggle={(active) => setFilter(v => ({
           ...v,
           promo: active

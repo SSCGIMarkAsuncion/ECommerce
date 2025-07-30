@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type HTMLProps, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Product } from "../Models/Product";
 import useProducts from "../Hooks/useProducts";
 import { useSearchParams } from "react-router";

@@ -8,8 +8,15 @@ import { useUser } from "../Context/User";
 import A from "./A";
 import { useCartContext } from "../Context/Cart";
 
+export type NavbarType = "" | "product";
+export interface NavbarProps {
+  className?: string,
+  type?: NavbarType,
+  admin?: boolean
+};
+
 // TODO: repalce admin with useUser
-export default function Navbar({ className = "", admin = false }) {
+export default function Navbar({ className = "", type="", admin = false }: NavbarProps) {
   const navigate = useNavigate();
   const height = Theme.appbar.classHeight;
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -49,12 +56,12 @@ export default function Navbar({ className = "", admin = false }) {
     <p className="birthstone-regular text-4xl shadow-lg">Kape Kalakal</p>
     </a>
 
-    <NavbarMenu />
+    <NavbarMenu type={type} />
   </div>
 }
 
 
-function NavbarMenu() {
+function NavbarMenu({ type = "" }: { type: NavbarType }) {
   const [ isOpen, setOpen ] = useState(true);
   const { user, userDispatcher: { logout }} = useUser();
   const { cart } = useCartContext();
@@ -71,7 +78,7 @@ function NavbarMenu() {
       pType="icon" className="w-[38px] h-[38px] md:hidden">
       <IconBars fill="#fff" />
     </Button>
-    <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center">
+    <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center md:hidden">
       <MenuItem href="/products" className="flex items-center gap-2 justify-center">
         <IconSearch className="w-[18px] h-[18px]"/>
         Products
@@ -112,10 +119,14 @@ function NavbarMenu() {
 
     {/* FOR >=LAPTOP */}
     <div className="hidden md:flex items-center fraunces-regular text-sm gap-2">
-      <div className="flex-1"></div>
-      <A href="/products">Products</A>
-      <A href="/#contact">Contact Us</A>
-      <A href="/aboutus">About Us</A>
+      { type !== "product" &&
+        <>
+          <div className="flex-1"></div>
+          <A href="/products">Products</A>
+          <A href="/#contact">Contact Us</A>
+          <A href="/aboutus">About Us</A>
+        </>
+      }
       <div className="flex-1"></div>
       <div hidden={!user} className="relative">
         <Button href="/cart" pType="icon" pColor="whitePrimary" className="size-8"><IconCart /></Button>

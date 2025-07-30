@@ -3,6 +3,7 @@ import { Theme } from "../Utils/Theme";
 import { IconEye, IconEyeSlash, IconSearch, IconXMark } from "../Utils/SVGIcons";
 import useDelayCallback from "../Hooks/useDelayCallback";
 import Button from "./Button";
+import SearchIcon from "../assets/Search.svg"
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   suffix?: ReactNode,
@@ -76,7 +77,7 @@ export default function Input(props: InputProps) {
     <div className="mt-1 text-red-700 text-sm">
       {
         errs.map((err, i) => {
-          return <p key={i} className="mb-2 animate-appear">{err}</p>;
+          return <p key={i} className="animate-appear">{err}</p>;
         })
       }
     </div>
@@ -129,7 +130,7 @@ export interface SearchbarProps extends HTMLProps<HTMLInputElement> {
 };
 
 export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
-  const cb = onChangeFilter? useDelayCallback(onChangeFilter, 300):null;
+  const cb = onChangeFilter? useDelayCallback(onChangeFilter, 1000):null;
   const ref = useRef<HTMLInputElement>(null);
   const [ svalue, setSValue ] = useState("");
 
@@ -156,6 +157,6 @@ export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
         ref.current.value = "";
         setSValue("");
       }
-    }}><IconXMark className="fill-red-800" /></Button> }
+    }}><IconXMark className="fill-primary-900" /></Button> }
   </div>
 }

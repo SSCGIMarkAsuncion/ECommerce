@@ -48,7 +48,7 @@ export async function GetProduct(req, res) {
 
   if (isSale) {
     orConditions.push({
-      salePrice: { $exists: true, $gt: 0 }
+      discount: { $exists: true, $gt: 0 }
     });
   }
 
@@ -70,10 +70,11 @@ export async function GetProduct(req, res) {
         }
         break;
       case "price":
-        optSort = {
-          price: sortType,
-          salePrice: sortType
-        }
+        throw new MError(400, "sorting by price is not implemented yet")
+        // optSort = {
+        //   price: sortType,
+        //   salePrice: sortType
+        // }
         break;
     }
   }
@@ -115,7 +116,7 @@ export async function PutProduct(req, res) {
     imgs: body.imgs,
     tags: body.tags,
     price: body.price,
-    salePrice: body.salePrice
+    discount: body.discount
   };
   for (const key of Object.keys(set)) {
     const item = set[key];
@@ -164,7 +165,7 @@ export async function PostProduct(req, res) {
     }
   }
   catch (e) {
-    throw new MError(400, "Failed to add products");
+    throw new MError(400, e.message);
   }
 
   res.status(200).send("");

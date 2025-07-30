@@ -44,10 +44,10 @@ export function BestSellerItem({ product }: { product?: Product }) {
     {
       product &&
       <>
-        <img src={product?.imgs[0]} className="w-full aspect-square object-cover" />
+        <img src={product?.imgs[0]} alt="/Logo.svg" className="w-full aspect-square object-cover" />
         <div className="p-2 md:p-3">
           <p className="fraunces-regular text-md text-primary-950 font-medium">{product.name}</p>
-          <Price price={product.price} promoPrice={product.salePrice} className="mt-4 font-medium" />
+          <Price price={product.price} promoPrice={product.discount} className="mt-4 font-medium" />
           <ButtonCart product={product}/>
         </div>
       </>

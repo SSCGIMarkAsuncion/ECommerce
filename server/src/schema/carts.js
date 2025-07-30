@@ -1,6 +1,15 @@
 import mongoose, { mongo } from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
 
+export class Checkout {
+  /** @type {({ productId: string, price: number })[]} */
+  products = [];
+  total = 0;
+  // cart with populated CartItem.id
+  constructor(cart) {
+  }
+};
+
 export const CartItemSchema = new mongoose.Schema({
   id: {
     type: mongoose.Types.ObjectId,

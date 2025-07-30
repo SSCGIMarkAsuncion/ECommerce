@@ -16,7 +16,9 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
 };
 
 export function Modal(props: ModalProps) {
-  return <div onClick={props.onClick} className="overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
+  return <div 
+   // onClick={props.onClick}
+   className="overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
     <div className="mt-[var(--appbar-height)]"></div>
     {props.children}
   </div>;
@@ -144,16 +146,16 @@ function EditProduct(props: EditProductProps) {
         await updateProduct(product)
       else
         await newProduct(product)
+      props.closeModal();
     }
     catch (e) {
       const merrs = (e as MError).toErrorList();
+      setLoading(false);
       setErr(merrs);
-      props.closeModal();
       return;
     }
 
     setLoading(false);
-    props.closeModal();
     reload();
   }, [currData]);
 
@@ -190,7 +192,7 @@ function EditProduct(props: EditProductProps) {
     <TextArea label="Description" id="description" className="text-sm" defaultValue={currData.description} />
     <div className="*:flex-1 flex gap-1">
       <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
-      <Input id="salePrice" type="number" required label="Sale Price (0 for no price reduction)" className="text-sm" defaultValue={currData.salePrice || 0} />
+      <Input id="discount" type="number" required label="Discount%" min={0} max={100} className="text-sm" defaultValue={currData.discount || 0} />
     </div>
     <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
     <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs} onProcessing={() => {

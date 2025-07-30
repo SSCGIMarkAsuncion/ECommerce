@@ -15,6 +15,7 @@ export interface IColumn {
   enableColumnFilter?: boolean,
   enableSorting?: boolean
   isNumber?: boolean,
+  suffix?: string,
   isDate?: boolean,
   isArray?: boolean
 };
@@ -89,7 +90,8 @@ export function buildColumnFrom(
               }
             </div>
           }
-          return rawValue || "";
+          const suffix = colDef.suffix || "";
+          return rawValue + suffix || "";
         },
         enableSorting: colDef.enableSorting,
         enableColumnFilter: colDef.isDate? false:colDef.enableColumnFilter

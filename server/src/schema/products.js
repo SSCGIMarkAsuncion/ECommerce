@@ -11,9 +11,15 @@ export const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  salePrice: {
+  discount: {
     type: Number,
     required: false,
+    validate: {
+      validator: function(v) {
+        return v >= 0 && v <= 100;
+      },
+      message: _props => "discount must be between 0 and 100"
+    },
     default: 0
   },
   imgs: {

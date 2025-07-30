@@ -54,19 +54,16 @@ export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
 
 function ProductItem({ product, ...props}: ProductItemProps) {
   return <Card {...props} className="w-full flex flex-col animate-appear relative">
-    <img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
+    <img src={product.imgs[0]} alt="/Logo.svg" className="w-full h-[100px] md:h-[200px] object-cover"/>
     <div className="p-2 text-sm flex flex-col flex-1 gap-4">
       <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
       <div className="mt-auto">
-        <Price price={product.price} promoPrice={product.salePrice} promoTextSize="text-xs" className="font-medium text-right"/>
+        <Price price={product.price} promoPrice={product.discount} promoTextSize="text-xs" className="font-medium text-right"/>
         <ButtonCart product={product} />
-        {/* <ButtonCart product={product} >
-          <Price price={product.price} promoPrice={product.salePrice} promoTextSize="text-xs" className="font-medium text-white"/>
-        </ButtonCart> */}
       </div>
     </div>
     {
-      product.salePrice &&
+      product.discount &&
       <div className="aspect-square w-8 flex items-center justify-center bg-primary-900 text-white absolute top-2 left-2 shadow-sm/75 shadow-black">
         <p className="my-auto font-bold">%</p>
       </div>

@@ -8,7 +8,7 @@ export function SlidingMenuContent(props: HTMLProps<HTMLDivElement>) {
   const animation = !Boolean(props.hidden)? "animate-slide-down opacity-1":"animate-slide-up opacity-0";
 
   return <div onClick={props.onClick}
-    // hidden={Boolean(props.hidden)}
+    hidden={Boolean(props.hidden)}
     className={`${animation} absolute top-0 left-0 w-full pt-[var(--appbar-height)] bg-primary-900 z-100 ${props.className || ""}`}>
     <Button
       pType="icon" className="w-[32px] h-[32px] absolute right-[1em] top-[1em]">
@@ -73,7 +73,7 @@ export function ButtonMenu(props: ButtonMenu) {
       <IconCaretDown className={`${isOpen? "animate-rotate-180":"animate-rotate-180-rev"}`}/>
       </div>
     </Button>
-    <div className={`${isOpen? "animate-slide-down pointer-events-auto":"animate-slide-up pointer-events-none"} absolute bottom-[-1] bg-primary-700 py-1 ${Theme.rounded} bg-primary-900 shadow-sm shadow-black/25 flex flex-col w-max translate-x-[-25%]`}>
+    <div hidden={!isOpen} className={`${isOpen? "animate-slide-down pointer-events-auto":"animate-slide-up pointer-events-none"} absolute bottom-[-1] bg-primary-700 py-1 ${Theme.rounded} bg-primary-900 shadow-sm shadow-black/25 flex flex-col w-max translate-x-[-25%]`}>
       {props.children}
     </div>
   </div>

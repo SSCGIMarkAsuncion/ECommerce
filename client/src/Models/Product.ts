@@ -5,7 +5,7 @@ export class Product {
   name: string;
   description: string;
   price: number;
-  salePrice: number | null;
+  discount: number;
   imgs: string[];
   tags: string[];
   createdAt: Date | null;
@@ -16,7 +16,7 @@ export class Product {
     this.name = obj.name;
     this.description = obj.description;
     this.price = Number(obj.price)
-    this.salePrice = obj.salePrice? Number(obj.salePrice):null;
+    this.discount = obj.discount? Number(obj.discount):0; // just in case for old docs that uses salePrice
     this.imgs = obj.imgs;
     this.tags = obj.tags;
     this.createdAt = obj.createdAt? new Date(obj.createdAt):null;
@@ -29,7 +29,7 @@ export class Product {
       name: "",
       description: "",
       price: 0,
-      salePrice: null,
+      discount: 0,
       imgs: [],
       tags: [],
       createdAt: null,
@@ -43,7 +43,7 @@ export class Product {
       name: fdata.get("name") || "",
       description: fdata.get("description") || "",
       price: Number(fdata.get("price")) || 0,
-      salePrice: Number(fdata.get("salePrice")) || null,
+      discount: Number(fdata.get("discount")) || 0,
       tags, imgs, createdAt: null, updatedAt: null
     });
   }
@@ -68,9 +68,10 @@ export const PRODUCT_COLUMNS: IColumn[] = [
     isNumber: true
   },
   {
-    name: "Sale Price",
-    id: "salePrice",
+    name: "discount%",
+    id: "discount",
     enableColumnFilter: true,
+    suffix: '%',
     isNumber: true
   },
   {

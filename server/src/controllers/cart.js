@@ -121,5 +121,18 @@ export async function GetCart(req, res) {
  * @param {import('express').Response} res
  */
 export async function GetCheckout(req, res) {
-  return res.status(200).send("Checkout");
+  const uid = new ObjectId(String(req.tokenPayload.id));
+
+  const cart = await Cart.findOne({
+    owner: uid,
+    status: "cart"
+  }).sort({ updatedAt: -1 })
+    .populate("products.id")
+    .lean().exec();
+
+  if (!cart) {
+    throw new MError(400, "No Cart for this user.");
+  }
+
+  return res.status(200).json(cart);
 }

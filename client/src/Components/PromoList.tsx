@@ -29,10 +29,10 @@ export default function PromoList(props: PromoListProps) {
 }
 
 export function PromoItem(props: PromoProps) {
-  console.assert(props.promo.salePrice != undefined);
+  console.assert(props.promo.discount != undefined);
   const isLeft = props.index % 2 === 0;
   const textAlign = isLeft? "text-initial":"text-right";
-  const percentOff = Math.trunc(100 - (props.promo.salePrice!/props.promo.price * 100));
+  const percentOff = Math.trunc(100 - (props.promo.discount!/props.promo.price * 100));
 
   return <div className="w-full sm:w-[90%] lg:w-[70%] m-auto">
     <h2 className={`fraunces-regular text-3xl tracking-wide text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>
@@ -40,11 +40,11 @@ export function PromoItem(props: PromoProps) {
 
       <div className="p-8 relative">
         <BgSkewedRect className="absolute top-[50%] left-[50%] translate-[-50%] aspect-[3/4] size-[18em] sm:size-[28em]"/>
-        <img src={props.promo.imgs[0]} className={`aspect-[3/4]! max-w-[190px] sm:max-w-[320px] ${!isLeft? "rotate-3":"rotate-[-3deg]"} object-cover m-auto shadow-xs shadow-black`} />
+        <img src={props.promo.imgs[0]} alt="/Logo.svg" className={`aspect-[3/4]! max-w-[190px] sm:max-w-[320px] ${!isLeft? "rotate-3":"rotate-[-3deg]"} object-cover m-auto shadow-xs shadow-black`} />
       </div>
 
       <div className={`md:flex flex-col md:justify-center text-lg md:text-xl lg:text-2xl ${textAlign}`}>
-        <Price price={props.promo.price} promoPrice={props.promo.salePrice} />
+        <Price price={props.promo.price} promoPrice={props.promo.discount} />
         <p className={`fraunces-regular text-md md:text-lg lg:text-xl mb-2 text-primary-950`}>
           {props.promo.description}
         </p>

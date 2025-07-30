@@ -2,6 +2,7 @@ import express from "express";
 import { PostProduct, DeleteProduct, GetProduct, PutProduct } from "../controllers/product.js";
 import { authenticateJWT } from "../middleware/verify_token.js";
 import { hasAdminRole, hasSuperAdminRole } from "../middleware/role.js";
+import { Product } from "../schema/products.js";
 
 const router = express.Router();
 

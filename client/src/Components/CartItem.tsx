@@ -2,6 +2,7 @@ import type { HTMLProps } from "react";
 import type { CartItem } from "../Models/Cart";
 import { Card } from "./Card";
 import { ButtonCart, ButtonCartDelete } from "./CartButton";
+import Price from "./Price";
 
 export interface CartItemProps extends HTMLProps<HTMLDivElement> {
   cartItem: CartItem
@@ -13,16 +14,12 @@ export default function CartItem(props: CartItemProps) {
   }
 
   const product = props.cartItem.product!;
-  const hasSalePrice = Boolean(product.salePrice);
 
   return <Card className="relative fraunces-regular flex gap-2 md:items-center text-xl h-[200px]">
     <img src={product.imgs[0]} alt="/Logo.svg" className="w-auto h-full" />
     <div className="h-full flex flex-col gap-1 flex-1">
       <div className="py-2">
-        <p className="text-md">
-          <span className={`${hasSalePrice? "line-through":""}`}>PHP {product.price}</span>
-          &nbsp;{hasSalePrice? "PHP":""} {product.salePrice}
-        </p>
+        <Price price={product.price} promoPrice={product.discount} />
         <p className="text-wrap my-4">{product.name}</p>
       </div>
       <div className="flex-1"></div>

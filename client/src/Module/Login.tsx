@@ -8,13 +8,13 @@ import { MError } from "../Utils/Error";
 import FormError from "../Components/FormError";
 import FormHeader from "../Components/FormHeader";
 import User from "../Models/User";
-import { useUser } from "../Context/User";
+import { useUserContext } from "../Context/User";
 
 export default function Login() {
   const [ errs, setErrs ] = useState<string[]>([]);
   const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
-  const { userDispatcher: { login }} = useUser();
+  const { userDispatcher: { login }} = useUserContext();
 
   const onSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();

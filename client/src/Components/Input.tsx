@@ -97,7 +97,7 @@ export function InputPassword(props: InputProps) {
     });
   }, []);
 
-  return <Input ref={props.ref} validators={props.validators} required id={props.id} label={props.label}
+  return <Input {...props} ref={props.ref} validators={props.validators} required id={props.id} label={props.label}
     type={type} suffix={
       <div className="w-[18px] h-[18px] flex items-center cursor-pointer" onClick={(e) => {
         e.stopPropagation();

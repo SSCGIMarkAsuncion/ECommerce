@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useState, type Action
 import type Cart from "../Models/Cart";
 import type { Product } from "../Models/Product";
 import useCart from "../Hooks/useCart";
-import { useUser } from "./User";
+import { useUserContext } from "./User";
 import Loading from "../Components/Loading";
 import { useNotification } from "./Notify";
 
@@ -19,7 +19,7 @@ export function useCartContext() {
 export function CartContextProvider({ children, withProductInfo = false }: { children: ReactNode, withProductInfo?: boolean }) {
   const [ initial, dispatcher ] = useReducer(reducer, null);
   const [ loading, setLoading ] = useState(true);
-  const { user } = useUser();
+  const { user } = useUserContext();
   const { getCarts } = useCart();
   const notify = useNotification();
 
@@ -51,10 +51,6 @@ export function CartContextProvider({ children, withProductInfo = false }: { chi
     }
     a();
   }, [user]);
-
-  if (loading) {
-    return <Loading></Loading>;
-  }
 
   return <CartContext.Provider value={initial}>
     <CartContextDispatcher.Provider value={dispatcher}>

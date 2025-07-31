@@ -2,20 +2,34 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { type OpenableData, type TableData } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
 import { useNotification } from "./Notify";
+import { useSearchParams } from "react-router";
 
 export type ActionTypes = "none" | "new" | "edit" | "delete" | "add";
 type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
 
-const SelectedDataContext = createContext<{ selectedData: OpenableData, setSelectedData: Dispatcher<OpenableData> } | null>(null);
+const SelectedDataContext = createContext<{ selectedData: OpenableData, setSelectedData: Dispatcher<OpenableData> }>(null!);
 const DataContext = createContext<TableData | null>(null);
-const ActionContext = createContext<{ actionType: ActionTypes, setActionType: Dispatcher<ActionTypes> } | null>(null);
-const CurrentDataContext = createContext<{ currentData: any, setCurrentData: Dispatcher<any> } | null>(null);
+const ActionContext = createContext<{ actionType: ActionTypes, setActionType: Dispatcher<ActionTypes> }>(null!);
+const CurrentDataContext = createContext<{ currentData: any, setCurrentData: Dispatcher<any> }>(null!);
 const ReloadContext = createContext<() => void>(() => {});
-const ErrorsContext = createContext<{ errors: string[], setErrors: Dispatcher<string[]> } | null>(null);
+const ErrorsContext = createContext<{ errors: string[], setErrors: Dispatcher<string[]> }>(null!);
 
 export function EditableDataContextProvider({ children }: { children: ReactNode }) {
+  const [ searchParams, setSearchParams ] = useSearchParams();
+  let defaultSelected = "products";
+  switch (searchParams.get("s")) {
+    case "products":
+    case "promos":
+    case "orders":
+    case "users":
+    case "payments":
+      defaultSelected = searchParams.get("s")!;
+    default:
+      break;
+  }
+
   const [ actionType, setActionType ] = useState<ActionTypes>("none");
-  const [ selectedData, setSelectedData ] = useState<OpenableData>("products");
+  const [ selectedData, setSelectedData ] = useState<OpenableData>(defaultSelected as OpenableData);
   const [ tableData, setTableData ] = useState<TableData | null>(null);
   const [ currentData, setCurrentData ] = useState<any | null>(null);
   const [ reloadData, setReloadData ] = useState<boolean>(false);
@@ -45,6 +59,11 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
     }
     a();
   }, [selectedData, reloadData]);
+
+  useEffect(() => {
+    if (searchParams.get("s") === selectedData) return;
+    setSearchParams(`?s=${selectedData}`);
+  }, [selectedData]);
 
   return <SelectedDataContext.Provider value={{ selectedData, setSelectedData }}>
     <DataContext.Provider value={tableData}>

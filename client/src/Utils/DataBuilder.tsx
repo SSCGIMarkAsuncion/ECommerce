@@ -48,10 +48,7 @@ function arrayFilterFn(row: Row<any>, columnId: string, filterValue: string) {
   return false;
 }
 
-export function buildColumnFrom(
-  type: OpenableData,
-  columnDef: IColumn[]
-) {
+export function buildColumnFrom(columnDef: IColumn[]) {
   const columnHelper = createColumnHelper<any>();
   const columns = [];
 
@@ -72,7 +69,7 @@ export function buildColumnFrom(
   );
 
   columnDef.forEach((colDef) => {
-    let filterFn = undefined;
+    let filterFn: any = "includesString";
     if (colDef.isNumber) {
       filterFn = numberFilterFn;
     }

@@ -55,6 +55,7 @@ export default function useCart() {
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status <= 399) {
+      if (!resjson) return null;
       const cart = new Cart(resjson);
       if (includeProductInfo) {
         const newProducts = cart.products.map((product) => {

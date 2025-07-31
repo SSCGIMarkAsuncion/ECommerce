@@ -1,15 +1,19 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Product } from "../Models/Product";
 import { useNotification } from "../Context/Notify";
 import { useEditableDataContext } from "../Context/EditableData";
 import useProducts from "../Hooks/useProducts";
 import { toDateTimeLocalString } from "../Utils/DataBuilder";
-import Input, { TextArea } from "./Input";
+import Input, { InputPassword, TextArea } from "./Input";
 import FormError from "./FormError";
 import { EditorTags } from "./EditorTags";
 import { ImageEditor } from "./ImageEditor";
 import Button from "./Button";
 import type { MError } from "../Utils/Error";
+import type User from "../Models/User";
+import useUsers from "../Hooks/useUser";
+import { checkPassword } from "../Utils/FormValidators";
+import Select from "./Select";
 
 interface EditConfirmButtonsProps {
   loading: boolean,
@@ -23,12 +27,12 @@ function EditConfirmButtons(props: EditConfirmButtonsProps) {
   </div>
 }
 
-export interface EditProductProps {
-  data: Product,
+export interface EditProps<T> {
+  data: T,
   closeModal: () => void
 };
 
-export function EditProduct(props: EditProductProps) {
+export function EditProduct(props: EditProps<Product>) {
   const { updateProduct, newProduct } = useProducts();
   const { reload } = useEditableDataContext();
   const [ loading, setLoading ] = useState(false);
@@ -123,6 +127,79 @@ export function EditProduct(props: EditProductProps) {
           }
         }}
       />
+
+      <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
+    </form>
+  </>
+}
+
+export function EditUser(props: EditProps<User>) {
+  const {  } = useUsers();
+  const { reload } = useEditableDataContext();
+  const [ loading, setLoading ] = useState(false);
+  const [ currData, setCurrData ] = useState({ ...props.data });
+  const [ err, setErr ] = useState<string[]>([]);
+  const notify = useNotification();
+
+  useEffect(() => {
+    notify("error", "NOT IMPLEMENTED YET");
+  }, []);
+
+  const onSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (err.length > 0) return;
+    setLoading(true);
+
+    const form = e.currentTarget as HTMLFormElement;
+    const fdata = new FormData(form);
+    // const product = Product.from(fdata, currData.tags, currData.imgs);
+
+    // try {
+    //   if (product.id) {
+    //     await updateProduct(product)
+    //     notify("info", `Successfully edited product ${product.id}`);
+    //   }
+    //   else {
+    //     await newProduct(product);
+    //     notify("info", `Successfully created a new product`);
+    //   }
+    //   props.closeModal();
+    // }
+    // catch (e) {
+    //   const merrs = (e as MError).toErrorList();
+    //   setLoading(false);
+    //   setErr(merrs);
+    //   return;
+    // }
+
+    setLoading(false);
+    reload();
+  }, [currData]);
+
+  return <>
+    <form className="mt-4" onSubmit={onSubmit}>
+      <FormError errors={err} />
+
+      <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
+      <div className="*:flex-1 flex gap-1">
+        <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
+        <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
+      </div>
+
+      <div className="*:flex-1 flex gap-1">
+        <Input id="username" type="text" required label="Username" className="text-sm" defaultValue={currData.username} />
+        <Input id="email" type="text" required label="Email" className="text-sm" defaultValue={currData.email} />
+      </div>
+
+      <div className="*:flex-1 flex gap-1">
+        <InputPassword id="password" label="Password" className="text-sm" required defaultValue={""} validators={[checkPassword]}  />
+        <Select id="role" label="Role:" defaultValue={currData.role || "user"}>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+          <option value="superadmin">Superadmin</option>
+        </Select>
+        {/* <Input id="discount" type="number" required label="Discount%" min={0} max={100} step={0.5} className="text-sm" defaultValue={currData.discount || 0} /> */}
+      </div>
 
       <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
     </form>

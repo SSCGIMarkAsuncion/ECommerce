@@ -25,11 +25,11 @@ export const ROUTER = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <CartContextProvider>
-      <AdminOnly>
+    element: <AdminOnly>
+      <CartContextProvider>
         <Admin />
-      </AdminOnly>
-    </CartContextProvider>
+      </CartContextProvider>
+    </AdminOnly>
   },
   {
     path: "/products",

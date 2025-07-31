@@ -4,7 +4,7 @@ import Button from "./Button";
 import { IconBars, IconCart, IconSearch, IconSidebar } from "../Utils/SVGIcons";
 import { useCallback, useEffect, useState } from "react";
 import { ButtonMenu, MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
-import { useUser } from "../Context/User";
+import { useUserContext } from "../Context/User";
 import A from "./A";
 import { useCartContext } from "../Context/Cart";
 
@@ -63,7 +63,7 @@ export default function Navbar({ className = "", type="", admin = false }: Navba
 
 function NavbarMenu({ type = "" }: { type: NavbarType }) {
   const [ isOpen, setOpen ] = useState(true);
-  const { user, userDispatcher: { logout }} = useUser();
+  const { user, userDispatcher: { logout }} = useUserContext();
   const { cart } = useCartContext();
   const navigate = useNavigate();
 

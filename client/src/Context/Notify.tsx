@@ -61,13 +61,13 @@ function Notification({ item, remove }: { item: NotificationItem, remove: (item:
     error: "fill-red-500 text-red-500 bg-red-100! border-red-300!"
   };
 
-  return <Card className={`flex items-center gap-2 px-2 py-1 border-1 ${colors[item.type]}`} onClick={() => {
+  return <Card className={`flex items-center gap-2 px-3! py-2! border-1 ${colors[item.type]}`} onClick={() => {
     if (timer.current) {
       clearTimeout(timer.current)
     }
     remove(item);
   }}>
     <IconInfoFilled className="size-6" />
-    <span className="text-md mr-2">{item.body}</span>
+    <span className="text-md mr-2 font-semibold">{item.body}</span>
   </Card>
 }

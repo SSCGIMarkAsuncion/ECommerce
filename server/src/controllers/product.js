@@ -153,10 +153,6 @@ export async function PutProduct(req, res) {
       delete set[key];
     }
   }
-  if (set.imgs && set.imgs.length == 0) {
-    // do not overwrite images if the update is length 0
-    delete set.imgs
-  }
 
   console.log("PutProduct::set", set);
   try {
@@ -169,8 +165,10 @@ export async function PutProduct(req, res) {
     );
   }
   catch (e) {
-  console.log("PutProduct::ERR", e);
-    throw new MError(404, "Product Id does not exist. Cannot update");
+    if (e instanceof Error)
+      throw new MError(404, e.message);
+    else
+      throw new MError(404, e);
   }
 
   return res.status(200).send("");

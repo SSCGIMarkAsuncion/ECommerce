@@ -6,14 +6,14 @@ import type { ButtonProps } from "./Button";
 import Button from "./Button";
 import { IconTrash } from "../Utils/SVGIcons";
 import { useNotification } from "../Context/Notify";
-import { useUser } from "../Context/User";
+import { useUserContext } from "../Context/User";
 
 export interface ButtonCartProps extends HTMLProps<HTMLDivElement> {
   product: Product
 };
 
 export function ButtonCart({ product, ...props }: ButtonCartProps) {
-  const { user } = useUser();
+  const { user } = useUserContext();
   const notify = useNotification();
   const { cart } = useCartContext();
   const { addToCart } = useCart();

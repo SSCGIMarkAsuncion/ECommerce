@@ -1,6 +1,6 @@
 import Navbar from "../Components/Navbar";
 import DataTable from "../Components/DataTable";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Sidebar, { SidebarButton } from "../Components/Sidebar";
 import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
 import Loading from "../Components/Loading";
@@ -24,11 +24,8 @@ function Page() {
     actionType,
     selectedData,
     tableData,
-    errors
+    // errors
   } = useEditableDataContext();
-  if (!actionType || !selectedData) throw new MError("Editable Data Context is null");
-
-  const currentData = tableData;
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,6 +36,7 @@ function Page() {
         setIsLoading(false);
   }, [tableData, actionType])
 
+  const currentData = tableData;
   let mainContent = null;
   if (isLoading) {
     mainContent = <Loading>Loading Data</Loading>;
@@ -52,14 +50,16 @@ function Page() {
 
   return <>
     <div className="mt-[var(--appbar-height)]"></div>
-    <FormError errors={errors?.errors || []} />
+    {/* <div className="m-2">
+      <FormError errors={errors?.errors || []} />
+    </div> */}
     { mainContent }
     <Sidebar>
       <h1 className="text-white text-lg px-2">Data</h1>
-      <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:w-4 [&>svg]:h-4"><IconBag />Products</SidebarButton>
-      <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:w-4 [&>svg]:h-4"><IconCart />Orders</SidebarButton>
-      <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:w-4 [&>svg]:h-4"><IconMoneyWave />Payments</SidebarButton>
-      <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:w-4 [&>svg]:h-4"><IconUser />Users</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
+      <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
     </Sidebar>
     <Navbar admin />
 
@@ -71,22 +71,24 @@ function Editor() {
   const {
     actionType,
     currentData,
-    selectedData,
+    selectedData
   } = useEditableDataContext();
+  const closeModal = useCallback(() => {
+    actionType.setActionType("none")
+    // errors.setErrors([]);
+  }, []);
 
   if (!actionType || !selectedData || !currentData) return null;
   if (actionType.actionType === "none") return null
 
-  // console.log("Editor", currentData.currentData);
-
-  return <Modal onClick={() => actionType.setActionType("none")}>
+  return <Modal>
     {actionType.actionType == "add" &&
-      <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={null} />
+      <ModalEdit closeModal={closeModal} />
     }
     {actionType.actionType == "delete" &&
-      <ModalDelete closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData.currentData} />
+      <ModalDelete closeModal={closeModal} />
     }
-    {actionType.actionType == "edit" && <ModalEdit closeModal={() => actionType.setActionType("none")} type={selectedData.selectedData} data={currentData.currentData} />}
+    {actionType.actionType == "edit" && <ModalEdit closeModal={closeModal} />}
   </Modal>
 }
 

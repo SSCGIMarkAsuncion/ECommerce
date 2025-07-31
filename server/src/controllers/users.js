@@ -8,7 +8,7 @@ import MError from '../error.js';
  * @param {import('express').Response} res
  */
 export async function GetUsers(req, res) {
-  const users =  await User.find({});
+  const users =  await User.find({}).sort({ updatedAt: -1 });
 
   return res.status(200).json(users);
 }

@@ -3,9 +3,6 @@ import User from "../Models/User";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 
-// NULL = has not been checked yet
-// MError = has been verified but is invalid
-// User = TOKEN is valid
 export type TUserContext = User | null;
 export interface TUserContextDispatcher {
   login: (user: User) => Promise<void>,
@@ -16,7 +13,7 @@ export interface TUserContextDispatcher {
 const UserContext = createContext<TUserContext>(null);
 const UserContextDispatcher = createContext<TUserContextDispatcher | null>(null);
 
-export function useUser() {
+export function useUserContext() {
   return {
     user: useContext(UserContext),
     userDispatcher: useContext(UserContextDispatcher)!
@@ -71,7 +68,7 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
 
 // use after UserContextProvider
 export function AdminOnly({ children }: { children: ReactNode }) {
-  const { user, userDispatcher: { loading } } = useUser();
+  const { user, userDispatcher: { loading } } = useUserContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,7 +84,7 @@ export function AdminOnly({ children }: { children: ReactNode }) {
 }
 
 export function AuthenticatedOnly({ children }: { children: ReactNode }) {
-  const { user, userDispatcher: { loading } } = useUser();
+  const { user, userDispatcher: { loading } } = useUserContext();
   const navigate = useNavigate();
 
   useEffect(() => {

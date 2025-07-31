@@ -35,8 +35,6 @@ export function useEditableData() {
       case "payments":
     }
 
-    // empty arrays for loading is done but there is no data
-    // null for still loading data
     return {
       data: [],
       column: []

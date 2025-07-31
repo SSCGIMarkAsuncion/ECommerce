@@ -42,7 +42,7 @@ export const ROUTER = createBrowserRouter([
   {
     path: "/cart",
     element: <AuthenticatedOnly>
-      <CartContextProvider withProductInfo={true}>
+      <CartContextProvider withProductInfo={true} waitForResult={true}>
         <Cart />
       </CartContextProvider>
     </AuthenticatedOnly>

@@ -5,9 +5,7 @@ import Sidebar, { SidebarButton } from "../Components/Sidebar";
 import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
 import Loading from "../Components/Loading";
 import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
-import { MError } from "../Utils/Error";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
-import FormError from "../Components/FormError";
 import { Theme } from "../Utils/Theme";
 import SearchIcon from "../assets/Search.svg"
 import Img from "../Components/Img";
@@ -41,7 +39,7 @@ function Page() {
   if (isLoading) {
     mainContent = <Loading>Loading Data</Loading>;
   }
-  else if (currentData) {
+  else if (currentData && currentData.data.length > 0) {
     mainContent = <DataTable title={selectedData.selectedData} tableColumns={currentData.column} tableData={currentData.data} />
   }
   else {
@@ -49,7 +47,7 @@ function Page() {
   }
 
   return <>
-    <div className="mt-[var(--appbar-height)]"></div>
+    <div className="h-[var(--appbar-height)]"></div>
     {/* <div className="m-2">
       <FormError errors={errors?.errors || []} />
     </div> */}
@@ -94,7 +92,7 @@ function Editor() {
 
 function NoContent() {
   return <div
-   className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
+   className={`bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded} m-8`}>
     <Img src={SearchIcon} className="size-20"/>
     <div>
       <p className="mt-2">No Data Found</p>

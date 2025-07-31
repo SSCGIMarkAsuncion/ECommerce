@@ -16,7 +16,13 @@ export function useCartContext() {
   };
 }
 
-export function CartContextProvider({ children, withProductInfo = false }: { children: ReactNode, withProductInfo?: boolean }) {
+export interface CartContextProviderProps {
+  children: ReactNode,
+  withProductInfo?: boolean,
+  waitForResult?: boolean
+};
+
+export function CartContextProvider({ children, withProductInfo = false, waitForResult = false }: CartContextProviderProps) {
   const [ initial, dispatcher ] = useReducer(reducer, null);
   const [ loading, setLoading ] = useState(true);
   const { user } = useUserContext();
@@ -51,6 +57,10 @@ export function CartContextProvider({ children, withProductInfo = false }: { chi
     }
     a();
   }, [user]);
+
+  if (loading && waitForResult) {
+    return <Loading></Loading>;
+  }
 
   return <CartContext.Provider value={initial}>
     <CartContextDispatcher.Provider value={dispatcher}>

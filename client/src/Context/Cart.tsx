@@ -4,6 +4,7 @@ import type { Product } from "../Models/Product";
 import useCart from "../Hooks/useCart";
 import { useUser } from "./User";
 import Loading from "../Components/Loading";
+import { useNotification } from "./Notify";
 
 const CartContext = createContext<Cart | null>(null);
 const CartContextDispatcher = createContext<ActionDispatch<[action: CartContextAction]> | null>(null);
@@ -17,9 +18,10 @@ export function useCartContext() {
 
 export function CartContextProvider({ children, withProductInfo = false }: { children: ReactNode, withProductInfo?: boolean }) {
   const [ initial, dispatcher ] = useReducer(reducer, null);
-  const [ loading, setLoading ] = useState(false);
+  const [ loading, setLoading ] = useState(true);
   const { user } = useUser();
   const { getCarts } = useCart();
+  const notify = useNotification();
 
   useEffect(() => {
     async function a() {
@@ -32,12 +34,16 @@ export function CartContextProvider({ children, withProductInfo = false }: { chi
         });
       }
       catch(e) {
-        console.log("ERR::CONTEXT_CART", e);
+        if (e instanceof Error) {
+          notify("error", e.message)
+        }
+        else {
+          notify("error", String(e));
+        }
       }
       setLoading(false);
     }
     if (!user) {
-      console.log("remove");
       dispatcher({
         type: "remove", cart: null
       });

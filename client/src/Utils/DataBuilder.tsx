@@ -27,6 +27,13 @@ export interface IColumn {
 //   return formattedData;
 // }
 
+export function toDateTimeLocalString(date: Date | null) {
+  if (!date) {
+    return undefined;
+  }
+  return date.toISOString().slice(0,16);
+}
+
 function numberFilterFn(row: Row<any>, columnId: string, filterValue: string) {
   const cellValue = row.getValue(columnId);
   return String(cellValue).includes(String(filterValue));

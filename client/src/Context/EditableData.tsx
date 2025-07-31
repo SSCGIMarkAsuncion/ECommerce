@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { type OpenableData, type TableData } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
+import { useNotification } from "./Notify";
 
 export type ActionTypes = "none" | "new" | "edit" | "delete" | "add";
 type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -17,8 +18,9 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
   const [ selectedData, setSelectedData ] = useState<OpenableData>("products");
   const [ tableData, setTableData ] = useState<TableData | null>(null);
   const [ currentData, setCurrentData ] = useState<any | null>(null);
-  const [ reloadData, setReloaddata ] = useState<boolean>(false);
+  const [ reloadData, setReloadData ] = useState<boolean>(false);
   const [ errors, setErrors ] = useState<string[]>([]);
+  const notify = useNotification();
 
   const { load: loadData } = useEditableData();
 
@@ -29,20 +31,26 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
   }, [actionType]);
 
   useEffect(() => {
-    loadData(selectedData)
-      .then((data) => {
+    async function a() {
+      try {
+        const data = await loadData(selectedData)
         setTableData(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+      }
+      catch (e) {
+        if (e instanceof Error)
+          notify("error", e.message);
+        else
+          notify("error", String(e));
+      }
+    }
+    a();
   }, [selectedData, reloadData]);
 
   return <SelectedDataContext.Provider value={{ selectedData, setSelectedData }}>
     <DataContext.Provider value={tableData}>
       <ActionContext.Provider value={{ actionType, setActionType }}>
         <CurrentDataContext.Provider value={{ currentData, setCurrentData }}>
-        <ReloadContext.Provider value={() => setReloaddata(v => !v)}>
+        <ReloadContext.Provider value={() => setReloadData(v => !v)}>
         <ErrorsContext.Provider value={{ errors, setErrors }}>
           {children}
         </ErrorsContext.Provider>

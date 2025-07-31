@@ -12,16 +12,14 @@ export function useEditableData() {
         });
         if (products.length == 0)
           break;
-        // const rows = buildRowsFrom("products", products);
         const cols = buildColumnFrom("products", PRODUCT_COLUMNS);
-        // console.log(cols, products);
         return {
           column: cols,
           data: products
         };
+      case "users":
       case "promos":
       case "orders":
-      case "users":
       case "payments":
     }
 

@@ -10,6 +10,7 @@ import { MError } from "../Utils/Error";
 import FormError from "./FormError";
 import { useEditableDataContext } from "../Context/EditableData";
 import { useNotification } from "../Context/Notify";
+import { EditProduct } from "./Edit";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -30,22 +31,23 @@ export interface ModalEditProps {
   closeModal: () => void
 };
 
-function toDateTimeLocalString(date: Date | null) {
-  if (!date) {
-    return undefined;
-  }
-  return date.toISOString().slice(0,16);
-}
-
 export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
   let editComponent = null;
+  let label = "";
   switch (type) {
     case "products":
       editComponent = <EditProduct closeModal={closeModal} data={data as Product || Product.empty()} />
+      label = "Product";
       break;
     case "orders":
+      label = "Order";
+      break;
     case "users":
+      label = "User";
+      break;
     case "payments":
+      label = "Payment";
+      break;
   };
 
   useEffect(() => {
@@ -63,13 +65,12 @@ export function ModalEdit({ type, data, closeModal }: ModalEditProps) {
   }, [])
 
   return <div onClick={(e) => e.stopPropagation()} className="overflow-y-auto w-[80%] md:w-[90%] m-auto rounded-xs bg-white p-4 animate-slide-down">
-    {editComponent}
+    <div className="overflow-y-auto">
+      <h1 className="fraunces-regular text-4xl font-semibold text-primary-950">{label}</h1>
+      {editComponent}
+    </div>
   </div>;
 }
-export interface EditProductProps {
-  data: Product,
-  closeModal: () => void
-};
 
 export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
   const { reload, errors } = useEditableDataContext();
@@ -122,98 +123,4 @@ export function ModalDelete({ type, data, closeModal }: ModalEditProps) {
       }}>Delete</Button>
     </div>
   </div>;
-}
-
-function EditProduct(props: EditProductProps) {
-  const { updateProduct, newProduct } = useProducts();
-  const { reload } = useEditableDataContext();
-  const [ loading, setLoading ] = useState(false);
-  const [ currData, setCurrData ] = useState({ ...props.data });
-  const [ err, setErr ] = useState<string[]>([]);
-  const notify = useNotification();
-
-  const onSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (err.length > 0) return;
-    setLoading(true);
-
-    const form = e.currentTarget as HTMLFormElement;
-    const fdata = new FormData(form);
-    const product = Product.from(fdata, currData.tags, currData.imgs);
-
-    try {
-      if (product.id)
-        await updateProduct(product)
-      else
-        await newProduct(product)
-      props.closeModal();
-    }
-    catch (e) {
-      const merrs = (e as MError).toErrorList();
-      setLoading(false);
-      setErr(merrs);
-      return;
-    }
-
-    setLoading(false);
-    reload();
-  }, [currData]);
-
-  const onChangeTags = useCallback((tags: string[]) => {
-    // console.log(currData.tags, tags);
-    setCurrData((v) => {
-      return {
-        ...v,
-        tags
-      };
-    });
-  }, []);
-
-  const onChangeImgs = useCallback((imgs: string[]) => {
-    // console.log(currData.imgs, imgs);
-    setCurrData((v) => {
-      return {
-        ...v,
-        imgs: imgs
-      };
-    });
-  }, []);
-
-  return <div className="overflow-y-auto">
-  <h1 className="fraunces-regular text-4xl font-semibold text-primary-950">Product</h1>
-  <form className="mt-4" onSubmit={onSubmit}>
-    <FormError errors={err} />
-    <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
-    <div className="*:flex-1 flex gap-1">
-      <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
-      <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
-    </div>
-    <Input id="name" type="text" required label="Name" className="text-sm" defaultValue={currData.name} />
-    <TextArea label="Description" id="description" className="text-sm" defaultValue={currData.description} />
-    <div className="*:flex-1 flex gap-1">
-      <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
-      <Input id="discount" type="number" required label="Discount%" min={0} max={100} className="text-sm" defaultValue={currData.discount || 0} />
-    </div>
-    <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
-    <ImageEditor imgs={currData.imgs} onChangeImgs={onChangeImgs} onProcessing={() => {
-      setLoading(true);
-      notify("info", "Image uploading");
-    }} onProcessingDone={() => {
-      setLoading(false);
-      notify("info", "Image uploaded");
-    }}
-      onErr={(e) => {
-        const errs = e.toErrorList();
-        if (errs.length > 0) {
-          setErr(errs);
-        }
-      }}
-      />
-    <div className="flex gap-1 text-xs mt-2">
-      <Button className="ml-auto" loading={loading} onClick={props.closeModal} pColor="whitePrimary">Cancel</Button>
-      <Button loading={loading} type="submit" pColor="green">Ok</Button>
-    </div>
-  </form>
-  {/* <p>{JSON.stringify(data, null, 2)}</p> */}
-  </div>
 }

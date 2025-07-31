@@ -10,7 +10,7 @@ import { EditorTags } from "./EditorTags";
 import { ImageEditor } from "./ImageEditor";
 import Button from "./Button";
 import type { MError } from "../Utils/Error";
-import type User from "../Models/User";
+import User from "../Models/User";
 import useUsers from "../Hooks/useUser";
 import { checkPassword } from "../Utils/FormValidators";
 import Select from "./Select";
@@ -134,16 +134,12 @@ export function EditProduct(props: EditProps<Product>) {
 }
 
 export function EditUser(props: EditProps<User>) {
-  const {  } = useUsers();
+  const { updateUser, createUser } = useUsers();
   const { reload } = useEditableDataContext();
   const [ loading, setLoading ] = useState(false);
-  const [ currData, setCurrData ] = useState({ ...props.data });
+  const [ currData, _setCurrData ] = useState({ ...props.data });
   const [ err, setErr ] = useState<string[]>([]);
   const notify = useNotification();
-
-  useEffect(() => {
-    notify("error", "NOT IMPLEMENTED YET");
-  }, []);
 
   const onSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,25 +148,25 @@ export function EditUser(props: EditProps<User>) {
 
     const form = e.currentTarget as HTMLFormElement;
     const fdata = new FormData(form);
-    // const product = Product.from(fdata, currData.tags, currData.imgs);
+    const user = User.from(fdata);
 
-    // try {
-    //   if (product.id) {
-    //     await updateProduct(product)
-    //     notify("info", `Successfully edited product ${product.id}`);
-    //   }
-    //   else {
-    //     await newProduct(product);
-    //     notify("info", `Successfully created a new product`);
-    //   }
-    //   props.closeModal();
-    // }
-    // catch (e) {
-    //   const merrs = (e as MError).toErrorList();
-    //   setLoading(false);
-    //   setErr(merrs);
-    //   return;
-    // }
+    try {
+      if (user.id) {
+        await updateUser(user)
+        notify("info", `Successfully edited user ${user.id}`);
+      }
+      else {
+        await createUser(user);
+        notify("info", `Successfully created a new user`);
+      }
+      props.closeModal();
+    }
+    catch (e) {
+      const merrs = (e as MError).toErrorList();
+      setLoading(false);
+      setErr(merrs);
+      return;
+    }
 
     setLoading(false);
     reload();

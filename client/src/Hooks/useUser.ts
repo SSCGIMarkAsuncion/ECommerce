@@ -16,7 +16,7 @@ export default function useUsers() {
   };
 
   const updateUser = async (update: User) => {
-    const res = await fetch(`${api}/update/${update.id}`, {
+    const res = await fetch(`${api}/edit/${update.id}`, {
       method: "PUT",
       credentials: "include",
       headers: {

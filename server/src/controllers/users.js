@@ -70,7 +70,13 @@ export async function PostUser(req, res) {
   }
 
   const user = new User(body);
-  const result = await user.save();
+  let result = {};
+  try {
+    result = await user.save({ validateBeforeSave: true });
+  }
+  catch (e) {
+    throw new MError(400, "Please refer to your IT Personel");
+  }
 
   return res.status(200).json(result);
 }

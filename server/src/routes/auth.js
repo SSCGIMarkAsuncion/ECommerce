@@ -7,11 +7,7 @@ import { TOKEN_KEY } from "../utils/jwt.js";
 
 const router = express.Router();
 
-router.post("/register",
-  authenticateJWTIfExist,
-  verifyRole,
-  PostRegister
-);
+router.post("/register", PostRegister);
 
 router.post("/login", PostLogin);
 

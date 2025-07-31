@@ -47,11 +47,30 @@ export async function PutUser(req, res) {
   }
 
   if (set.role) {
-    if (!(tokenRole == ROLES.SUPERADMIN && set.role == ROLES.SUPERADMIN)) {
+    if (tokenRole != ROLES.SUPERADMIN && set.role == ROLES.SUPERADMIN) {
       throw new MError(400, `Cannot change role of user with ${ROLES.SUPERADMIN} with ${tokenRole} privileges`);
     }
   }
 
-  const result = await User.findByIdAndUpdate(id, set);
+  const result = await User.findByIdAndUpdate(id, set, { new: true });
+  return res.status(200).json(result);
+}
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function PostUser(req, res) {
+  const body = req.body;
+  const tokenRole = req.tokenPayload.role;
+  if (body.role) {
+    if (tokenRole != ROLES.SUPERADMIN && body.role == ROLES.SUPERADMIN) {
+      throw new MError(400, `Cannot create with a ${ROLES.SUPERADMIN} role with ${body.role} privileges`);
+    }
+  }
+
+  const user = new User(body);
+  const result = await user.save();
+
   return res.status(200).json(result);
 }

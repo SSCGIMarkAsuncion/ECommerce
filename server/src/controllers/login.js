@@ -1,5 +1,5 @@
 import MError from '../error.js';
-import { encrypt } from '../encryption.js';
+import { compare, hash } from '../encryption.js';
 import { User } from '../schema/user.js';
 import { createToken, TOKEN_KEY } from "../utils/jwt.js"
 
@@ -12,15 +12,19 @@ export async function PostLogin(req, res) {
   console.log("PostLogin::BODY", body);
   const user = {
     email: body.email,
-    password: body.password? encrypt(body.password):null,
+    password: body.password,
   };
   for (const key of Object.keys(user)) {
     if (!user[key])
       throw new MError(406, "Missing Credentials");
   }
 
-  const foundUser = await User.findOne(user);
+  const foundUser = await User.findOne({ email: user.email });
   if (foundUser == null) {
+    throw new MError(404, "User does not exists");
+  }
+  console.log(hash(user.password));
+  if (!compare(user.password, foundUser.password)) {
     throw new MError(404, "User does not exists");
   }
 

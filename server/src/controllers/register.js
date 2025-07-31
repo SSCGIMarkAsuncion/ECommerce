@@ -1,4 +1,3 @@
-import { encrypt } from "../encryption.js";
 import MError from "../error.js";
 import { User } from "../schema/user.js";
 import ROLES from "../utils/roles.js";
@@ -9,19 +8,11 @@ import ROLES from "../utils/roles.js";
  */
 export async function PostRegister(req, res) {
   const body = req.body;
-  console.log("PostRegister::BODY", body);
-  const role = req.query.role || ROLES.USER;
-  const tokenRole = req.tokenPayload? req.tokenPayload.role:null;
-
-  if ((role == ROLES.ADMIN || role == ROLES.SUPERADMIN) && tokenRole != ROLES.SUPERADMIN) {
-    throw new MError(400, "Request Not Allowed");
-  }
-
   const user = {
     email: body.email,
     username: body.username,
     password: body.password,
-    role: role
+    role: ROLES.USER
   };
   for (const key of Object.keys(user)) {
     if (!user[key])

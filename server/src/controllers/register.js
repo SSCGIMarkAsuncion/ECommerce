@@ -44,8 +44,10 @@ export async function PostRegister(req, res) {
     await newUser.save();
   }
   catch (e) {
-    console.log("PostRegister::ERR", e);
-    throw new MError(500, "An Error occured while registering. Please try again later.")
+    if (e instanceof Error)
+      throw new MError(500, e.message);
+    else
+      throw new MError(500, e);
   }
 
   res.status(200).send("");

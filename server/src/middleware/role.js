@@ -64,5 +64,5 @@ export function hasSuperAdminRole(req, _, next) {
   if (tokenRole === ROLES.SUPERADMIN) {
     return next();
   }
-  throw new MError(400, "Request not possible");
+  throw new MError(400, "This action is only permitted for SUPERADMIN");
 }

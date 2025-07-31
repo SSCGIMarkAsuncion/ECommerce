@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+import bcrypt from "bcrypt";
 import {
   createCipheriv,
   createDecipheriv
@@ -8,6 +9,7 @@ import {
 const algorithm = process.env.ENCRYPTION_ALGO;
 const hexkey = process.env.ENCRYPTION_KEY;
 const hexiv = process.env.ENCRYPTION_IV;
+const saltRound = process.env.HASH_SALT_ROUNDS;
 
 const key = Buffer.from(hexkey, "hex");
 const iv = Buffer.from(hexiv, "hex");

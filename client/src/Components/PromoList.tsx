@@ -4,6 +4,7 @@ import Skeleton from "./Skeleton";
 import { ButtonCart } from "./CartButton";
 import { BgSkewedRect } from "../Utils/SVGIcons";
 import Price from "./Price";
+import Img from "./Img";
 
 export interface PromoListProps extends React.HTMLProps<HTMLDivElement> {
   promos: Product[]
@@ -40,7 +41,7 @@ export function PromoItem(props: PromoProps) {
 
       <div className="p-8 relative">
         <BgSkewedRect className="absolute top-[50%] left-[50%] translate-[-50%] aspect-[3/4] size-[18em] sm:size-[28em]"/>
-        <img src={props.promo.imgs[0]} alt="/Logo.svg" className={`aspect-[3/4]! max-w-[190px] sm:max-w-[320px] ${!isLeft? "rotate-3":"rotate-[-3deg]"} object-cover m-auto shadow-xs shadow-black`} />
+        <Img src={props.promo.imgs[0]} className={`aspect-[3/4]! max-w-[190px] sm:max-w-[320px] ${!isLeft? "rotate-3":"rotate-[-3deg]"} object-cover m-auto shadow-xs shadow-black`} />
       </div>
 
       <div className={`md:flex flex-col md:justify-center text-lg md:text-xl lg:text-2xl ${textAlign}`}>

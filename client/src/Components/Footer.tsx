@@ -1,12 +1,13 @@
 import { IconEnvelope, IconLocationPin, IconPhone } from "../Utils/SVGIcons";
+import Img from "./Img";
 import Link from "./Link";
 
 export default function Footer() {
   return <div className="bg-primary-900 p-1 text-white mt-2">
-    <div className="px-2 py-2 tracking-wide fraunces-regular text-md flex flex-col items-center gap-4 sm:flex-row mb-4">
+    <div className="px-2 py-2 tracking-wide fraunces-regular text-md flex flex-col items-center gap-6 sm:flex-row mb-4">
       <div className="w-max m-auto md:m-[initial] md:w-[initial]">
         <div className="flex gap-2 items-center justify-center md:justify-normal mb-4">
-          <img className="size-9 rounded-md" src="/Logo_2.svg" alt="icon" title="icon" />
+          <Img className="size-9 rounded-md" src="/Logo_2.svg" alt="icon" title="icon" />
           <p>Kape Kalakal</p>
         </div>
         <p className="text-sm w-[20em] text-center md:text-left">Brew cafe quality coffee without the fuss or waste of traditional paper filters.</p>
@@ -33,7 +34,6 @@ export default function Footer() {
           </li>
         </ul>
       </div>
-
 
       <div className="w-max m-auto md:m-[initial] md:w-[initial]">
         <h1 className="w-max mb-4">Contact us</h1>

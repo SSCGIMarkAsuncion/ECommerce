@@ -27,9 +27,7 @@ export default function Cart() {
           <div className="text-md w-full md:w-max min-w-[200px]">
             <Card className="p-2 hover:bg-[initial]! fraunces-regular">
               <CartBreakdown />
-              <Button className="mt-4 w-full" onClick={() => {
-                navigate("/checkout");
-              }}>Checkout</Button>
+              <Button className="mt-4 w-full">Checkout</Button>
             </Card>
           </div>
         </div>

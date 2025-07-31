@@ -120,7 +120,7 @@ export async function GetCart(req, res) {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-export async function GetCheckout(req, res) {
+export async function GetBreakdown(req, res) {
   const uid = new ObjectId(String(req.tokenPayload.id));
 
   const cart = await Cart.findOne({

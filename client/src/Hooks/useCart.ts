@@ -81,8 +81,8 @@ export default function useCart() {
     }, []);
   };
 
-  const checkout = async () => {
-    const res = await fetch(`${api}/cart/checkout`,{
+  const getBreakdown = async () => {
+    const res = await fetch(`${api}/cart/breakdown`,{
       credentials: "include"
     });
 
@@ -98,6 +98,6 @@ export default function useCart() {
     getCarts,
     getCartsAndSetCarts,
     removeFromCart,
-    checkout
+    getBreakdown
   }
 }

@@ -3,6 +3,7 @@ import type { CartItem } from "../Models/Cart";
 import { Card } from "./Card";
 import { ButtonCart, ButtonCartDelete } from "./CartButton";
 import Price from "./Price";
+import Img from "./Img";
 
 export interface CartItemProps extends HTMLProps<HTMLDivElement> {
   cartItem: CartItem
@@ -17,7 +18,7 @@ export default function CartItem(props: CartItemProps) {
 
   return <Card className="relative aspect-[9/5] h-[200px] fraunces-regular flex gap-2 text-md md:text-lg">
     <div className="w-[35%] md:w-[30%] bg-gray-100">
-      <img src={product.imgs[0]} alt="/Logo.svg" className="m-auto w-auto h-full" />
+      <Img src={product.imgs[0]} className="m-auto w-auto h-full" />
     </div>
     <div className="h-full flex flex-col gap-1 flex-1">
       <div className="py-2">

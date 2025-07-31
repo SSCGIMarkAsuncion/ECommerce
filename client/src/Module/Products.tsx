@@ -10,6 +10,7 @@ import { useProductContext } from "../Context/Product";
 import { ProductFilter } from "../Components/ProductFilter";
 import { Theme } from "../Utils/Theme";
 import SearchIcon from "../assets/Search.svg"
+import Img from "../Components/Img";
 
 export function Products() {
   return <>
@@ -54,7 +55,7 @@ export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
 
 function ProductItem({ product, ...props}: ProductItemProps) {
   return <Card {...props} className="w-full flex flex-col animate-appear relative">
-    <img src={product.imgs[0]} alt="/Logo.svg" className="w-full h-[100px] md:h-[200px] object-cover"/>
+    <Img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
     <div className="p-2 text-sm flex flex-col flex-1 gap-4">
       <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
       <div className="mt-auto">
@@ -74,7 +75,7 @@ function ProductItem({ product, ...props}: ProductItemProps) {
 function NoResults() {
   return <div
    className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
-    <img src={SearchIcon} className="size-20"/>
+    <Img src={SearchIcon} className="size-20"/>
     <div>
       <p className="mt-2">No Results Found</p>
       <p className="text-primary-500 text-sm">We can't find any item matching your search</p>

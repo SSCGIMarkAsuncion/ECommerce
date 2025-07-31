@@ -4,6 +4,7 @@ import Button from "./Button";
 import { IconXMark } from "../Utils/SVGIcons";
 import useImageMedia from "../Hooks/useImageMedia";
 import type { MError } from "../Utils/Error";
+import Img from "./Img";
 
 export interface ImageEditorProps extends HTMLProps<HTMLDivElement> {
   imgs: string[],
@@ -91,7 +92,7 @@ export function Image({ editable = false, ...props }: ImageProps) {
   delete forwardProps.onRemove;
 
   return <div className="bg-gray-200 relative flex items-center">
-    <img {...forwardProps} alt="/Logo.svg" className={`m-auto object-cover ${props.className}`}/>
+    <Img {...forwardProps} className={`m-auto object-cover ${props.className}`}/>
     { editable && <Button pType="icon" className="absolute top-1 right-1 ml-auto w-8 h-8" onClick={(e) => {
         e.stopPropagation();
         if (props.onRemove)

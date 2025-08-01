@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type HTMLAttributes } from "react";
+import { useEffect, useRef, useState, type HTMLAttributes } from "react";
 import { Product } from "../Models/Product";
 import Button from "./Button";
 import useProducts from "../Hooks/useProducts";

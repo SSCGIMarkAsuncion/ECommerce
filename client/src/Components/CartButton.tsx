@@ -22,7 +22,7 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
     return item.id == product.id;
   })[0];
 
-  return <Btn className={`fraunces-regular w-full ${props.className}`}
+  return <Btn className={`w-full ${props.className}`}
     cartAmount={cartItem?.amount}
     onChangeCartAmount={(newAmount: number) => {
       if (user == null) {

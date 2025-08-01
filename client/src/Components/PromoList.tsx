@@ -35,8 +35,8 @@ export function PromoItem(props: PromoProps) {
   const textAlign = isLeft? "text-initial":"text-right";
   const percentOff = props.promo.discount;
 
-  return <div className="w-full sm:w-[90%] lg:w-[70%] m-auto">
-    <h2 className={`fraunces-regular text-3xl tracking-wide text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>
+  return <div className="fraunces-regular w-full sm:w-[90%] lg:w-[70%] m-auto">
+    <h2 className={`text-3xl tracking-wide text-primary-950 mb-2 ${textAlign} font-semibold`}>{props.promo.name}</h2>
     <div className={`mb-4 block md:flex md:gap-2 ${isLeft? "flex-row":"flex-row-reverse"}`}>
 
       <div className="p-8 relative">

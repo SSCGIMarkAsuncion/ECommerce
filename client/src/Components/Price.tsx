@@ -12,7 +12,7 @@ export default function Price({ price, promoPrice, promoTextSize = "text-sm",...
   const discountedPrice = (promoPrice)? Math.trunc((price * (1-promoPrice/100))*100)/100:0;
   const hasDiscount = promoPrice && promoPrice > 0;
 
-  return <p className={`fraunces-regular text-primary-950 ${props.className}`}>
+  return <p className={`${props.className}`}>
     { hasDiscount? <> <span className={`align-top line-through ${promoTextSize}`}>{toCurrency(price)}</span></>:<></> }
     <span>{toCurrency(hasDiscount? discountedPrice:price)}</span>
   </p>

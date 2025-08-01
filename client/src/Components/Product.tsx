@@ -17,8 +17,8 @@ export function ProductItem({ product, ...props}: ProductItemProps) {
     navigation(`/product/${product.id}`);
   }}>
     <Img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
-    <div className="p-2 text-sm flex flex-col flex-1 gap-4">
-      <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
+    <div className="fraunces-regular p-2 text-sm flex flex-col flex-1 gap-4">
+      <p className="text-wrap text-primary-950">{product.name}</p>
       <div className="mt-auto">
         <Price price={product.price} promoPrice={product.discount} promoTextSize="text-xs" className="font-medium text-right"/>
         <ButtonCart product={product} />

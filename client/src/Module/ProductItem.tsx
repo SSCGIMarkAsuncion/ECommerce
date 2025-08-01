@@ -8,8 +8,13 @@ import { useNotification } from "../Context/Notify";
 import { MError } from "../Utils/Error";
 import Skeleton from "../Components/Skeleton";
 import { Pill } from "../Components/Pill";
-import Button from "../Components/Button";
 import { ButtonCart } from "../Components/CartButton";
+
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
+import Button from "../Components/Button";
+import { IconCaretDown } from "../Utils/SVGIcons";
+import Price from "../Components/Price";
 
 export default function MProductItem() {
   const { id } = useParams();
@@ -34,20 +39,27 @@ export default function MProductItem() {
   return <>
     <NavbarOffset />
     <div className="min-h-[70svh] p-4 w-full md:w-[96%] mx-0 md:mx-auto grid grid-cols-1 md:grid-cols-2 gap-2">
-      <Skeleton className="bg-primary-300"/>
+      { !product?
+        <Skeleton className="bg-primary-300"/>:
+        <>
+          <Gallery />
+        </>
+      }
       { !product?
 
         <ProductLoading />:
-        <div className="fraunces-regular">
-          <h1 className="text-xl md:text-3xl tracking-wide">{product.name}</h1>
-          <div className="flex gap-1">
+        <div className="fraunces-regular p-4 text-primary-900">
+          <h1 className="text-xl font-semibold md:text-3xl tracking-wide ">{product.name}</h1>
+          <div className="flex gap-1 text-xs">
           {
             product.tags.map((tag) => {
               return <Pill>{tag}</Pill>;
             })
           }
           </div>
-          <p className="text-md md:text-lg mt-4">{product.description}</p>
+          <Price className="text-3xl" price={product.price} promoPrice={product.discount} />
+          <p className="text-sm mt-4">Details:</p>
+          <p className="text-md md:text-lg">{product.description}</p>
           <ButtonCart product={product} className="mt-8 w-full md:w-[40%]" />
         </div>
       }
@@ -65,4 +77,24 @@ function ProductLoading() {
 
     <Skeleton className="bg-primary-300 w-[30%] aspect-[6/2] mt-8" />
   </div>
+}
+
+function Gallery() {
+  const images = [
+    {
+      original: "https://picsum.photos/id/1018/1000/600/",
+      thumbnail: "https://picsum.photos/id/1018/250/150/",
+    },
+    {
+      original: "https://picsum.photos/id/1015/1000/600/",
+      thumbnail: "https://picsum.photos/id/1015/250/150/",
+    },
+    {
+      original: "https://picsum.photos/id/1019/1000/600/",
+      thumbnail: "https://picsum.photos/id/1019/250/150/",
+    },
+  ];
+  return <ImageGallery
+   showPlayButton={false}
+   items={images} />;
 }

@@ -16,7 +16,7 @@ export default function CartItem(props: CartItemProps) {
 
   const product = props.cartItem.product!;
 
-  return <Card className="relative aspect-[9/5] h-[200px] fraunces-regular flex gap-2 text-md md:text-lg">
+  return <Card className="fraunces-regular relative aspect-[9/5] h-[200px] fraunces-regular flex gap-2 text-md md:text-lg">
     <div className="w-[35%] md:w-[30%] bg-gray-100">
       <Img src={product.imgs[0]} className="m-auto w-auto h-full" />
     </div>

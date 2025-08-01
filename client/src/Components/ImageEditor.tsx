@@ -5,6 +5,7 @@ import { IconXMark } from "../Utils/SVGIcons";
 import useImageMedia from "../Hooks/useImageMedia";
 import type { MError } from "../Utils/Error";
 import Img from "./Img";
+import { useNotification } from "../Context/Notify";
 
 export interface ImageEditorProps extends HTMLProps<HTMLDivElement> {
   imgs: string[],
@@ -16,14 +17,19 @@ export interface ImageEditorProps extends HTMLProps<HTMLDivElement> {
 
 export function ImageEditor(props: ImageEditorProps) {
   const [ imgs, setImgs ] = useState([ ...props.imgs ]);
-  const { upload } = useImageMedia();
+  const { upload, deleteImg } = useImageMedia();
   const ref = useRef<HTMLInputElement>(null);
+  const notify = useNotification();
 
   useEffect(() => {
     props.onChangeImgs(imgs);
   }, [imgs]);
 
   const onRemove = useCallback((img: string) => {
+    deleteImg(img)
+      .then((v) => notify("info", `Image deletion status ${v.result || "ok"}`))
+      .catch((e) => notify("error", e.message));
+
     setImgs((v) => {
       return [ ...v.filter((i) => i !== img) ];
     });

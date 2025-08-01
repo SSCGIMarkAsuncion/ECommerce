@@ -21,7 +21,25 @@ export default function useImageMedia() {
     throw new MError(resjson);
   };
 
+  const deleteImg = async (link: string) => {
+    const res = await fetch(`${url}/delete`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+      body: link
+    });
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status < 399) {
+      return resjson;
+    }
+    throw new MError(resjson);
+  }
+
   return {
-    upload
+    upload,
+    deleteImg
   };
 }

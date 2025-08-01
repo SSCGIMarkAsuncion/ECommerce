@@ -40,9 +40,6 @@ function Page() {
 
   return <>
     <div className="h-[var(--appbar-height)]"></div>
-    {/* <div className="m-2">
-      <FormError errors={errors?.errors || []} />
-    </div> */}
     <div className="block md:flex">
       <SidebarOffset className="hidden md:block" />
       {

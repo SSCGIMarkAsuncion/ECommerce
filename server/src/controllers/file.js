@@ -1,5 +1,6 @@
 import MError from '../error.js';
-import { uploadStream } from "../cloudinary.js";
+import { deleteImg, uploadStream } from "../cloudinary.js";
+import { extractPublicId } from "cloudinary-build-url"
 
 /** 
  * success return type
@@ -37,5 +38,11 @@ export async function DeleteFile(req, res) {
     throw new MError(404, "URL is missing from body");
   }
 
-  throw new MError(500, "NOT IMPLEMENTED YET");
+  const id = extractPublicId(url);
+  if (!id) {
+    throw new MError(400, "Not a cloudinary link");
+  }
+
+  const result = await deleteImg(id);
+  res.status(200).json({ ...result });
 }

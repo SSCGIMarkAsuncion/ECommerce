@@ -3,6 +3,7 @@ import { Theme } from "../Utils/Theme";
 import { IconCaretDown, IconXMark } from "../Utils/SVGIcons";
 import Button, { type ButtonProps } from "./Button";
 import { useNavigate } from "react-router";
+import A from "./A";
 
 export function SlidingMenuContent(props: HTMLProps<HTMLDivElement>) {
   const animation = !Boolean(props.hidden)? "animate-slide-down opacity-1":"animate-slide-up opacity-0";
@@ -21,15 +22,9 @@ export function SlidingMenuContent(props: HTMLProps<HTMLDivElement>) {
 }
 
 export function MenuItem(props: HTMLProps<HTMLAnchorElement>) {
-  const navigate = useNavigate();
-  return <a className={`${Theme.transition} cursor-pointer p-2 hover:bg-primary-950 ${props.className}`} href={props.href}
-    onClick={props.onClick || ((e) => {
-      e.preventDefault();
-      if (props.href)
-        navigate(props.href);
-    })}>
+  return <A className={`p-2 hover:bg-primary-950! ${props.className}`} href={props.href} >
     {props.children}
-  </a>
+  </A>
 }
 
 export interface SubMenuProps extends HTMLProps<HTMLDivElement> {

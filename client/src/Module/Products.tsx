@@ -1,16 +1,12 @@
-import { type HTMLProps } from "react";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
-import { type Product } from "../Models/Product";
 import Loading from "../Components/Loading";
-import { Card } from "../Components/Card";
-import { ButtonCart } from "../Components/CartButton";
-import Price from "../Components/Price";
 import { useProductContext } from "../Context/Product";
 import { ProductFilter } from "../Components/ProductFilter";
 import { Theme } from "../Utils/Theme";
 import SearchIcon from "../assets/Search.svg"
 import Img from "../Components/Img";
+import { ProductItem } from "../Components/Product";
 
 export function Products() {
   return <>
@@ -47,29 +43,6 @@ function ProductView() {
     </div>
     { products.length == 0 && <NoResults /> }
   </>
-}
-
-export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
-  product: Product
-};
-
-function ProductItem({ product, ...props}: ProductItemProps) {
-  return <Card {...props} className="w-full flex flex-col animate-appear relative">
-    <Img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
-    <div className="p-2 text-sm flex flex-col flex-1 gap-4">
-      <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>
-      <div className="mt-auto">
-        <Price price={product.price} promoPrice={product.discount} promoTextSize="text-xs" className="font-medium text-right"/>
-        <ButtonCart product={product} />
-      </div>
-    </div>
-    {
-      product.discount > 0 &&
-      <div className="aspect-square w-8 flex items-center justify-center bg-primary-900 text-white absolute top-2 left-2 shadow-sm/75 shadow-black">
-        <p className="my-auto font-bold">%</p>
-      </div>
-    }
-  </Card>
 }
 
 function NoResults() {

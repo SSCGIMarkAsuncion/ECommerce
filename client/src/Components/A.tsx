@@ -6,9 +6,9 @@ export default function A(props: HTMLProps<HTMLAnchorElement>) {
   const navigate = useNavigate();
   return <a {...props}
     onClick={(e) => {
+      if (!props.href) return;
+      if (props.href.includes('#')) return;
       e.preventDefault();
-      e.stopPropagation();
-      if (props.href)
         navigate(props.href);
     }}
     className={`text-white hover:underline hover:brightness-75 active:hover:brightness-75 cursor-pointer active:underline ${Theme.transition} ${props.className}`}>

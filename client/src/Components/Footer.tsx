@@ -1,6 +1,7 @@
 import { IconEnvelope, IconLocationPin, IconPhone } from "../Utils/SVGIcons";
 import Img from "./Img";
-import Link from "./Link";
+import A from "./A";
+const Link = A;
 
 export default function Footer() {
   return <div className="bg-primary-900 p-1 text-white mt-2">
@@ -18,17 +19,17 @@ export default function Footer() {
         <h1 className="w-max mb-4">Navigation</h1>
         <ul className="text-sm *:my-2 text-gray-300 [&_svg]:fill-gray-100">
           <li>
-            <Link href="/products">
+            <Link className="flex items-center gap-1" href="/products">
               Products
             </Link>
           </li>
           <li>
-            <Link href="/#contactus">
+            <Link className="flex items-center gap-1" href="/#contactus">
               Contact us
             </Link>
           </li>
           <li>
-            <Link href="/aboutus">
+            <Link className="flex items-center gap-1" href="/aboutus">
               About us
             </Link>
           </li>
@@ -39,19 +40,19 @@ export default function Footer() {
         <h1 className="w-max mb-4">Contact us</h1>
         <ul className="pl-2 text-sm *:my-2 text-gray-300 [&_svg]:fill-gray-100">
           <li>
-            <Link href="tel:09212312213">
+            <Link className="flex items-center gap-1" href="tel:09212312213">
               <IconPhone className="w-[12px] h-auto" />
               09xxxxxxxxx
             </Link>
           </li>
           <li>
-            <Link href="mailto:kapekalakal@gmail.com">
+            <Link className="flex items-center gap-1" href="mailto:kapekalakal@gmail.com">
               <IconEnvelope className="w-[12px] h-auto" />
               kapekalakal@gmail.com
             </Link>
           </li>
           <li>
-            <Link href="#" target="_blank">
+            <Link className="flex items-center gap-1" href="#" target="_blank">
               <IconLocationPin className="w-[12px] h-auto" />
               7 Mt. Malinang, Quezon City, Metro Manila
             </Link>

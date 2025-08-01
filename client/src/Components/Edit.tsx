@@ -188,7 +188,7 @@ export function EditUser(props: EditProps<User>) {
       </div>
 
       <div className="*:flex-1 flex gap-1">
-        <InputPassword id="password" label="Password" className="text-sm" required defaultValue={""} validators={[checkPassword]}  />
+        <InputPassword id="password" label="Password" className="text-sm" defaultValue={""} validators={[checkPassword]}  />
         <Select id="role" label="Role:" defaultValue={currData.role || "user"}>
           <option value="user">User</option>
           <option value="admin">Admin</option>

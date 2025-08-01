@@ -3,7 +3,6 @@ import { Theme } from "../Utils/Theme";
 import { IconEye, IconEyeSlash, IconSearch, IconXMark } from "../Utils/SVGIcons";
 import useDelayCallback from "../Hooks/useDelayCallback";
 import Button from "./Button";
-import SearchIcon from "../assets/Search.svg"
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
   suffix?: ReactNode,
@@ -59,7 +58,7 @@ export default function Input(props: InputProps) {
   const delayedCallback = useDelayCallback(onValidate, 500);
 
   return <div hidden={props.hidden}>
-    <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
+    <label htmlFor={props.id}>{props.label}</label>
     <div 
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
@@ -97,7 +96,12 @@ export function InputPassword(props: InputProps) {
     });
   }, []);
 
-  return <Input {...props} ref={props.ref} validators={props.validators} required id={props.id} label={props.label}
+  const required: any = { };
+  if (props.required) {
+    required.required = true;
+  }
+
+  return <Input {...props} ref={props.ref} validators={props.validators} {...required} id={props.id} label={props.label}
     type={type} suffix={
       <div className="w-[18px] h-[18px] flex items-center cursor-pointer" onClick={(e) => {
         e.stopPropagation();

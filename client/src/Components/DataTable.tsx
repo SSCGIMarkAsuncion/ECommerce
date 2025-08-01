@@ -8,7 +8,8 @@ import { useEditableDataContext, type ActionTypes } from "../Context/EditableDat
 export interface DataTableProps extends HTMLProps<HTMLElement> {
   tableColumns: any[],
   tableData: any[],
-  title: string
+  title: string,
+  containerClass?: string
 };
 
 export default function DataTable(props: DataTableProps) {
@@ -54,7 +55,7 @@ export default function DataTable(props: DataTableProps) {
       setPageIndex(next.pageIndex);
     },
   });
-  return <div className="p-4">
+  return <div className={`p-4 ${props.containerClass || ""}`}>
       <div className="flex gap-2 capitalize items-center">
         <h3 className="text-2xl">{props.title}</h3>
         <Button onClick={() => {

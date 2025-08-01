@@ -7,6 +7,10 @@ export const Theme = {
     classHeight: "h-[var(--appbar-height)]",
     background: "bg-primary-900",
   },
+  sidebar: {
+    // size: "var(--sidebar-width)",
+    background: "bg-primary-800"
+  },
   transition: "transition-all ease-in duration-200",
   button: {
     disabled: "disabled:bg-neutral-500 disabled:text-neutral-200 disabled:cursor-default! disabled:pointer-events-none",

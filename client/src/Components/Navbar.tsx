@@ -8,7 +8,7 @@ import { useUserContext } from "../Context/User";
 import A from "./A";
 import { useCartContext } from "../Context/Cart";
 
-export type NavbarType = "" | "product";
+export type NavbarType = "" | "product" | "admin";
 export interface NavbarProps {
   className?: string,
   type?: NavbarType,
@@ -43,7 +43,7 @@ export default function Navbar({ className = "", type="", admin = false }: Navba
         });
         window.dispatchEvent(ev);
       }}
-        pType="icon" className="w-[33px] h-[33px] mr-2">
+        pType="icon" className="w-[33px] h-[33px] mr-2 md:hidden">
         <IconSidebar fill="#fff" className={`${sidebarOpen? "rotate-180":""}`} />
       </Button>
     }
@@ -60,6 +60,9 @@ export default function Navbar({ className = "", type="", admin = false }: Navba
   </div>
 }
 
+export function NavbarOffset() {
+  return <div className="h-[var(--appbar-height)]"></div>
+}
 
 function NavbarMenu({ type = "" }: { type: NavbarType }) {
   const [ isOpen, setOpen ] = useState(true);
@@ -79,18 +82,18 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
       <IconBars fill="#fff" />
     </Button>
     <SlidingMenuContent onClick={toggle} hidden={isOpen} className="text-lg text-center md:hidden">
-      <MenuItem href="/products" className="flex items-center gap-2 justify-center">
+      <MenuItem href="/products" className={`flex items-center gap-2 justify-center ${type == "admin"? "hidden":""}`}>
         <IconSearch className="w-[18px] h-[18px]"/>
         Products
       </MenuItem>
-      <MenuItem href="/cart" className="flex items-center gap-2 justify-center">
+      <MenuItem href="/cart" className={`flex items-center gap-2 justify-center`}>
         <IconCart className="w-[18px] h-[18px]"/>
         Cart
       </MenuItem>
-      <MenuItem href="/#contact" className="flex items-center gap-2 justify-center">
+      <MenuItem href="/#contact" className={`flex items-center gap-2 justify-center ${type == "admin"? "hidden":""}`}>
         Contact Us
       </MenuItem>
-      <MenuItem href="/aboutus" className="flex items-center gap-2 justify-center">
+      <MenuItem href="/aboutus" className={`flex items-center gap-2 justify-center ${type == "admin"? "hidden":""}`}>
         About Us
       </MenuItem>
       { user == null?
@@ -128,9 +131,14 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
         </>
       } */}
       <div className="flex-1"></div>
-      <A href="/products">Products</A>
-      <A href="/#contact">Contact Us</A>
-      <A href="/aboutus">About Us</A>
+      {
+        type !== "admin" &&
+        <>
+          <A href="/products">Products</A>
+          <A href="/#contact">Contact Us</A>
+          <A href="/aboutus">About Us</A>
+        </>
+      }
       <div className="flex-1"></div>
       <div hidden={!user} className="relative">
         <Button href="/cart" pType="icon" pColor="whitePrimary" className="size-8"><IconCart /></Button>

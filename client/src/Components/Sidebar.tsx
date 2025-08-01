@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ButtonHTMLAttributes, type HTMLAttributes, type HTMLProps } from "react";
+import { useCallback, useEffect, useState, type ButtonHTMLAttributes, type HTMLAttributes } from "react";
 import { Theme } from "../Utils/Theme";
 
 export default function Sidebar(props: HTMLAttributes<HTMLDivElement>) {
@@ -27,11 +27,13 @@ export default function Sidebar(props: HTMLAttributes<HTMLDivElement>) {
   return <div
    {...props}
    onClick={onClose}
-   className={`${isOpen? "animate-slide-right-in":"animate-slide-left-out"} h-full pt-[var(--appbar-height)] absolute top-0 left-0 max-w-full md:max-w-[200px] bg-primary-800 text-white ${props.className}`}>
-    <div className="py-4">
+   className={`${isOpen? "animate-slide-right-in":"animate-slide-left-out md:animate-slide-right-in"} h-[100svh] pt-[var(--appbar-height)] absolute top-0 left-0 md:w-[var(--sidebar-width)] ${Theme.sidebar.background} text-white ${props.className}`}>
       {props.children}
-    </div>
   </div>;
+}
+
+export function SidebarOffset({ className ="" }) {
+  return <div className={`w-[var(--sidebar-width)] ${className}`}></div>
 }
 
 export function SidebarButton(props: ButtonHTMLAttributes<HTMLButtonElement>) {

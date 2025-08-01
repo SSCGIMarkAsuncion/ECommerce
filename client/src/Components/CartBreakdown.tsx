@@ -19,7 +19,7 @@ export default function CartBreakdown() {
         setCheckoutInfo(info);
       }
       catch (e) {
-        notify("error", ( e as MError ).msg);
+        notify("error", ( e as MError ).message);
       }
     }
     a();

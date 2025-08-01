@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import User from "../Models/User";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
+import Loading from "../Components/Loading";
 
 export type TUserContext = User | null;
 export interface TUserContextDispatcher {
@@ -77,6 +78,10 @@ export function AdminOnly({ children }: { children: ReactNode }) {
       navigate("/");
     }
   }, [loading, user]);
+
+  if (loading) {
+    return <Loading />
+  }
 
   return <>
     {children}

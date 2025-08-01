@@ -1,12 +1,12 @@
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
-import Loading from "../Components/Loading";
 import { useProductContext } from "../Context/Product";
 import { ProductFilter } from "../Components/ProductFilter";
 import { Theme } from "../Utils/Theme";
 import SearchIcon from "../assets/Search.svg"
 import Img from "../Components/Img";
 import { ProductItem } from "../Components/Product";
+import Skeleton from "../Components/Skeleton";
 
 export function Products() {
   return <>
@@ -29,19 +29,19 @@ function ProductView() {
     productdispatcher: { loading }
   } = useProductContext();
 
-  if (loading) {
-    return <Loading>Loading Products</Loading>
-  }
-
   return<>
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
       {
-        products.map((product) => {
+        loading?
+        (new Array(10).fill(null).map((_) => {
+          return <Skeleton className="h-[200px] bg-primary-100" />
+        }))
+        :products.map((product) => {
           return <ProductItem key={product.id} product={product} />
         })
       }
     </div>
-    { products.length == 0 && <NoResults /> }
+    { !loading && products.length == 0 && <NoResults /> }
   </>
 }
 

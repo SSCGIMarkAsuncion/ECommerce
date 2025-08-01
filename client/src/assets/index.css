@@ -96,6 +96,7 @@
 
 :root {
   --appbar-height: 50px;
+  --sidebar-width: 18svw;
   font-family: "Roboto", Avenir, Helvetica, Arial, sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;

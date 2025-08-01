@@ -24,7 +24,7 @@ export default function Footer() {
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-1" href="/#contactus">
+            <Link className="flex items-center gap-1" href="/#contact">
               Contact us
             </Link>
           </li>

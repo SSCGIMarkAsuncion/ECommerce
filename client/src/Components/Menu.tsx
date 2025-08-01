@@ -2,7 +2,6 @@ import { useCallback, useState, type HTMLProps } from "react";
 import { Theme } from "../Utils/Theme";
 import { IconCaretDown, IconXMark } from "../Utils/SVGIcons";
 import Button, { type ButtonProps } from "./Button";
-import { useNavigate } from "react-router";
 import A from "./A";
 
 export function SlidingMenuContent(props: HTMLProps<HTMLDivElement>) {
@@ -22,7 +21,7 @@ export function SlidingMenuContent(props: HTMLProps<HTMLDivElement>) {
 }
 
 export function MenuItem(props: HTMLProps<HTMLAnchorElement>) {
-  return <A className={`p-2 hover:bg-primary-950! ${props.className}`} href={props.href} >
+  return <A className={`p-2 hover:bg-primary-950! hover:no-underline! ${props.className}`} href={props.href} >
     {props.children}
   </A>
 }

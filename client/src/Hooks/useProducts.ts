@@ -36,8 +36,14 @@ export default function useProducts() {
     throw new MError(resjson);
   };
 
-  const getProductsById = async (id: string) => {
-    return {} as Product;
+  const getProductById = async (id: string) => {
+    const res = await fetch(`${url}/${id}`);
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status <= 399) {
+      return new Product(resjson);
+    }
+    throw new MError(resjson);
   };
 
   const updateProduct = async (update: Product) => {
@@ -112,7 +118,7 @@ export default function useProducts() {
 
   return {
     getProducts,
-    getProductsById,
+    getProductById,
     updateProduct,
     newProduct,
     removeProduct,

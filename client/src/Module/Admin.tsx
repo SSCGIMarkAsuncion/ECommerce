@@ -1,7 +1,7 @@
 import Navbar from "../Components/Navbar";
 import DataTable from "../Components/DataTable";
 import { useCallback, useEffect, useState } from "react";
-import Sidebar, { SidebarButton } from "../Components/Sidebar";
+import Sidebar, { SidebarButton, SidebarOffset } from "../Components/Sidebar";
 import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
 import Loading from "../Components/Loading";
 import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
@@ -9,6 +9,7 @@ import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
 import { Theme } from "../Utils/Theme";
 import SearchIcon from "../assets/Search.svg"
 import Img from "../Components/Img";
+import { useUserContext } from "../Context/User";
 
 export default function Admin() {
   return <EditableDataContextProvider>
@@ -17,6 +18,7 @@ export default function Admin() {
 }
 
 function Page() {
+  const { user } = useUserContext();
   const [ isLoading, setIsLoading ] = useState(false);
   const {
     actionType,
@@ -35,31 +37,40 @@ function Page() {
   }, [tableData, actionType])
 
   const currentData = tableData;
-  let mainContent = null;
-  if (isLoading) {
-    mainContent = <Loading>Loading Data</Loading>;
-  }
-  else if (currentData && currentData.data.length > 0) {
-    mainContent = <DataTable title={selectedData.selectedData} tableColumns={currentData.column} tableData={currentData.data} />
-  }
-  else {
-    mainContent = <NoContent />
-  }
 
   return <>
     <div className="h-[var(--appbar-height)]"></div>
     {/* <div className="m-2">
       <FormError errors={errors?.errors || []} />
     </div> */}
-    { mainContent }
-    <Sidebar>
-      <h1 className="text-white text-lg px-2">Data</h1>
-      <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
-      <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
-      <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
-      <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
+    <div className="block md:flex">
+      <SidebarOffset className="hidden md:block" />
+      {
+       (() => {
+        if (isLoading) {
+          return <Loading>Loading Data</Loading>;
+        }
+        else if (currentData && currentData.data.length > 0) {
+          return <DataTable containerClass="flex-1" title={selectedData.selectedData} tableColumns={currentData.column} tableData={currentData.data} />
+        }
+        return <NoContent />
+       })()
+      }
+    </div>
+    <Sidebar className="text-sm flex flex-col fraunces-regular">
+      <div className="py-4">
+        <h1 className="text-white text-lg px-2">Manage</h1>
+        <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
+        <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
+        <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
+        <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
+      </div>
+      <div className="mt-auto px-1">
+        <div className={`bg-primary-900 h-[2px]`} />
+        <p className="capitalize text-lg my-2">{user!.role}</p>
+      </div>
     </Sidebar>
-    <Navbar admin />
+    <Navbar admin type="admin" />
 
     <Editor />
   </>;
@@ -92,7 +103,7 @@ function Editor() {
 
 function NoContent() {
   return <div
-   className={`bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded} m-8`}>
+   className={`flex-1 bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded} m-8`}>
     <Img src={SearchIcon} className="size-20"/>
     <div>
       <p className="mt-2">No Data Found</p>

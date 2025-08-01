@@ -1,22 +1,21 @@
-export class MError {
-  msg: any;
+export class MError extends Error {
   constructor(msg: any) {
-    if (msg instanceof MError) {
-      this.msg = msg.msg;
+    if (msg instanceof Error) {
+      super(msg.message);
       return;
     }
-    this.msg = msg;
+    super(msg);
   }
 
   toErrorList() {
-    if (typeof this.msg == "string") {
-      return [this.msg];
+    if (typeof this.message == "string") {
+      return [this.message];
     }
 
-    const keys = Object.keys(this.msg)
+    const keys = Object.keys(this.message)
     let merrs: string[] = [];
     keys.forEach((key) => {
-      merrs.push(this.msg[key]);
+      merrs.push(this.message[key as any]);
     });
     return merrs;
   }

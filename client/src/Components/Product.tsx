@@ -4,13 +4,18 @@ import { Card } from "./Card"
 import Img from "./Img"
 import Price from "./Price"
 import { ButtonCart } from "./CartButton"
+import { useNavigate } from "react-router"
 
 export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
   product: Product
 };
 
 export function ProductItem({ product, ...props}: ProductItemProps) {
-  return <Card {...props} className="w-full flex flex-col animate-appear relative">
+  const navigation = useNavigate();
+  return <Card {...props} className="w-full flex flex-col animate-appear relative" onClick={(e) => {
+    e.stopPropagation();
+    navigation(`/product/${product.id}`);
+  }}>
     <Img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
     <div className="p-2 text-sm flex flex-col flex-1 gap-4">
       <p className="text-wrap fraunces-regular text-primary-950">{product.name}</p>

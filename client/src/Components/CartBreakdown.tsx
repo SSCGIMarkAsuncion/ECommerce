@@ -4,9 +4,11 @@ import { useNotification } from "../Context/Notify";
 import type { MError } from "../Utils/Error";
 import { Checkout } from "../Models/Cart";
 import { toCurrency } from "../Utils/Currency";
+import { useCartContext } from "../Context/Cart";
 
 export default function CartBreakdown() {
   const [ checkoutInfo, setCheckoutInfo ] = useState<Checkout | null>(null);
+  const { cart } = useCartContext();
   const { getBreakdown }  = useCart();
   const notify = useNotification();
 
@@ -21,7 +23,7 @@ export default function CartBreakdown() {
       }
     }
     a();
-  }, []);
+  }, [cart]);
 
   if (!checkoutInfo) return null;
 

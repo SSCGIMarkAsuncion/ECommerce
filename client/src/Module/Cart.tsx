@@ -7,7 +7,7 @@ import { Card } from "../Components/Card";
 import CartBreakdown from "../Components/CartBreakdown";
 import Radio from "../Components/Radio";
 import Img from "../Components/Img";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { useNotification } from "../Context/Notify";
 
 export default function Cart() {

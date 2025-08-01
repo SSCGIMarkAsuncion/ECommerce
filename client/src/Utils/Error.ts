@@ -1,10 +1,11 @@
-export class MError extends Error {
+export class MError {
+  message: string;
   constructor(msg: any) {
     if (msg instanceof Error) {
-      super(msg.message);
+      this.message = msg.message;
       return;
     }
-    super(msg);
+    this.message = msg;
   }
 
   toErrorList() {

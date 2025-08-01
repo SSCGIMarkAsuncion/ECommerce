@@ -14,6 +14,7 @@ import User from "../Models/User";
 import useUsers from "../Hooks/useUser";
 import { checkPassword } from "../Utils/FormValidators";
 import Select from "./Select";
+import useImageMedia from "../Hooks/useImageMedia";
 
 interface EditConfirmButtonsProps {
   loading: boolean,
@@ -29,16 +30,45 @@ function EditConfirmButtons(props: EditConfirmButtonsProps) {
 
 export interface EditProps<T> {
   data: T,
-  closeModal: () => void
+  closeModal: () => void,
+  loading: {
+    loading: boolean,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  },
+  ref?: React.RefObject<any>
 };
 
 export function EditProduct(props: EditProps<Product>) {
   const { updateProduct, newProduct } = useProducts();
   const { reload } = useEditableDataContext();
-  const [ loading, setLoading ] = useState(false);
   const [ currData, setCurrData ] = useState({ ...props.data });
   const [ err, setErr ] = useState<string[]>([]);
   const notify = useNotification();
+  const { deleteImg } = useImageMedia();
+  const { loading, setLoading } = props.loading;
+
+  const onCancel = useCallback(async () => {
+    setLoading(true);
+    const deleteImgs = currData.imgs.filter((link) => {
+      if (!currData.id) return true;
+      return !props.data.imgs.includes(link);
+    });
+
+    for (const link of deleteImgs) {
+      try {
+        notify("info", `Deleting ${link}`);
+        const v = await deleteImg(link)
+        notify("info", `Image deletion status ${v.result || "ok"}`)
+      }
+      catch(e: any) {
+         notify("error", e.message)
+      }
+    };
+    setLoading(false);
+    props.closeModal();
+  }, [currData]);
+  if (props.ref)
+    props.ref.current = onCancel;
 
   const onSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +158,7 @@ export function EditProduct(props: EditProps<Product>) {
         }}
       />
 
-      <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
+      <EditConfirmButtons loading={loading} onCancel={onCancel} />
     </form>
   </>
 }
@@ -136,7 +166,7 @@ export function EditProduct(props: EditProps<Product>) {
 export function EditUser(props: EditProps<User>) {
   const { updateUser, createUser } = useUsers();
   const { reload } = useEditableDataContext();
-  const [ loading, setLoading ] = useState(false);
+  const { loading, setLoading } = props.loading;
   const [ currData, _setCurrData ] = useState({ ...props.data });
   const [ err, setErr ] = useState<string[]>([]);
   const notify = useNotification();

@@ -1,4 +1,4 @@
-import { useEffect, useState, type HTMLAttributes } from "react";
+import { useCallback, useEffect, useRef, useState, type HTMLAttributes } from "react";
 import { Product } from "../Models/Product";
 import Button from "./Button";
 import useProducts from "../Hooks/useProducts";
@@ -25,21 +25,53 @@ export interface ModalEditProps {
   closeModal: () => void
 };
 
-export function ModalEdit({ closeModal }: ModalEditProps) {
+export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
   const { 
     selectedData: { selectedData: type },
     currentData: { currentData: data }
   } = useEditableDataContext();
 
+  const customCloseTrigger = useRef<(() => Promise<void>) | null>(null);
+  const closeTrigger = useRef(() => {});
+
+  const [ loading, setLoading ] = useState(false);
+
+  useEffect(() => {
+    closeTrigger.current = async () => {
+      // console.log("loading", loading);
+      if (loading) return;
+      // console.log("running closeTrigger", customCloseTrigger.current);
+
+      if (customCloseTrigger.current)
+        await customCloseTrigger.current();
+
+      cmodal();
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    function close(e: KeyboardEvent) {
+      if (e.key == "Escape") {
+        closeTrigger.current();
+      }
+    }
+
+    window.addEventListener("keydown", close)
+    return () => {
+      window.removeEventListener("keydown", close);
+    }
+  }, [])
+
   let editComponent = null;
   let label = "";
+  const ploading={loading, setLoading}
   switch (type) {
     case "products":
-      editComponent = <EditProduct closeModal={closeModal} data={data as Product || Product.empty()} />
+      editComponent = <EditProduct ref={customCloseTrigger} loading={ploading} closeModal={cmodal} data={data as Product || Product.empty()} />
       label = "Product";
       break;
     case "users":
-      editComponent = <EditUser closeModal={closeModal} data={data as User || User.empty()} />
+      editComponent = <EditUser loading={ploading} closeModal={cmodal} data={data as User || User.empty()} />
       label = "User";
       break;
     case "orders":
@@ -49,20 +81,6 @@ export function ModalEdit({ closeModal }: ModalEditProps) {
       label = "Payment";
       break;
   };
-
-  useEffect(() => {
-    function close(e: KeyboardEvent) {
-      if (e.key == "Escape") {
-        closeModal();
-      }
-    }
-
-    window.addEventListener("keydown", close)
-    return () => {
-      window.removeEventListener("keydown", close);
-      // console.log("keydown removed");
-    }
-  }, [])
 
   return <div onClick={(e) => e.stopPropagation()} className="overflow-y-auto w-[80%] md:w-[90%] m-auto rounded-xs bg-white p-4 animate-slide-down">
     <div className="overflow-y-auto">

@@ -9,7 +9,13 @@ export const ProductSchema = new mongoose.Schema({
   description: String,
   price: {
     type: Number,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return v > 0;
+      },
+      message: _ => "price must be greater than 0. use discount for free items"
+    }
   },
   discount: {
     type: Number,

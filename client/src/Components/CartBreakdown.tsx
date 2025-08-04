@@ -28,6 +28,7 @@ export default function CartBreakdown() {
   if (!checkoutInfo) return null;
 
   return <div className="mb-2 *:mb-1">
+    <p className="font-semibold mb-1">Computation</p>
     <div className="grid grid-cols-2"><p>Total Items:</p> <p className="text-right">{checkoutInfo.itemsAmount}</p></div>
     <div className="grid grid-cols-2"><p>Vat:</p> <p className="text-right">{checkoutInfo.vatRate}%</p></div>
     <div className="grid grid-cols-2"><p>Subtotal:</p> <p className="text-right">{toCurrency(checkoutInfo.subtotal)}</p></div>

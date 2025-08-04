@@ -1,4 +1,4 @@
-import { useCallback, useState, type HTMLProps } from "react";
+import { useCallback, useEffect, useRef, useState, type HTMLProps } from "react";
 import { Theme } from "../Utils/Theme";
 import { IconCaretDown, IconXMark } from "../Utils/SVGIcons";
 import Button, { type ButtonProps } from "./Button";
@@ -21,7 +21,7 @@ export function SlidingMenuContent(props: HTMLProps<HTMLDivElement>) {
 }
 
 export function MenuItem(props: HTMLProps<HTMLAnchorElement>) {
-  return <A className={`p-2 hover:bg-primary-950! hover:no-underline! ${props.className}`} href={props.href} >
+  return <A {...props} className={`p-2 hover:bg-primary-950! hover:no-underline! ${props.className}`} href={props.href} >
     {props.children}
   </A>
 }
@@ -54,9 +54,26 @@ export interface ButtonMenu extends ButtonProps {
 
 export function ButtonMenu(props: ButtonMenu) {
   const [ isOpen, setIsOpen ] = useState(false);
+  const refSubMenu = useRef<HTMLDivElement>(null);
   const toggle = useCallback(() => {
     setIsOpen(v => !v);
   }, []);
+
+  useEffect(() => {
+    if (!refSubMenu.current) return;
+    const pad = 10;
+    refSubMenu.current.style.left = '';
+    refSubMenu.current.style.right = '';
+    const { left, width } = refSubMenu.current.getBoundingClientRect();
+
+    // implement left side if needed
+
+    if (left+width >= window.innerWidth - pad) {
+      refSubMenu.current.style.left = `${(left+width)-window.innerWidth-pad}px`;
+    }
+
+  }, [refSubMenu, isOpen]);
+
   return <div className="relative cursor-pointer" onClick={toggle}>
     <Button pColor="none" onClick={(e) => {
       e.stopPropagation();
@@ -67,7 +84,7 @@ export function ButtonMenu(props: ButtonMenu) {
       <IconCaretDown className={`${isOpen? "animate-rotate-180":"animate-rotate-180-rev"}`}/>
       </div>
     </Button>
-    <div hidden={!isOpen} className={`${isOpen? "animate-slide-down pointer-events-auto":"animate-slide-up pointer-events-none"} absolute bottom-[-1] bg-primary-700 py-1 ${Theme.rounded} bg-primary-900 shadow-sm shadow-black/25 flex flex-col w-max translate-x-[-25%]`}>
+    <div ref={refSubMenu} hidden={!isOpen} className={`${isOpen? "animate-slide-down pointer-events-auto":"animate-slide-up pointer-events-none"} absolute bottom-[-1] bg-primary-700 py-1 ${Theme.rounded} bg-primary-900 shadow-sm shadow-black/25 flex flex-col w-max`}>
       {props.children}
     </div>
   </div>

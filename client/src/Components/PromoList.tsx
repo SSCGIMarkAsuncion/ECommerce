@@ -46,7 +46,7 @@ export function PromoItem(props: PromoProps) {
 
       <div className={`md:flex flex-col md:justify-center text-lg md:text-xl lg:text-2xl ${textAlign}`}>
         <Price price={props.promo.price} promoPrice={props.promo.discount} />
-        <p className={`fraunces-regular text-md md:text-lg lg:text-xl mb-2 text-primary-950`}>
+        <p className={`fraunces-regular text-md md:text-lg lg:text-xl my-6 text-primary-950`}>
           {props.promo.description}
         </p>
         {/* <div className="mt-auto hidden md:block w-full"></div> */}

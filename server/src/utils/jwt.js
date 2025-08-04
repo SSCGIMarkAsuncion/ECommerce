@@ -25,7 +25,7 @@ export function verifyToken(token) {
     return decoded;
   }
   catch (e) {
-    console.log("ERR", e);
+    console.log("ERR", "TOKEN MODIFIED or EXPIRED");
   }
 
   return null;

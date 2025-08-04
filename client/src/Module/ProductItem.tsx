@@ -12,30 +12,35 @@ import { ButtonCart } from "../Components/CartButton";
 
 import Price from "../Components/Price";
 import Gallery from "../Components/Gallery";
+import NoResults from "../Components/NoResults";
+import Button from "../Components/Button";
 
 export default function MProductItem() {
   const { id } = useParams();
   const { getProductById } = useProducts();
   const [ product, setProduct ] = useState<Product | null>(null);
   const notify = useNotification();
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     async function a() {
+      setLoading(true);
       try {
         const product = await getProductById(id as string)
         if (product == null) throw new MError("Product does not exist");
         setProduct(product);
       }
       catch (e) {
-        notify("error", ( e as MError ).message)
+        notify("error", ( e as MError ).toErrorList().join('\n'));
       }
+      setLoading(false);
     }
     a();
   }, []);
 
   return <>
     <NavbarOffset />
-    <div className="min-h-[70svh] p-4 w-full md:w-[96%] mx-0 md:mx-auto grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div hidden={!loading && !product} className="min-h-[70svh] p-4 w-full md:w-[96%] mx-0 md:mx-auto grid grid-cols-1 md:grid-cols-2 gap-2">
       { !product?
         <Skeleton className="bg-primary-300"/>:
         <>
@@ -50,7 +55,7 @@ export default function MProductItem() {
           <div className="flex gap-1 text-xs">
           {
             product.tags.map((tag) => {
-              return <Pill>{tag}</Pill>;
+              return <Pill key={tag}>{tag}</Pill>;
             })
           }
           </div>
@@ -61,6 +66,13 @@ export default function MProductItem() {
         </div>
       }
     </div>
+    {
+      !loading && 
+      <div hidden={Boolean(product)} className="min-h-[80vh] p-8 flex flex-col gap-4 items-center justify-center">
+        <NoResults title="This Product Id does not exist." />
+        <Button href="/products">Go Back</Button>
+      </div>
+    }
     <Navbar type="product" />
     <Footer />
   </>

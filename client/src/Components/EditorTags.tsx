@@ -45,7 +45,12 @@ export function EditorTags(props: EditorTagsProps) {
   }, []);
 
   return <div>
-    <Input label="Tags" onKeyDown={onKeyDown} placeholder="Press Enter to add Tags" className="mb-1" />
+    <Input label="Tags" list="suggestions" onKeyDown={onKeyDown} placeholder="Type to see suggestiongs. Press Enter to add Tags" className="mb-1" />
+    <datalist id="suggestions">
+      <option value="best seller" />
+      <option value="coffee" />
+      <option value="tools" />
+    </datalist>
     <div className="flex flex-wrap gap-1">
       {
         tags.map((tag) => {

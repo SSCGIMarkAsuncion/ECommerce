@@ -7,6 +7,7 @@ import { ButtonCart } from './CartButton';
 import { Card } from './Card';
 import Price from './Price';
 import Img from './Img';
+import { useNavigate } from 'react-router';
 
 export default function BestSeller({ products }: { products: Product[] }) {
   const responsive = CarouselBreakpoints;
@@ -35,9 +36,11 @@ export default function BestSeller({ products }: { products: Product[] }) {
 }
 
 export function BestSellerItem({ product }: { product?: Product }) {
+  const navigation = useNavigate();
   const onOpen = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    // console.log("Open item", product);
+    if (product)
+      navigation(`/product/${product.id}`);
   }, []);
 
   return <Card className={`${product? "":"animate-pulse"} mx-2`}

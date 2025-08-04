@@ -37,14 +37,14 @@ export function ProductFilter() {
     setSearchParams(`?${queries.join('&')}`, { replace: true });
   }, [filter]);
 
-  return <>
+  return <div className="flex gap-1 items-center">
     <Searchbar placeholder="Filter by name" defaultValue={filter.filter} onChangeFilter={(f) => {
       setFilter(v => ({
         ...v, filter: f
       }));
      }} />
     <div>
-      <ul className="flex mt-1">
+      <ul className="flex mt-1 *:w-max">
         <li><Toggle initial={filter.promo} onBtnToggle={(active) => setFilter(v => ({
           ...v,
           promo: active
@@ -70,5 +70,5 @@ export function ProductFilter() {
         }}>Price</SortButton></li>
       </ul>
     </div>
-  </>
+  </div>
 }

@@ -118,7 +118,7 @@ export interface TextAreaProps extends HTMLProps<HTMLTextAreaElement> {
 
 export function TextArea(props: TextAreaProps) {
   return <div>
-    <label htmlFor={props.id} className="fraunces-regular">{props.label}</label>
+    <label htmlFor={props.id}>{props.label}</label>
     <div 
       className={`${Theme.transition} ${Theme.textarea} ${props.className}`}>
       <textarea

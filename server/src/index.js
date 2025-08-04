@@ -36,8 +36,10 @@ app.use("/products/", productsRouter);
 app.use("/cart/", cartRouter);
 app.use("/users/", usersRouter);
 app.use("/file/", authenticateJWT, fileRouter);
-app.use((err, _, res, __) => {
-  console.log("ERROR::", err);
+app.use(
+/*** @param {Error} err */
+  (err, _, res, __) => {
+  console.log("CAUGHT ERROR::", err.name, err.message, err.cause);
   res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });
 });
 

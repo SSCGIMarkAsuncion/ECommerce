@@ -67,12 +67,14 @@ function Btn(props: BtnProps) {
   const amount = props.cartAmount || 0;
   if (amount >= 1) {
     return <div className={`flex gap-1 justify-between items-center ${props.className}`}>
-      <Button className="aspect-square" onClick={() => {
+      <Button className="aspect-square" onClick={(e) => {
+        e.stopPropagation();
         if (props.onChangeCartAmount)
           props.onChangeCartAmount(amount-1);
       }}>-</Button>
       {amount}
-      <Button className="aspect-square" onClick={() => {
+      <Button className="aspect-square" onClick={(e) => {
+        e.stopPropagation();
         if (props.onChangeCartAmount)
           props.onChangeCartAmount(amount+1);
       }}

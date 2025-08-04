@@ -36,7 +36,7 @@ export default function Cart() {
       </div>
       : <NoCart />
     }
-    <Navbar />
+    <Navbar type="product" />
     <Footer />
   </>
 }

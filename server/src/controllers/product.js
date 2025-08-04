@@ -26,12 +26,19 @@ export async function GetProduct(req, res) {
   console.log("filter", filter, "tags", tags);
 
   if (productId) {
-    const doc = await Product.findOne({
-      _id: productId
-    });
+    let doc = null;
+    try {
+      doc = await Product.findOne({
+        _id: productId
+      });
 
-    if (doc == null) {
-      throw new MError(404, "Product Id does not exist.");
+      if (doc == null) {
+        throw new MError(404, "Product Id does not exist.");
+      }
+    }
+    catch (e) {
+      console.log("GetProduct::Id::ERR", e);
+      return res.status(404).send("Product Id does not exist.");
     }
     return res.status(200).json(doc);
   }

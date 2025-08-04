@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { Theme } from "../Utils/Theme"
 import Button from "./Button";
-import { IconBars, IconCart, IconSearch, IconSidebar } from "../Utils/SVGIcons";
+import { IconArrowLeft, IconBars, IconCart, IconSearch, IconSidebar } from "../Utils/SVGIcons";
 import { useCallback, useEffect, useState } from "react";
 import { ButtonMenu, MenuItem, SlidingMenuContent, SubMenu } from "./Menu";
 import { useUserContext } from "../Context/User";
@@ -18,7 +18,6 @@ export interface NavbarProps {
 // TODO: repalce admin with useUser
 export default function Navbar({ className = "", type="", admin = false }: NavbarProps) {
   const navigate = useNavigate();
-  const height = Theme.appbar.classHeight;
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -33,7 +32,7 @@ export default function Navbar({ className = "", type="", admin = false }: Navba
     }
   }, []);
 
-  return <div className={`z-999 ${height} ${Theme.transition} ${Theme.appbar.background} w-full px-3 flex items-center fixed top-0 left-0 text-white ${className}`}>
+  return <div className={`z-999 h-[var(--appbar-height)] ${Theme.transition} ${Theme.appbar.background} w-full px-3 flex items-center fixed top-0 left-0 text-white ${className}`}>
     {
       admin && 
       <Button onClick={() => {
@@ -47,15 +46,21 @@ export default function Navbar({ className = "", type="", admin = false }: Navba
         <IconSidebar fill="#fff" className={`${sidebarOpen? "rotate-180":""}`} />
       </Button>
     }
+    {
+     type === "product" &&
+      <Button pType="icon" className="size-9 fill-white" onClick={(e) => {
+        e.stopPropagation();
+        navigate(-1);
+      }}><IconArrowLeft /></Button>
+    }
     <a className="flex gap-2 items-center z-[999]" href="/" onClick={(e) => {
       e.preventDefault();
       e.stopPropagation();
       navigate("/");
     }}>
-    <img className="w-8 h-auto" src="/Logo_2.svg" alt="Home" title="Home" />
-    <p className="birthstone-regular text-4xl shadow-lg">Kape Kalakal</p>
+      <img className="w-8 h-auto" src="/Logo_2.svg" alt="Home" title="Home" />
+      <p className="fraunces-regular text-xl shadow-lg">Kape Kalakal</p>
     </a>
-
     <NavbarMenu type={type} />
   </div>
 }
@@ -111,6 +116,7 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
               Admin Dashboard
             </MenuItem>:<></>
           }
+          <MenuItem className="block w-full" href="/settings">Settings</MenuItem>
           <MenuItem className="block w-full" onClick={(e) => {
             toggle(e);
             logout();
@@ -154,6 +160,7 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
         <>
         <ButtonMenu label={user.username}>
           { user.isAdmin() && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
+          <MenuItem href="/settings">Settings</MenuItem>
           <MenuItem onClick={() => {
             logout();
             navigate("/");

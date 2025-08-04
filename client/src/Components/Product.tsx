@@ -19,6 +19,7 @@ export function ProductItem({ product, ...props}: ProductItemProps) {
     <Img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
     <div className="fraunces-regular p-2 text-sm flex flex-col flex-1 gap-4">
       <p className="text-wrap text-primary-950">{product.name}</p>
+      <p className="text-wrap text-xs text-primary-950">Stock: 100 (Placeholder)</p>
       <div className="mt-auto">
         <Price price={product.price} promoPrice={product.discount} promoTextSize="text-xs" className="font-medium text-right"/>
         <ButtonCart product={product} />

@@ -9,6 +9,7 @@ import FormError from "../Components/FormError";
 import FormHeader from "../Components/FormHeader";
 import User from "../Models/User";
 import { useUserContext } from "../Context/User";
+import Footer from "../Components/Footer";
 
 export default function Login() {
   const [ errs, setErrs ] = useState<string[]>([]);
@@ -35,8 +36,8 @@ export default function Login() {
 
   return <div className="w-full h-full bg-primary-50">
     <Navbar className="bg-primary-950" />
-    <div className="h-full py-[var(--appbar-height)] bg-[inherit]">
-      <div className={`fraunces-regular my-8 w-[98%] md:w-[60%] mx-auto px-2 py-8 bg-white shadow-black shadow-xs/15 ${Theme.rounded}`}>
+    <div className="min-h-full py-[var(--appbar-height)] bg-[inherit]">
+      <div className={`fraunces-regular my-8 w-[98%] md:w-[30%] mx-auto px-2 py-8 bg-white shadow-black shadow-xs/15 ${Theme.rounded}`}>
         <FormHeader title="Login" />
         <form className="text-lg md:text-sm px-8" onSubmit={onSubmit}>
           <FormError errors={errs} />
@@ -53,6 +54,6 @@ export default function Login() {
         </form>
       </div>
     </div>
-    {/* <Footer /> */}
+    <Footer />
   </div>;
 }

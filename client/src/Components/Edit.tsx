@@ -135,6 +135,7 @@ export function EditProduct(props: EditProps<Product>) {
       <div className="*:flex-1 flex gap-1">
         <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
         <Input id="discount" type="number" required label="Discount%" min={0} max={100} step={0.5} className="text-sm" defaultValue={currData.discount || 0} />
+        <Input id="stocks" type="number" required label="Stocks" min={0} className="text-sm" defaultValue={currData.stocks} />
       </div>
 
       <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />

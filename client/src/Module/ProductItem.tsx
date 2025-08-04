@@ -60,6 +60,7 @@ export default function MProductItem() {
           }
           </div>
           <Price className="text-3xl" price={product.price} promoPrice={product.discount} />
+          <p className="text-sm">Stock: {product.stocks}</p>
           <p className="text-sm mt-4">Details:</p>
           <p className="text-md md:text-lg">{product.description}</p>
           <ButtonCart product={product} className="mt-8 w-full md:w-[40%]" />

@@ -151,6 +151,7 @@ export async function PutProduct(req, res) {
     description: body.description,
     imgs: body.imgs,
     tags: body.tags,
+    stocks: body.stocks,
     price: body.price,
     discount: body.discount
   };

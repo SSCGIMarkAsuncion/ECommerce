@@ -1,7 +1,7 @@
 import type { HTMLProps } from "react";
 import { useCartContext } from "../Context/Cart";
 import useCart from "../Hooks/useCart";
-import type { Product } from "../Models/Product";
+import { Product } from "../Models/Product";
 import type { ButtonProps } from "./Button";
 import Button from "./Button";
 import { IconTrash } from "../Utils/SVGIcons";
@@ -24,6 +24,7 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
 
   return <Btn className={`w-full ${props.className}`}
     cartAmount={cartItem?.amount}
+    disabled={product.stocks==0}
     onChangeCartAmount={(newAmount: number) => {
       if (user == null) {
         notify("error", "Please login first before adding to cart.");
@@ -39,7 +40,8 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
       }
       addToCart(product, 1);
     }}>
-    {props.children || "Add to cart"}
+    { product.stocks > 0 && (props.children || "Add to cart")}
+    { product.stocks == 0 && "Out of stock"}
   </Btn>
 }
 

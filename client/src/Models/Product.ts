@@ -6,6 +6,7 @@ export class Product {
   description: string;
   price: number;
   discount: number;
+  stocks: number;
   imgs: string[];
   tags: string[];
   createdAt: Date | null;
@@ -17,6 +18,7 @@ export class Product {
     this.description = obj.description;
     this.price = Number(obj.price)
     this.discount = obj.discount? Number(obj.discount):0; // just in case for old docs that uses salePrice
+    this.stocks = obj.stocks || 0;
     this.imgs = obj.imgs;
     this.tags = obj.tags;
     this.createdAt = obj.createdAt? new Date(obj.createdAt):null;
@@ -30,6 +32,7 @@ export class Product {
       description: "",
       price: 0,
       discount: 0,
+      stocks: 0,
       imgs: [],
       tags: [],
       createdAt: null,
@@ -42,6 +45,7 @@ export class Product {
       _id: fdata.get("id") || "",
       name: fdata.get("name") || "",
       description: fdata.get("description") || "",
+      stocks: Number(fdata.get("stocks")) || 0,
       price: Number(fdata.get("price")) || 0,
       discount: Number(fdata.get("discount")) || 0,
       tags, imgs, createdAt: null, updatedAt: null
@@ -81,10 +85,9 @@ export const PRODUCT_COLUMNS: IColumn[] = [
     isArray: true
   },
   {
-    name: "Created At",
-    id: "createdAt",
+    name: "Stocks",
+    id: "stocks",
     enableColumnFilter: true,
-    isDate: true
   },
   {
     name: "Updated At",

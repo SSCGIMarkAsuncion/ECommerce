@@ -19,5 +19,6 @@ export async function connect() {
 export const COLLECTIONS = {
   USERS: "users",
   PRODUCTS: "products",
-  CARTS: "carts"
+  CARTS: "carts",
+  HISTORY: "history"
 };

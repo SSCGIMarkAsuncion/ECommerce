@@ -10,11 +10,8 @@ import Skeleton from "../Components/Skeleton";
 import { Pill } from "../Components/Pill";
 import { ButtonCart } from "../Components/CartButton";
 
-import ImageGallery from "react-image-gallery";
-import "react-image-gallery/styles/css/image-gallery.css";
-import Button from "../Components/Button";
-import { IconCaretDown } from "../Utils/SVGIcons";
 import Price from "../Components/Price";
+import Gallery from "../Components/Gallery";
 
 export default function MProductItem() {
   const { id } = useParams();
@@ -42,7 +39,7 @@ export default function MProductItem() {
       { !product?
         <Skeleton className="bg-primary-300"/>:
         <>
-          <Gallery />
+          <Gallery links={product.imgs} />
         </>
       }
       { !product?
@@ -77,24 +74,4 @@ function ProductLoading() {
 
     <Skeleton className="bg-primary-300 w-[30%] aspect-[6/2] mt-8" />
   </div>
-}
-
-function Gallery() {
-  const images = [
-    {
-      original: "https://picsum.photos/id/1018/1000/600/",
-      thumbnail: "https://picsum.photos/id/1018/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
-    },
-  ];
-  return <ImageGallery
-   showPlayButton={false}
-   items={images} />;
 }

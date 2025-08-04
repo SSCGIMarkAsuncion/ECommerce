@@ -4,7 +4,8 @@ import { COLLECTIONS } from "../mongodb";
 /*
  add
   data{
-    id: <schema._id>
+    // array for addMany
+    id: [<schema._id>]
   }
  edit
   data{
@@ -34,6 +35,7 @@ export const HistorySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 HistorySchema.pre("save", function(next) {
+
 });
 
 export const History = mongoose.model(COLLECTIONS.HISTORY, HistorySchema, COLLECTIONS.HISTORY);

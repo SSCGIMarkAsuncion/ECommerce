@@ -38,7 +38,7 @@ export function ProductFilter() {
   }, [filter]);
 
   return <div className="flex gap-1 items-center">
-    <Searchbar placeholder="Filter by name" defaultValue={filter.filter} onChangeFilter={(f) => {
+    <Searchbar className="bg-gray-100/50" placeholder="Search for products" defaultValue={filter.filter} onChangeFilter={(f) => {
       setFilter(v => ({
         ...v, filter: f
       }));
@@ -49,11 +49,11 @@ export function ProductFilter() {
           ...v,
           promo: active
         }))}>Promo</Toggle></li>
+        <li className="font-[initial] font-bold">|</li>
         <li><Toggle initial={filter.bestSeller} onBtnToggle={(active) => setFilter(v => ({
           ...v,
           bestSeller: active
         }))}>Best Sellers</Toggle></li>
-        {/* <li>Tags</li> */}
         <li className="ml-4"><SortButton sortValue={filter.date} onBtnToggle={(s) => {
           setFilter(v => ({
             ...v,
@@ -61,6 +61,7 @@ export function ProductFilter() {
             date: s
           }));
         }}>Date</SortButton></li>
+        <li className="font-[initial] font-bold">|</li>
         <li><SortButton sortValue={filter.price} onBtnToggle={(s) => {
           setFilter(v => ({
             ...v,

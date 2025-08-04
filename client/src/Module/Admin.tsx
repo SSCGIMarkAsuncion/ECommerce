@@ -62,9 +62,9 @@ function Page() {
         <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
         <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
       </div>
-      <div className="mt-auto px-1">
+      <div className="mt-auto">
         <div className={`bg-primary-900 h-[2px]`} />
-        <p className="capitalize text-lg my-2">{user!.role}</p>
+        <p className="capitalize text-lg my-2 px-1">{user!.role}</p>
       </div>
     </Sidebar>
     <Navbar admin type="admin" />

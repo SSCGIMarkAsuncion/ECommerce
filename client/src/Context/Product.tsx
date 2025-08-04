@@ -38,7 +38,7 @@ export function ProductContextProvider({ children }: { children: ReactNode }) {
   const [ searchParams, _ ] = useSearchParams();
   const [ product, setProduct ] = useState<Product[]>([]);
   // unused
-  const [ filter, setFilter ] = useState<Filter>({
+  const [ _filter, setFilter ] = useState<Filter>({
     filter: "",
     tags: []
   });

@@ -3,7 +3,7 @@ import { SortButton, Toggle } from "./Button";
 import { Searchbar } from "./Input";
 import type { SortType } from "../Hooks/useProducts";
 import { useSearchParams } from "react-router";
-import { QUERY_BOOL_BESTSELLER, QUERY_BOOL_PROMO, QUERY_STR_DATE, QUERY_STR_FILTER, QUERY_STR_PRICE } from "../Context/Product";
+import { QUERY_BOOL_BESTSELLER, QUERY_BOOL_PROMO, QUERY_STR_DATE, QUERY_STR_FILTER, QUERY_STR_PRICE, useProductContext } from "../Context/Product";
 
 export function ProductFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,14 +30,14 @@ export function ProductFilter() {
     if (filter.price)
       queries.push(`${QUERY_STR_PRICE}=${filter.price}`);
     if (filter.promo)
-      queries.push(`${QUERY_BOOL_PROMO}=1`)
+      queries.push(`${QUERY_BOOL_PROMO}=1`);
     if (filter.bestSeller)
-      queries.push(`${QUERY_BOOL_BESTSELLER}=1`)
+      queries.push(`${QUERY_BOOL_BESTSELLER}=1`);
 
     setSearchParams(`?${queries.join('&')}`, { replace: true });
   }, [filter]);
 
-  return <div className="flex gap-1 items-center">
+  return <div>
     <Searchbar className="bg-gray-100/50" placeholder="Search for products" defaultValue={filter.filter} onChangeFilter={(f) => {
       setFilter(v => ({
         ...v, filter: f

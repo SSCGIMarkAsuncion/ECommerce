@@ -23,6 +23,10 @@ export async function PutCart(req, res) {
     throw new MError(404, "Product Id does not exist");
   }
 
+  if (product.stocks <= 0) {
+    throw new MError(400, "Product has 0 stocks");
+  }
+
   let amount = 1;
   try {
     amount = Number(req.query.amount);

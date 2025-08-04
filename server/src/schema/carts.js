@@ -2,7 +2,7 @@ import mongoose, { mongo } from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
 
 export class Checkout {
-  /** @type {({ productId: string, price: number })[]} */
+  /** @type {({ id: any, amount: number })[]} */
   products = [];
   subtotal = 0;
   vatRate = 12;
@@ -16,6 +16,9 @@ export class Checkout {
 
     this.products.forEach((cartItem) => {
       const product = cartItem.id;
+      if (product.stock < cartItem.amount) {
+        return;
+      }
       // console.log(this.subtotal, product.price, product.discount);
       if (product.discount && product.discount >= 0) {
         const percent = 1 - (product.discount / 100);

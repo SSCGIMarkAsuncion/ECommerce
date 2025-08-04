@@ -136,7 +136,7 @@ export interface SearchbarProps extends HTMLProps<HTMLInputElement> {
 export function Searchbar({ onChangeFilter, ...props }: SearchbarProps) {
   const cb = onChangeFilter? useDelayCallback(onChangeFilter, 1000):null;
   const ref = useRef<HTMLInputElement>(null);
-  const [ svalue, setSValue ] = useState("");
+  const [ svalue, setSValue ] = useState(props.defaultValue || "");
 
   useEffect(() => {
     if (cb)

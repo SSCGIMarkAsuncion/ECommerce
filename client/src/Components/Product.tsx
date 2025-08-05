@@ -17,7 +17,7 @@ export function ProductItem({ product, ...props}: ProductItemProps) {
     e.stopPropagation();
     navigation(`/product/${product.id}`);
   }}>
-    <Img src={product.imgs[0]} className="w-full h-[100px] md:h-[200px] object-cover"/>
+    <Img src={product.imgs[0]} className="w-full h-[100px] sm:h-[200px] object-cover border-2 border-primary-900"/>
     <div className="fraunces-regular p-2 text-sm flex flex-col flex-1 gap-4">
       <p className="text-wrap text-primary-950">{product.name}</p>
       <p className="text-wrap text-xs text-primary-950/80">Stock: {product.stocks}</p>

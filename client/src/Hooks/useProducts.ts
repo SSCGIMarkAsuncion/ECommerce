@@ -1,5 +1,5 @@
-import { QUERY_STR_SORT, QUERY_STR_SORTBY } from "../Context/Product";
-import { Product } from "../Models/Product";
+import { productFilterQueryBuild, type ProductFilterQuery } from "../Models/Product";
+import { Product, ProductFilterPresets } from "../Models/Product";
 import { MError } from "../Utils/Error";
 const api = import.meta.env.VITE_API;
 
@@ -12,20 +12,11 @@ export interface Sort {
 export default function useProducts() {
   const url = `${api}/products`;
 
-  const getProducts = async (tags: string[], filters: string[], isSale: boolean = false, sort?: Sort): Promise<Product[]> => {
-    const queries = [];
+  const getProducts = async (filter: ProductFilterQuery): Promise<Product[]> => {
+    let squeries = encodeURI(productFilterQueryBuild(filter));
+    if (squeries) squeries = `?${squeries}`;
 
-    if (tags.length>0)
-      queries.push(`tags=${tags.join(';')}`);
-    if (filters.length>0)
-      queries.push(`filter=${filters.join(';')}`);
-    if (sort)
-      queries.push(`${QUERY_STR_SORTBY}=${sort.by}&${QUERY_STR_SORT}=${sort.type}`);
-    if (isSale)
-      queries.push("isSale=1");
-
-    const squeries = encodeURI(queries.join('&'));
-    const res = await fetch(`${url}?${squeries}`);
+    const res = await fetch(`${url}${squeries}`);
 
     const resjson = await res.json();
     if (res.status >= 200 && res.status < 300) {
@@ -116,6 +107,16 @@ export default function useProducts() {
     throw new MError(resjson);
   }
 
+  const getFilterPresets = async () => {
+    const res = await fetch(`${url}/filter-presets`);
+
+    const resjson = await res.json() as any[];
+    if (res.status >= 200 && res.status < 399) {
+      return new ProductFilterPresets(resjson);
+    }
+    throw new MError(resjson);
+  };
+
   return {
     getProducts,
     getProductById,
@@ -123,6 +124,7 @@ export default function useProducts() {
     newProduct,
     removeProduct,
     getPromo,
-    getBestSellers
+    getBestSellers,
+    getFilterPresets
   };
 }

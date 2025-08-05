@@ -1,75 +1,93 @@
-import { useEffect, useState } from "react";
 import { SortButton, Toggle } from "./Button";
 import { Searchbar } from "./Input";
+import MultiRange from "./MultiRange";
+import { useProductContext } from "../Context/Product";
+import { useEffect, useState } from "react";
+import Select from "./Select";
+import { productFilterQueryGetSortOf } from "../Models/Product";
 import type { SortType } from "../Hooks/useProducts";
-import { useSearchParams } from "react-router";
-import { QUERY_BOOL_BESTSELLER, QUERY_BOOL_PROMO, QUERY_STR_DATE, QUERY_STR_FILTER, QUERY_STR_PRICE, useProductContext } from "../Context/Product";
 
 export function ProductFilter() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [ filter, setFilter ] = useState<{
-    filter: string,
-    promo: boolean,
-    bestSeller: boolean,
-    date: SortType | null,
-    price: SortType | null
-  }>({
-    filter: searchParams.get(QUERY_STR_FILTER) || "",
-    promo: searchParams.get(QUERY_BOOL_PROMO) == '1',
-    bestSeller: searchParams.get(QUERY_BOOL_BESTSELLER) == '1',
-    date: searchParams.get(QUERY_STR_DATE) as SortType || null,
-    price: searchParams.get(QUERY_STR_PRICE) as SortType || null
-  });
+  const { productdispatcher: { filterPreset, filter, setFilter }} = useProductContext();
+  const [ maxPrice, setMaxPrice ] = useState(0);
 
   useEffect(() => {
-    const queries = [];
-    if (filter.filter)
-      queries.push(`${QUERY_STR_FILTER}=${filter.filter}`);
-    if (filter.date)
-      queries.push(`${QUERY_STR_DATE}=${filter.date}`);
-    if (filter.price)
-      queries.push(`${QUERY_STR_PRICE}=${filter.price}`);
-    if (filter.promo)
-      queries.push(`${QUERY_BOOL_PROMO}=1`);
-    if (filter.bestSeller)
-      queries.push(`${QUERY_BOOL_BESTSELLER}=1`);
+    setMaxPrice(filterPreset.current.maxPrice);
+  }, [filterPreset.current]);
 
-    setSearchParams(`?${queries.join('&')}`, { replace: true });
-  }, [filter]);
+  const setTags = (name: string, include: boolean) => {
+    setFilter(v => {
+      let tags = v.tags;
+      const index = tags.findIndex((tag) => tag == name);
+      if (include) {
+        if (index >= 0)
+          return v;
+        else
+          tags.push(name);
+      }
+      else {
+        if (index >= 0) {
+          tags = tags.filter((tag) => tag !== name);
+        }
+      }
+
+      return {
+        ...v, tags: tags
+      };
+    });
+  };
 
   return <div>
-    <Searchbar className="bg-gray-100/50" placeholder="Search for products" defaultValue={filter.filter} onChangeFilter={(f) => {
-      setFilter(v => ({
-        ...v, filter: f
-      }));
+    <Searchbar className="bg-gray-100/50 text-sm" placeholder="Search for products" defaultValue={filter.q}
+     onChangeFilter={(f) => {
+      setFilter(v => {
+        if (v.q == f) return v;
+        return {
+          ...v, q: f
+        };
+      });
      }} />
-    <div>
-      <ul className="flex mt-1 *:w-max">
-        <li><Toggle initial={filter.promo} onBtnToggle={(active) => setFilter(v => ({
-          ...v,
-          promo: active
-        }))}>Promo</Toggle></li>
-        <li className="font-[initial] font-bold">|</li>
-        <li><Toggle initial={filter.bestSeller} onBtnToggle={(active) => setFilter(v => ({
-          ...v,
-          bestSeller: active
-        }))}>Best Sellers</Toggle></li>
-        <li className="ml-4"><SortButton sortValue={filter.date} onBtnToggle={(s) => {
+    <div className="mt-4 fraunces-regular text-sm">
+      <p className="text-gray-500 text-xs">Sort by</p>
+      <ul className="mt-1 *:mb-[1px] *:w-max">
+        <li><SortButton sortValue={productFilterQueryGetSortOf(filter, "date")} onBtnToggle={(s) => {
           setFilter(v => ({
             ...v,
-            price: null,
-            date: s
+            sby: "date", sort: s
           }));
-        }}>Date</SortButton></li>
-        <li className="font-[initial] font-bold">|</li>
-        <li><SortButton sortValue={filter.price} onBtnToggle={(s) => {
+         }}>Date</SortButton></li>
+        <li><SortButton sortValue={productFilterQueryGetSortOf(filter, "price")} onBtnToggle={(s) => {
           setFilter(v => ({
             ...v,
-            date: null,
-            price: s
+            sby: "price", sort: s
           }));
         }}>Price</SortButton></li>
       </ul>
+
+      <p className="text-gray-500 text-xs mt-4">Category</p>
+      <ul className="mt-1 *:mb-[1px] *:w-max">
+        <li><Toggle initial={filter.isDiscounted} onBtnToggle={(active) => {
+          setFilter(v => ({
+            ...v, isDiscounted: active
+          }));
+        }}>Promo</Toggle></li>
+        {/* <li className="font-[initial] font-bold">|</li> */}
+        <li><Toggle initial={filter.tags.includes("best seller")} onBtnToggle={(active) => setTags("best seller", active)}>Best Sellers</Toggle></li>
+        {
+          filterPreset.current.categories.map((category) => {
+            return <li key={category}><Toggle className="capitalize" initial={filter.tags.includes(category)} onBtnToggle={(active) => setTags(category, active)}>{category}</Toggle></li>
+          })
+        }
+      </ul>
+      <p className="text-gray-500 text-xs mt-4">Price</p>
+      <MultiRange min={0} max={maxPrice} minValue={filter.priceMin} maxValue={filter.priceMax || 999999} onChange={(e) => {
+        if (maxPrice == 0) return;
+        setFilter(v => {
+          return {
+            ...v, priceMin: e.minValue, priceMax: e.maxValue
+          };
+        })
+      }} />
     </div>
   </div>
 }

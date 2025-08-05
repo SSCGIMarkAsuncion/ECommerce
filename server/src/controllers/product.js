@@ -1,29 +1,14 @@
-import { Product } from '../schema/products.js';
+import { Product, ProductFilter } from '../schema/products.js';
 import { ObjectId } from 'mongodb';
-import parseQueryValue from "../utils/query.js";
 import MError from '../error.js';
 
-/* QUERY SCHEMA
-- Only works if :id does not exist
-filter=..;..
-tags=..;..
-isSale=1 // optional
-sby=string // sort by
-s=string // sort type "asc" | "desc"
-*/
 /** 
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
 export async function GetProduct(req, res) {
   const productId = req.params.id? new ObjectId(req.params.id):null;
-  const filter = parseQueryValue(req.query.filter);
-  const tags = parseQueryValue(req.query.tags);
-  const isSale = req.query.isSale == '1';
-  const sortBy = req.query.sby || "";
-  const sort = req.query.s || "asc";
-
-  console.log("filter", filter, "tags", tags);
+  const productFilter = new ProductFilter(req.query);
 
   if (productId) {
     let doc = null;
@@ -43,81 +28,13 @@ export async function GetProduct(req, res) {
     return res.status(200).json(doc);
   }
 
-  // Build $or query for partial matches
-  let orConditions = [];
-  let andConditions = [];
-  filter.forEach(f => {
-    orConditions.push({ name: { $regex: f, $options: "i" } });
-    orConditions.push({ description: { $regex: f, $options: "i" } });
-  });
-  tags.forEach(tag =>
-    orConditions.push({ tags: tag })
-  );
-
-  if (isSale) {
-    andConditions.push({
-      discount: { $exists: true, $gt: 0 }
-    });
+  const aggregate = productFilter.buildAggregate();
+  if (aggregate.length > 0) {
+    const docs = await Product.aggregate(aggregate);
+    return res.status(200).json(docs);
   }
-
-  let query = {};
-  if (orConditions.length > 0) {
-    query["$or"] = orConditions;
-  }
-  if (andConditions.length > 0) {
-    query["$and"] = andConditions;
-  }
-  let optSort = null;
-
-  let aggregate = [];
-  aggregate.push({
-    $match: query
-  });
-  if (sortBy) {
-    let sortType = 1;
-    if (sort == "desc")
-      sortType = -1;
-
-    switch (sortBy) {
-      case "date":
-        optSort = {
-          updatedAt: sortType
-        }
-        break;
-      case "price":
-        optSort = {
-          discountedPrice: sortType
-        };
-        aggregate.push({
-          $addFields: {
-            discountedPrice: {
-              $cond: {
-                if: { $gt: ["$discount", 0] },
-                then: {
-                  $multiply: [
-                    "$price",
-                    { $subtract: [1, { $divide: ["$discount", 100] }] }
-                  ]
-                },
-                else: "$price"
-              }
-            }
-          }
-        });
-        break;
-    }
-  }
-  if (optSort)
-    aggregate.push({
-      $sort: optSort
-    });
-
-  console.log(aggregate);
-
-  const docs = await Product.aggregate(aggregate);
-  // const docs = await Product.aggregate(aggregate).find(query, null, {
-  //   sort: optSort
-  // });
+  
+  const docs = await Product.find();
   return res.status(200).json(docs);
 }
 
@@ -204,4 +121,22 @@ export async function PostProduct(req, res) {
   }
 
   res.status(200).send("");
+}
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function GetPresets(_req, res) {
+  const presets = (await Product.aggregate([
+    {
+      $group: {
+        _id: null,
+        maxPrice: { $max: "$price" },
+        count: { $sum: 1 }
+      }
+    }
+  ]).project("maxPrice count"))[0];
+  presets.categories = ["coffee", "tools", "accessories", "teas"];
+  res.status(200).json(presets);
 }

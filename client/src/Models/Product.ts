@@ -96,3 +96,138 @@ export const PRODUCT_COLUMNS: IColumn[] = [
     isDate: true
   },
 ];
+
+export class ProductFilterPresets {
+  maxPrice: number;
+  categories: string[];
+  count: number;
+
+  constructor(obj: any) {
+    this.maxPrice = obj.maxPrice;
+    this.categories = obj.categories;
+    this.count = obj.count;
+  }
+
+  static empty() {
+    return new ProductFilterPresets({
+      maxPrice: 0,
+      categories: [],
+      count: 0
+    });
+  }
+}
+
+export interface ProductFilterQuery {
+  sby: "date" | "price" | "";
+  sort: "asc" | "desc" | "";
+  priceMin: number;
+  priceMax: number;
+  isDiscounted: boolean;
+  tags: string[];
+  q: string;
+};
+
+export function productFilterQueryGetSortOf(query: ProductFilterQuery, type: typeof query.sby) {
+  if (query.sby == type && query.sort !== "") return query.sort;
+  return null;
+}
+
+export function productFilterQueryFrom(params: URLSearchParams) {
+  const res: ProductFilterQuery = {} as ProductFilterQuery;
+  res.sby = params.get("sby") as typeof res.sby || "";
+  res.sort = params.get("sort") as typeof res.sort || "";
+  res.isDiscounted = params.get("isDiscounted") == '1';
+  res.tags = params.get("tags") != null ? params.get("tags")!.split(';') : [];
+  res.q = params.get("q") || "";
+  try {
+    res.priceMin = Number(params.get("priceMin")) || 0;
+    res.priceMax = Number(params.get("priceMax")) || 0;
+  }
+  catch {
+    res.priceMin = 0;
+    res.priceMax = 0;
+  }
+  return res;
+}
+
+export function productFilterQueryBuild(query: ProductFilterQuery) {
+  const queries: string[] = [];
+  const keys = Object.keys(query) as Array<keyof ProductFilterQuery>;
+  keys.forEach((key) => {
+    if (!query[key]) return;
+
+    let v = query[key] as any;
+    if (key == "priceMax" && v == 0) return;
+
+    if (Array.isArray(v)) {
+      if (v.length == 0) return;
+      v = v.join(';');
+    }
+    if (v === true) {
+      // query[key] is already checked before query so v here is always true here if it is a boolean type
+      v = '1';
+    }
+    queries.push(`${key as string}=${v}`);
+  });
+
+  if (queries.length <= 0) return "";
+  return queries.join('&');
+}
+
+// export class ProductFilterQuery {
+//   sby: "date" | "price" | "";
+//   sort: "asc" | "desc" | "";
+//   priceMin: number;
+//   priceMax: number;
+//   isDiscounted: boolean;
+//   tags: string[];
+//   q: string;
+
+//   constructor(params: any | URLSearchParams) {
+//     if (params instanceof URLSearchParams) {
+//       this.sby = params.get("sby") as typeof this.sby || "";
+//       this.sort = params.get("sort") as typeof this.sort || "";
+//       this.isDiscounted = params.get("isDiscounted") == '1';
+//       this.tags = params.get("tags") != null ? params.get("tags")!.split(';') : [];
+//       this.q = params.get("q") || "";
+//       try {
+//         this.priceMin = Number(params.get("priceMin"));
+//         this.priceMax = Number(params.get("priceMax"));
+//       }
+//       catch {
+//         this.priceMin = 0;
+//         this.priceMax = 0;
+//       }
+//     }
+//     else {
+//       this.sby = params.sby || "";
+//       this.sort = params.sort || "";
+//       this.priceMin = params.priceMin || 0;
+//       this.priceMax = params.priceMax || 0;
+//       this.isDiscounted = params.isDiscounted || false;
+//       this.tags = params.tags || [];
+//       this.q = params.q || "";
+//     }
+//   }
+
+//   build() {
+//     const queries: string[] = [];
+//     const keys = Object.keys(JSON.stringify(this)) as Array<keyof this>;
+//     keys.forEach((key) => {
+//       if (!this[key]) return;
+
+//       let v = this[key] as any;
+//       if (Array.isArray(v)) {
+//         v = v.join(';');
+//       }
+//       if (v instanceof Boolean) {
+//         // this[key] is already checked before this so this means v is always true here
+//         v = '1';
+//       }
+//       queries.push(`${key as string}=${v}`);
+//     });
+
+//     if (queries.length <= 0) return "";
+//     return queries.join('&');
+//   }
+// }

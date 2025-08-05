@@ -3,7 +3,6 @@ import 'react-multi-carousel/lib/styles.css';
 import { CarouselBreakpoints } from '../Utils/Theme';
 import type { Product } from '../Models/Product';
 import { useCallback } from 'react';
-import { ButtonCart } from './CartButton';
 import { Card } from './Card';
 import Price from './Price';
 import Img from './Img';
@@ -19,9 +18,8 @@ export default function BestSeller({ products }: { products: Product[] }) {
     ssr={true}
     infinite={false}
     transitionDuration={500}
-    containerClass="w-full h-[450px]"
+    containerClass="w-full"
     itemClass="my-auto"
-    // removeArrowOnDeviceType={["tablet", "mobile"]}
     responsive={responsive} >
     {
       (products.length == 0)?
@@ -49,10 +47,10 @@ export function BestSellerItem({ product }: { product?: Product }) {
       product &&
       <>
         <Img src={product?.imgs[0]} className="w-full aspect-square object-cover" />
-        <div className="p-2 md:p-3 fraunces-regular">
-          <p className="text-md text-primary-950 font-medium">{product.name}</p>
-          <Price price={product.price} promoPrice={product.discount} className="mt-4 font-medium" />
-          <ButtonCart product={product}/>
+        <div className="text-xs md:text-md p-2 fraunces-regular h-[100px] flex flex-col">
+          <Price price={product.price} promoPrice={product.discount} className="font-medium" />
+          <p className="text-primary-950 font-medium">{product.name}</p>
+          {/* <ButtonCart product={product}/> */}
         </div>
       </>
     }

@@ -1,4 +1,4 @@
-import Navbar from "../Components/Navbar";
+import Navbar, { UserMenu } from "../Components/Navbar";
 import DataTable from "../Components/DataTable";
 import { useCallback, useEffect, useState } from "react";
 import Sidebar, { SidebarButton, SidebarOffset } from "../Components/Sidebar";
@@ -10,6 +10,7 @@ import { Theme } from "../Utils/Theme";
 import SearchIcon from "../assets/Search.svg"
 import Img from "../Components/Img";
 import { useUserContext } from "../Context/User";
+import A from "../Components/A";
 
 export default function Admin() {
   return <EditableDataContextProvider>
@@ -39,7 +40,7 @@ function Page() {
   const currentData = tableData;
 
   return <>
-    <div className="h-[var(--appbar-height)]"></div>
+    {/* <div className="h-[var(--appbar-height)]"></div> */}
     <div className="block md:flex">
       <SidebarOffset className="hidden md:block" />
       {
@@ -55,7 +56,9 @@ function Page() {
       }
     </div>
     <Sidebar className="text-sm flex flex-col fraunces-regular">
+      <UserMenu className="w-full" />
       <div className="py-4">
+        <A href="/" className="block mb-8"><Img src="/Logo_2.svg" className="size-18 mx-auto" /></A>
         <h1 className="text-white text-lg px-2">Manage</h1>
         <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
         <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
@@ -64,10 +67,12 @@ function Page() {
       </div>
       <div className="mt-auto">
         <div className={`bg-primary-900 h-[2px]`} />
-        <p className="capitalize text-lg my-2 px-1">{user!.role}</p>
+        {/* <p className="capitalize text-lg my-2 px-1">{user!.role}</p> */}
+        <div className="w-max mx-auto">
+        </div>
       </div>
     </Sidebar>
-    <Navbar admin type="admin" />
+    {/* <Navbar admin type="admin" /> */}
 
     <Editor />
   </>;

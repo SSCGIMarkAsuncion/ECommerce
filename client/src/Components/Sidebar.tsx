@@ -27,7 +27,7 @@ export default function Sidebar(props: HTMLAttributes<HTMLDivElement>) {
   return <div
    {...props}
    onClick={onClose}
-   className={`${isOpen? "animate-slide-right-in":"animate-slide-left-out md:animate-slide-right-in"} h-[100svh] pt-[var(--appbar-height)] absolute top-0 left-0 md:w-[var(--sidebar-width)] ${Theme.sidebar.background} text-white ${props.className}`}>
+   className={`${isOpen? "animate-slide-right-in":"animate-slide-left-out md:animate-slide-right-in"} h-[100svh] absolute top-0 left-0 md:w-[var(--sidebar-width)] ${Theme.sidebar.background} text-white ${props.className}`}>
       {props.children}
   </div>;
 }

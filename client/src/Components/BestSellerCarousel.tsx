@@ -47,9 +47,9 @@ export function BestSellerItem({ product }: { product?: Product }) {
       product &&
       <>
         <Img src={product?.imgs[0]} className="w-full aspect-square object-cover" />
-        <div className="text-xs md:text-md p-2 fraunces-regular h-[100px] flex flex-col">
-          <Price price={product.price} promoPrice={product.discount} className="font-medium" />
-          <p className="text-primary-950 font-medium">{product.name}</p>
+        <div className="p-2 fraunces-regular h-[100px] flex flex-col">
+          <Price price={product.price} promoPrice={product.discount} className="text-lg" />
+          <p className="text-primary-900 text-md">{product.name}</p>
           {/* <ButtonCart product={product}/> */}
         </div>
       </>

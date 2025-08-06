@@ -121,6 +121,8 @@ function ProductLoading() {
     <Skeleton className="bg-primary-300 h-[60px] mt-2" />
 
     <Skeleton className="bg-primary-300 w-[30%] aspect-[6/2] mt-8" />
+    <Skeleton className="bg-primary-300 h-[30px] w-[70%] mt-12" />
+    <Skeleton className="bg-primary-300 h-[60px] aspect-[6/2]" />
   </div>
 }
 
@@ -144,7 +146,7 @@ function ReviewEditor({ product, onPost }: ReviewEditorProps) {
 
   if (!user) {
     return <div className={`${Theme.rounded} fraunces-regular border-1 border-primary-400 bg-primary-200 text-primary-500 text-center py-4`}>
-      <p><A href="/login" className="text-primary-800!">Login</A> first to post a review.</p>
+      <p><A href="/login" className="text-primary-800! font-semibold">Login</A> first to post a review.</p>
     </div>
   }
 

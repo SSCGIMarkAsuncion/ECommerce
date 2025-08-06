@@ -41,7 +41,7 @@ export async function GetReviewOfProduct(req, res) {
 
   const docs = await Review.find({
     to: productId
-  }).populate([{ path: "user", select: "-password" }, "to"]);
+  }).populate([{ path: "user", select: "-password" }]);
 
   return res.status(200).json(docs);
 }

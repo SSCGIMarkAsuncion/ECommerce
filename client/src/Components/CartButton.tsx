@@ -4,7 +4,7 @@ import useCart from "../Hooks/useCart";
 import { Product } from "../Models/Product";
 import type { ButtonProps } from "./Button";
 import Button from "./Button";
-import { IconTrash } from "../Utils/SVGIcons";
+import { IconMinus, IconPlus, IconTrash } from "../Utils/SVGIcons";
 import { useNotification } from "../Context/Notify";
 import { useUserContext } from "../Context/User";
 
@@ -69,18 +69,18 @@ function Btn(props: BtnProps) {
   const amount = props.cartAmount || 0;
   if (amount >= 1) {
     return <div className={`flex gap-1 justify-between items-center ${props.className}`}>
-      <Button className="aspect-square" onClick={(e) => {
+      <Button className="aspect-square size-8 fill-white" onClick={(e) => {
         e.stopPropagation();
         if (props.onChangeCartAmount)
           props.onChangeCartAmount(amount-1);
-      }}>-</Button>
+      }}><IconMinus /></Button>
       {amount}
-      <Button className="aspect-square" onClick={(e) => {
+      <Button className="aspect-square size-8 fill-white" onClick={(e) => {
         e.stopPropagation();
         if (props.onChangeCartAmount)
           props.onChangeCartAmount(amount+1);
       }}
-      >+</Button>
+      ><IconPlus /></Button>
     </div>
   }
 

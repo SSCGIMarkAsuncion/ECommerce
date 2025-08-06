@@ -48,7 +48,7 @@ export default function Home() {
       <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium tracking-wide">Best Sellers </h1>
       <BestSeller products={bestSellers} />
     </div>
-    <div id="testimonials" className="fraunces-regular text-primary-900 bg-primary-200 p-6">
+    <div id="testimonials" className="fraunces-regular text-primary-900 bg-primary-200/75 p-6">
       <p className="text-center text-6xl mb-6 font-semibold">What Our Customers Say</p>
       <div className={`${Theme.rounded} mx-4 my-6`}>
         <Testimonials />

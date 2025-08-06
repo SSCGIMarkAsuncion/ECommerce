@@ -25,7 +25,7 @@ export default function Login() {
     setLoading(true);
     login(user)
       .then(() => {
-        navigate("/");
+        navigate(-1);
       })
       .catch((err: MError) => {
         let merrs: string[] = err.toErrorList();

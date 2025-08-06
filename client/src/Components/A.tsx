@@ -8,6 +8,7 @@ export default function A(props: HTMLProps<HTMLAnchorElement>) {
     onClick={(e) => {
       if (props.onClick) props.onClick(e);
       if (!props.href) return;
+      if (props.href.includes(':')) return;
       if (props.href.includes('#')) return;
       e.preventDefault();
       navigate(props.href);

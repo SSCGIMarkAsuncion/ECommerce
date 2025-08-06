@@ -8,6 +8,7 @@ import productsRouter from "./routes/products.js";
 import cartRouter from "./routes/cart.js";
 import fileRouter from "./routes/file.js";
 import usersRouter from "./routes/user.js";
+import reviewsRouter from "./routes/reviews.js";
 import { authenticateJWT } from "./middleware/verify_token.js";
 import { configureCloudinary } from "./cloudinary.js";
 
@@ -36,6 +37,7 @@ app.use("/products/", productsRouter);
 app.use("/cart/", cartRouter);
 app.use("/users/", usersRouter);
 app.use("/file/", authenticateJWT, fileRouter);
+app.use("/reviews/", reviewsRouter);
 app.use(
 /*** @param {Error} err */
   (err, _, res, __) => {

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 import useProducts from "../Hooks/useProducts";
 import ContactUs from "../Components/ContactUs";
 import { Theme } from "../Utils/Theme";
+import Testimonials from "../Components/Testimony";
 
 export default function Home() {
   const { getPromo, getBestSellers } = useProducts();
@@ -47,9 +48,10 @@ export default function Home() {
       <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium tracking-wide">Best Sellers </h1>
       <BestSeller products={bestSellers} />
     </div>
-    <div id="testimonials" className="fraunces-regular text-white bg-primary-500 p-6">
-      <p className="text-center text-8xl mb-6">Testimony</p>
-      <div className={`bg-white ${Theme.rounded} w-[80%] h-[80svh] mx-auto`}>
+    <div id="testimonials" className="fraunces-regular text-primary-900 bg-primary-200 p-6">
+      <p className="text-center text-6xl mb-6 font-semibold">What Our Customers Say</p>
+      <div className={`${Theme.rounded} mx-4 my-6`}>
+        <Testimonials />
       </div>
     </div>
     <div id="contact" className="px-6 py-14 grid grid-cols-1 md:grid-cols-2 gap-1">

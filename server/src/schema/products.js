@@ -68,7 +68,7 @@ export class ProductFilter {
       this.priceMin = 0;
       this.priceMax = 0;
     }
-    this.isDiscounted = queries.isDiscounted;
+    this.isDiscounted = queries.isDiscounted == '1';
     this.tags = parseQueryValue(queries.tags);
   }
 
@@ -85,7 +85,7 @@ export class ProductFilter {
 
     if (this.isDiscounted)
       andConditions.push({
-        discount: { $exists: true, $gt: 0 }
+        discount: { $gte: 1 }
       });
 
     const aggregate = [];

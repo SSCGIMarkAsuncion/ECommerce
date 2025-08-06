@@ -14,12 +14,20 @@ import Price from "../Components/Price";
 import Gallery from "../Components/Gallery";
 import NoResults from "../Components/NoResults";
 import Button from "../Components/Button";
+import useReviews from "../Hooks/useReviews";
+import { Review, type ReviewSummary } from "../Models/Reviews";
+import Rating from "../Components/Rating";
 
 export default function MProductItem() {
   const { id } = useParams();
   const { getProductById } = useProducts();
+  const { getReviewsOf } = useReviews();
   const [ product, setProduct ] = useState<Product | null>(null);
   const notify = useNotification();
+  const [ review, setReview ] = useState({
+    reviews: [] as Review[],
+    summary: {} as ReviewSummary
+  })
   const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
@@ -29,6 +37,12 @@ export default function MProductItem() {
         const product = await getProductById(id as string)
         if (product == null) throw new MError("Product does not exist");
         setProduct(product);
+
+        const reviews =  await getReviewsOf(product);
+        setReview({
+          reviews: reviews,
+          summary: Review.createSummary(reviews)
+        });
       }
       catch (e) {
         notify("error", ( e as MError ).toErrorList().join('\n'));
@@ -59,6 +73,12 @@ export default function MProductItem() {
             })
           }
           </div>
+
+          <div className="flex gap-2 items-center my-2">
+            <Rating rate={review.summary.averageRating} starClass="size-4" />
+            <p className="text-xs">{review.summary.count}</p>
+          </div>
+
           <Price className="text-3xl" price={product.price} promoPrice={product.discount} />
           <p className="text-sm">Stock: {product.stocks}</p>
           <p className="text-sm mt-4">Details:</p>

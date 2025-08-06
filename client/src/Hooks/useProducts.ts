@@ -84,7 +84,7 @@ export default function useProducts() {
   }
 
   const getPromo = async (): Promise<Product[]> => {
-    const res = await fetch(`${url}?isSale=1`);
+    const res = await fetch(`${url}?isDiscounted=1`);
     // await new Promise(resolve => setTimeout(resolve, 2000));
     const resjson = await res.json() as any[];
     if (res.status >= 200 && res.status < 399) {

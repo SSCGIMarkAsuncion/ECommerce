@@ -69,12 +69,12 @@ function Page() {
       <div className="mt-auto">
         <div className={`bg-primary-900 h-[2px]`} />
         <div className="flex items-center px-1">
-          <p className="capitalize text-md my-2 px-1">{user!.role}</p>
-          <Button pType="icon" className="size-8 ml-auto fill-white" onClick={(e) => {
+          <Button pType="icon" className="size-8 fill-white" onClick={(e) => {
             e.stopPropagation();
             logout();
             navigate("/");
           }}><IconLogout /></Button>
+          <p className="capitalize text-md my-2 px-1">{user!.role}</p>
         </div>
       </div>
     </Sidebar>
@@ -92,7 +92,6 @@ function Editor() {
   } = useEditableDataContext();
   const closeModal = useCallback(() => {
     actionType.setActionType("none")
-    // errors.setErrors([]);
   }, []);
 
   if (!actionType || !selectedData || !currentData) return null;

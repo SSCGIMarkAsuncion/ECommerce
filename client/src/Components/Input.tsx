@@ -67,7 +67,7 @@ export default function Input(props: InputProps) {
       <input
         {...props}
         name={props.id}
-        className="w-full outline-none read-only:pointer-events-none" >
+        className="w-full outline-none" >
       </input>
       {
         props.suffix

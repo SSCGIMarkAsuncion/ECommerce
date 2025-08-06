@@ -1,4 +1,4 @@
-import type { HTMLProps } from "react"
+import { useEffect, useState, type HTMLProps } from "react"
 import type { Product } from "../Models/Product"
 import { Card } from "./Card"
 import Img from "./Img"
@@ -6,6 +6,9 @@ import Price from "./Price"
 import { ButtonCart } from "./CartButton"
 import { useNavigate } from "react-router"
 import { Theme } from "../Utils/Theme"
+import useReviews from "../Hooks/useReviews"
+import { Review, type ReviewSummary } from "../Models/Reviews"
+import Rating from "./Rating"
 
 export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
   product: Product
@@ -13,13 +16,36 @@ export interface ProductItemProps extends HTMLProps<HTMLDivElement> {
 
 export function ProductItem({ product, ...props}: ProductItemProps) {
   const navigation = useNavigate();
+  const { getReviewsOf } = useReviews();
+  const [ review, setReview ] = useState({
+    reviews: [] as Review[],
+    summary: {} as ReviewSummary
+  });
+
+  useEffect(() => {
+    async function a() {
+      try {
+        const reviews =  await getReviewsOf(product);
+        setReview({
+          reviews: reviews,
+          summary: Review.createSummary(reviews)
+        });
+      }
+      catch (e) {
+        console.log("ProductItem::ERR", e);
+      }
+    }
+    a();
+  }, []);
+
   return <Card {...props} className={`w-full flex flex-col animate-appear relative`} onClick={(e) => {
     e.stopPropagation();
     navigation(`/product/${product.id}`);
   }}>
     <Img src={product.imgs[0]} className="w-full h-[100px] sm:h-[200px] object-cover border-2 border-primary-900"/>
-    <div className="fraunces-regular p-2 text-sm flex flex-col flex-1 gap-4">
+    <div className="fraunces-regular p-2 text-sm flex flex-col flex-1 gap-1">
       <p className="text-wrap text-primary-950">{product.name}</p>
+      <Rating rate={review.summary.averageRating} starClass="size-4" />
       <p className="text-wrap text-xs text-primary-950/80">Stock: {product.stocks}</p>
       <div className="mt-auto">
         <Price price={product.price} promoPrice={product.discount} promoTextSize="text-xs" className="font-medium text-right"/>

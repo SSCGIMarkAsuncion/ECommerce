@@ -40,7 +40,9 @@ export function ProductContextProvider({ children }: { children: ReactNode }) {
     async function a() {
       // console.log("FILTER", filter);
       try {
-        setSearchParams(`?${productFilterQueryBuild(filter)}`)
+        setSearchParams(`?${productFilterQueryBuild(filter)}`, {
+          replace: true
+        });
         const products = await getProducts(filter);
         setProduct(products);
       }

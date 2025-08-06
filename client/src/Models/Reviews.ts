@@ -13,10 +13,28 @@ export class Review {
   rate: number;
 
   constructor(obj: any) {
-    this.user = new User(obj.user);
+    this.user = obj.user? new User(obj.user):User.empty();
     this.comment = obj.comment;
     this.to = obj.to? new Product(obj.to):null;
     this.rate = Number(obj.rate);
+  }
+
+  static from(f: FormData) {
+    return new Review({
+      user: null,
+      comment: f.get("comment") || "",
+      to: { _id: f.get("to") || "" },
+      rate: Number(f.get("rate"))
+    });
+  };
+
+  toJson() {
+    const copy = { ...this };
+    if (copy.to)
+      // set Review.to to id of product for db insertion
+      // @ts-ignore
+      copy.to = copy.to.id;
+    return JSON.stringify(copy);
   }
 
   static createSummary(reviews: Review[]) {

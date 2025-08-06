@@ -28,8 +28,26 @@ export default function useReviews() {
     throw new MError(resjson);
   };
 
+  const postReview = async (review: Review) => {
+    const res = await fetch(`${url}/submit`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: review.toJson()
+    });
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status <= 399) {
+      return new Review(resjson);
+    }
+    throw new MError(resjson);
+  };
+
   return {
     getTestimonials,
-    getReviewsOf
+    getReviewsOf,
+    postReview
   };
 }

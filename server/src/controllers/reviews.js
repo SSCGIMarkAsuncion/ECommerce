@@ -20,8 +20,14 @@ export async function GetTestimony(req, res) {
  */
 export async function PostReview(req, res) {
   req.body.user = new ObjectId(String(req.tokenPayload.id));
-  const review = new Review(req.body);
+  let review = new Review(req.body);
   await review.save({ validateBeforeSave: true });
+  
+  const populate = [{ path: "user", select: "-password" }];
+  if (req.body.to)
+    populate.push("to");
+
+  review = await review.populate(populate)
 
   res.status(200).json(review);
 }
@@ -35,7 +41,7 @@ export async function GetReviewOfProduct(req, res) {
 
   const docs = await Review.find({
     to: productId
-  });
+  }).populate([{ path: "user", select: "-password" }, "to"]);
 
   return res.status(200).json(docs);
 }

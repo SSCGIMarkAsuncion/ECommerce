@@ -16,14 +16,14 @@ export default function Rating({ editable = false, starClass, onRateChange, max 
     if (editable) {
       toggle = (active: boolean) => {
         if (!onRateChange) return;
-        if (!active) {
+        if (!active && rate == i+1) {
           return onRateChange(i);
         }
         onRateChange(i+1);
       };
     }
     stars.push(
-      <Star className={starClass} active={i+1<=rate} onSToggle={toggle || undefined} />
+      <Star key={i} className={starClass} active={i+1<=rate} onSToggle={toggle || undefined} />
     );
   }
 

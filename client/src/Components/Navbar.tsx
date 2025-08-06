@@ -169,21 +169,20 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
         </>
       }
     </div>
-
   </div>
 }
 
-export function UserMenu() {
-  const navigate = useNavigate();
-  const { user, userDispatcher: { logout }} = useUserContext();
-  if (user == null) return;
+// export function UserMenu() {
+//   const navigate = useNavigate();
+//   const { user, userDispatcher: { logout }} = useUserContext();
+//   if (user == null) return;
 
-  return <ButtonMenu label={user.username}>
-    {user.isAdmin() && <MenuItem href="/admin">Admin Dashboard</MenuItem>}
-    <MenuItem href="/settings">Settings</MenuItem>
-    <MenuItem onClick={() => {
-      logout();
-      navigate("/");
-    }}>Logout</MenuItem>
-  </ButtonMenu>
-}
+//   return <ButtonMenu label={user.username}>
+//     {user.isAdmin() && <MenuItem href="/admin">Admin Dashboard</MenuItem>}
+//     <MenuItem href="/settings">Settings</MenuItem>
+//     <MenuItem onClick={() => {
+//       logout();
+//       navigate("/");
+//     }}>Logout</MenuItem>
+//   </ButtonMenu>
+// }

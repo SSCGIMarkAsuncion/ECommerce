@@ -84,7 +84,7 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
 
   return <div onClick={(e) => e.stopPropagation()} className="overflow-y-auto w-[80%] md:w-[90%] m-auto rounded-xs bg-white p-4 animate-slide-down">
     <div className="overflow-y-auto">
-      <h1 className="fraunces-regular text-4xl font-semibold text-primary-900">{label}</h1>
+      <h1 className="text-4xl font-semibold text-primary-900">{label}</h1>
       {editComponent}
     </div>
   </div>;

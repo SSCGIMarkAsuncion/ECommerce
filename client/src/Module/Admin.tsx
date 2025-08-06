@@ -1,8 +1,7 @@
-import Navbar, { UserMenu } from "../Components/Navbar";
 import DataTable from "../Components/DataTable";
 import { useCallback, useEffect, useState } from "react";
 import Sidebar, { SidebarButton, SidebarOffset } from "../Components/Sidebar";
-import { IconBag, IconCart, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
+import { IconBag, IconCart, IconLogout, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
 import Loading from "../Components/Loading";
 import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
@@ -11,6 +10,8 @@ import SearchIcon from "../assets/Search.svg"
 import Img from "../Components/Img";
 import { useUserContext } from "../Context/User";
 import A from "../Components/A";
+import Button from "../Components/Button";
+import { useNavigate } from "react-router";
 
 export default function Admin() {
   return <EditableDataContextProvider>
@@ -19,7 +20,8 @@ export default function Admin() {
 }
 
 function Page() {
-  const { user } = useUserContext();
+  const { user, userDispatcher: { logout } } = useUserContext();
+  const navigate = useNavigate();
   const [ isLoading, setIsLoading ] = useState(false);
   const {
     actionType,
@@ -55,20 +57,24 @@ function Page() {
        })()
       }
     </div>
-    <Sidebar className="text-sm flex flex-col fraunces-regular">
-      <UserMenu className="w-full" />
+    <Sidebar className="text-sm flex flex-col">
       <div className="py-4">
         <A href="/" className="block mb-8"><Img src="/Logo_2.svg" className="size-18 mx-auto" /></A>
         <h1 className="text-white text-lg px-2">Manage</h1>
-        <SidebarButton onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
-        <SidebarButton onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
-        <SidebarButton onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
-        <SidebarButton onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
+        <SidebarButton active={selectedData.selectedData == "products"} onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
+        <SidebarButton active={selectedData.selectedData == "orders"} onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
+        <SidebarButton active={selectedData.selectedData == "payments"} onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
+        <SidebarButton active={selectedData.selectedData == "users"} onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
       </div>
       <div className="mt-auto">
         <div className={`bg-primary-900 h-[2px]`} />
-        {/* <p className="capitalize text-lg my-2 px-1">{user!.role}</p> */}
-        <div className="w-max mx-auto">
+        <div className="flex items-center px-1">
+          <p className="capitalize text-md my-2 px-1">{user!.role}</p>
+          <Button pType="icon" className="size-8 ml-auto fill-white" onClick={(e) => {
+            e.stopPropagation();
+            logout();
+            navigate("/");
+          }}><IconLogout /></Button>
         </div>
       </div>
     </Sidebar>

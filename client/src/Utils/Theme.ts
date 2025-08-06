@@ -12,6 +12,7 @@ export const Theme = {
   transition: "transition-all ease-in duration-100",
   button: {
     disabled: "disabled:bg-neutral-500 disabled:text-neutral-200 disabled:cursor-default! disabled:pointer-events-none",
+    active: "bg-primary-600/25", // for filled.none
     filled: {
       primary: "bg-primary-900 hover:brightness-[1.6] active:brightness-[1.6] text-white",
       green: "bg-green-800 hover:brightness-[1.6] active:brightness-[1.6] text-white",

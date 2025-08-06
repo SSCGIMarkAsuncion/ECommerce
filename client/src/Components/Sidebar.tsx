@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ButtonHTMLAttributes, type HTMLAttributes } from "react";
+import { useCallback, useEffect, useState, type ButtonHTMLAttributes, type HTMLAttributes, type HTMLProps } from "react";
 import { Theme } from "../Utils/Theme";
 
 export default function Sidebar(props: HTMLAttributes<HTMLDivElement>) {
@@ -36,11 +36,15 @@ export function SidebarOffset({ className ="" }) {
   return <div className={`w-[var(--sidebar-width)] ${className}`}></div>
 }
 
-export function SidebarButton(props: ButtonHTMLAttributes<HTMLButtonElement>) {
+export interface SidebarButtonProps extends HTMLProps<HTMLButtonElement> {
+  active?: boolean
+};
+
+export function SidebarButton({ active = false, ...props }: SidebarButtonProps) {
   return <button
    {...props}
    type="button"
-   className={`w-full py-2 px-4 flex items-center gap-2 ${Theme.button.filled.none} ${props.className}`}>
+   className={`w-full py-2 px-4 flex items-center gap-2 ${Theme.button.filled.none} ${active? Theme.button.active:""} ${props.className}`}>
     {props.children}
   </button>
 }

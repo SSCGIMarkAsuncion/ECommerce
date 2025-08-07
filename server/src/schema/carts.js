@@ -16,7 +16,8 @@ export class Checkout {
 
     this.products.forEach((cartItem) => {
       const product = cartItem.id;
-      if (product.stock < cartItem.amount) {
+      console.log(product.stocks, cartItem.amount);
+      if (product.stocks < cartItem.amount) {
         return;
       }
       // console.log(this.subtotal, product.price, product.discount);

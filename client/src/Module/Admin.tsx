@@ -12,6 +12,7 @@ import { useUserContext } from "../Context/User";
 import A from "../Components/A";
 import Button from "../Components/Button";
 import { useNavigate } from "react-router";
+import Avatar from "../Components/Avatar";
 
 export default function Admin() {
   return <EditableDataContextProvider>
@@ -68,13 +69,14 @@ function Page() {
       </div>
       <div className="mt-auto">
         <div className={`bg-primary-900 h-[2px]`} />
-        <div className="flex items-center px-1">
-          <Button pType="icon" className="size-8 fill-white" onClick={(e) => {
+        <div className="flex items-center p-1">
+          <Avatar user={user!} avatarClass="size-6" nameClass="capitalize" subtitleClass="text-xs" subtitle={user!.role} withName />
+          <Button pType="icon" className="size-8 fill-white ml-auto" onClick={(e) => {
             e.stopPropagation();
             logout();
             navigate("/");
           }}><IconLogout /></Button>
-          <p className="capitalize text-md my-2 px-1">{user!.role}</p>
+          {/* <p className="capitalize text-md my-2 px-1">{user!.role}</p> */}
         </div>
       </div>
     </Sidebar>

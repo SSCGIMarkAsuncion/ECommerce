@@ -54,7 +54,7 @@ export default function Home() {
         <Testimonials />
       </div>
     </div>
-    <div id="contact" className="px-6 py-14 grid grid-cols-1 md:grid-cols-2 gap-1">
+    <div id="contact" className="px-6 py-14 grid grid-cols-1 md:grid-cols-2 gap-10">
       <ContactUs />
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.8996135015977!2d121.04467497416896!3d14.71826717418687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b0f0e5bb68dd%3A0x74ca74293192219d!2s7%20Mt.%20Malinang%2C%20Quezon%20City%2C%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1754009613862!5m2!1sen!2sph"
       className="border-0 h-full w-full"

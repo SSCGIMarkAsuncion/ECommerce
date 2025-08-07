@@ -10,6 +10,7 @@ import Cart from "../Module/Cart";
 import { AdminOnly, AuthenticatedOnly } from "../Context/User";
 import { ProductContextProvider } from "../Context/Product";
 import MProductItem from "../Module/ProductItem";
+import AboutUs from "../Module/Aboutus";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -44,6 +45,12 @@ export const ROUTER = createBrowserRouter([
     path: "/product/:id",
     element: <CartContextProvider>
       <MProductItem />
+    </CartContextProvider>
+  },
+  {
+    path: "/aboutus",
+    element: <CartContextProvider>
+      <AboutUs />
     </CartContextProvider>
   },
   {

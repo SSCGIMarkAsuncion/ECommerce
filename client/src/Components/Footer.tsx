@@ -4,7 +4,7 @@ import A from "./A";
 const Link = A;
 
 export default function Footer() {
-  return <div className="bg-primary-900 p-1 text-white mt-2">
+  return <div className="bg-primary-900 p-1 text-white">
     <div className="px-2 py-2 tracking-wide fraunces-regular text-md flex flex-col items-center gap-12 sm:flex-row mb-4">
       <div className="w-max m-auto md:m-[initial] md:w-[initial]">
         <div className="flex gap-2 items-center justify-center md:justify-normal mb-4">
@@ -40,15 +40,15 @@ export default function Footer() {
         <h1 className="w-max mb-4">Contact us</h1>
         <ul className="pl-2 text-xs *:my-2 text-gray-300 [&_svg]:fill-gray-100">
           <li>
-            <Link className="flex items-center gap-1" href="tel:09212312213">
+            <Link className="flex items-center gap-1" href="tel:09179222077">
               <IconPhone className="w-[12px] h-auto" />
-              09212312213
+              0917 922 2077
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-1" href="mailto:kapekalakal@gmail.com">
+            <Link className="flex items-center gap-1" href="mailto:kape@kalakal.com">
               <IconEnvelope className="w-[12px] h-auto" />
-              kapekalakal@gmail.com
+              kape@kalakal.com
             </Link>
           </li>
           <li>
@@ -64,3 +64,13 @@ export default function Footer() {
     <p className="italic text-xs fraunces-regular">&copy; 2025 Kape Kalakal. All Rights Reserved.</p>
   </div>
 }
+
+/*
+Bayanihan: We work hand-in-hand with communities and value collaboration over competition.
+
+Transparency: We ensure fair pricing and ethical sourcing.
+
+Cultural Pride: We celebrate Filipino heritage and support indigenous and local artisans.
+
+Sustainability: We promote eco-friendly packaging and slow commerce.
+*/

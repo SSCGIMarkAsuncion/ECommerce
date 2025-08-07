@@ -35,6 +35,8 @@ export async function PutCart(req, res) {
     throw new MError(400, "amount must be a number");
   }
 
+  if (amount > product.stocks) throw new MError(400, "Cannot set amount. The stocks is less than the requested amount.")
+
   const cart = await Cart.findOne({
     owner: uid,
     status: "cart"
@@ -137,7 +139,6 @@ export async function GetBreakdown(req, res) {
   if (!cart) {
     throw new MError(400, "No Cart for this user.");
   }
-
   const checkout = new Checkout(cart.products);
   return res.status(200).json(checkout);
 }

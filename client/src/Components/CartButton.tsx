@@ -7,6 +7,7 @@ import Button from "./Button";
 import { IconMinus, IconPlus, IconTrash } from "../Utils/SVGIcons";
 import { useNotification } from "../Context/Notify";
 import { useUserContext } from "../Context/User";
+import type { MError } from "../Utils/Error";
 
 export interface ButtonCartProps extends HTMLProps<HTMLDivElement> {
   product: Product
@@ -30,7 +31,7 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
         notify("error", "Please login first before adding to cart.");
         return;
       }
-      addToCart(product, newAmount);
+      addToCart(product, newAmount).catch(e => notify("error", (e as MError).toErrorList().join('\n')));
     }}
     onClick={(e) => {
       e.stopPropagation();
@@ -38,7 +39,7 @@ export function ButtonCart({ product, ...props }: ButtonCartProps) {
         notify("error", "Please login first before adding to cart.");
         return;
       }
-      addToCart(product, 1);
+      addToCart(product, 1).catch(e => notify("error", e.message));;
     }}>
     { product.stocks > 0 && (props.children || "Add to cart")}
     { product.stocks == 0 && "Out of stock"}

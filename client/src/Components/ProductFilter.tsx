@@ -3,9 +3,7 @@ import { Searchbar } from "./Input";
 import MultiRange from "./MultiRange";
 import { useProductContext } from "../Context/Product";
 import { useEffect, useState } from "react";
-import Select from "./Select";
 import { productFilterQueryGetSortOf } from "../Models/Product";
-import type { SortType } from "../Hooks/useProducts";
 
 export function ProductFilter() {
   const { productdispatcher: { filterPreset, filter, setFilter }} = useProductContext();
@@ -83,6 +81,8 @@ export function ProductFilter() {
       <MultiRange min={0} max={maxPrice} minValue={filter.priceMin} maxValue={filter.priceMax || 999999} onChange={(e) => {
         if (maxPrice == 0) return;
         setFilter(v => {
+          if (v.priceMin == e.minValue && v.priceMax == e.maxValue) return v;
+
           return {
             ...v, priceMin: e.minValue, priceMax: e.maxValue
           };

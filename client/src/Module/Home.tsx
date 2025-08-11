@@ -10,6 +10,7 @@ import useProducts from "../Hooks/useProducts";
 import ContactUs from "../Components/ContactUs";
 import { Theme } from "../Utils/Theme";
 import Testimonials from "../Components/Testimony";
+import Paypal from "../Components/Paypal";
 
 export default function Home() {
   const { getPromo, getBestSellers } = useProducts();

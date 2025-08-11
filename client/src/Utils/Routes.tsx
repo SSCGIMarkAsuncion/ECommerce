@@ -10,7 +10,9 @@ import Cart from "../Module/Cart";
 import { AdminOnly, AuthenticatedOnly } from "../Context/User";
 import { ProductContextProvider } from "../Context/Product";
 import MProductItem from "../Module/ProductItem";
-import AboutUs from "../Module/Aboutus";
+import AboutUs from "../Module/AboutUs";
+import Checkout from "../Module/Checkout";
+import PaymentProvider from "../Context/Payment";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -52,6 +54,16 @@ export const ROUTER = createBrowserRouter([
     element: <CartContextProvider>
       <AboutUs />
     </CartContextProvider>
+  },
+  {
+    path: "/checkout",
+    element: <AuthenticatedOnly>
+      <PaymentProvider>
+        <CartContextProvider waitForResult={true} redirectIfEmpty="/products">
+          <Checkout />
+        </CartContextProvider>
+      </PaymentProvider>
+    </AuthenticatedOnly>
   },
   {
     path: "/cart",

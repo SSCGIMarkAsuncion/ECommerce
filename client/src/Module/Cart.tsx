@@ -9,6 +9,7 @@ import Radio from "../Components/Radio";
 import Img from "../Components/Img";
 import { useCallback, useRef } from "react";
 import { useNotification } from "../Context/Notify";
+import { useNavigate, useNavigation } from "react-router";
 
 export default function Cart() {
   const { cart } = useCartContext();
@@ -42,18 +43,18 @@ export default function Cart() {
 }
 
 function Checkout() {
-  const notify = useNotification();
-  const ref = useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
 
   const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    notify("error", "NOT IMPLEMENTED YET");
+    const formdata = new FormData(e.currentTarget);
+    navigate(`/checkout/?paymentMethod=${formdata.get("paymentMethod") || "cod"}`);
   }, []);
 
-  return <form ref={ref} onSubmit={onSubmit}>
+  return <form onSubmit={onSubmit}>
     <div className="grid grid-cols-2 gap-2 mt-4">
       <Radio id="paymentMethodCod" required label="Cash on Delivery" name="paymentMethod" value="cod" />
-      <Radio id="paymentMethodOnline" required label="Pay online (GCash)" name="paymentMethod" value="gcash" />
+      <Radio id="paymentMethodOnline" required label="Pay online with Paypal" name="paymentMethod" value="paypal" />
     </div>
     <Button type="submit" className="mt-4 w-full">Checkout</Button>
   </form>

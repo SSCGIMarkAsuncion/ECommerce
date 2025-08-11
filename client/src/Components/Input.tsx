@@ -4,14 +4,17 @@ import { IconEye, IconEyeSlash, IconSearch, IconXMark } from "../Utils/SVGIcons"
 import useDelayCallback from "../Hooks/useDelayCallback";
 import Button from "./Button";
 
-export interface InputProps extends HTMLProps<HTMLInputElement> {
+export interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'prefix' | 'suffix'> {
   suffix?: ReactNode,
+  prefix?: ReactNode,
+  inputClassName?: string,
+  containerClassName?: string,
   label?: string,
   validators?: ((value: string) => string | string[])[], // returns an error message, empty if no error
   onStatus?: (value: string, invalid: boolean) => void
 };
 
-export default function Input(props: InputProps) {
+export default function Input({ containerClassName, inputClassName, prefix, suffix, label, validators, onStatus, ...props }: InputProps) {
   const [ invalid, setInvalid ] = useState(false);
   const [ errs, setErrs ] = useState<string[]>([]);
   const onValidate = useCallback((e: React.FocusEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -25,8 +28,8 @@ export default function Input(props: InputProps) {
       errMsgs.push(e.target.validationMessage);
     }
 
-    if (props.validators) {
-      props.validators.forEach((validator) => {
+    if (validators) {
+      validators.forEach((validator) => {
         const errMsg = validator(value)
         if (errMsg) {
           if (typeof errMsg == "string")
@@ -45,33 +48,32 @@ export default function Input(props: InputProps) {
     if (errMsgs.length > 0) {
       setInvalid(true);
       setErrs(errMsgs);
-      if (props.onStatus)
-        props.onStatus(value, true);
+      if (onStatus)
+        onStatus(value, true);
     }
     else {
       setInvalid(false);
       setErrs([]);
-      if (props.onStatus)
-        props.onStatus(value, false);
+      if (onStatus)
+        onStatus(value, false);
     }
-  }, [props.validators, props.onStatus]);
+  }, [validators, onStatus]);
   const delayedCallback = useDelayCallback(onValidate, 500);
 
-  return <div hidden={props.hidden}>
-    <label htmlFor={props.id}>{props.label}</label>
+  return <div hidden={props.hidden} className={containerClassName}>
+    <label htmlFor={props.id}>{label}</label>
     <div 
       data-invalid={invalid}
       onBlur={onValidate as React.FocusEventHandler<HTMLInputElement>}
       onChange={(e) => delayedCallback(e)}
       className={`${Theme.transition} ${Theme.input} ${props.className}`}>
+      { prefix }
       <input
         {...props}
         name={props.id}
-        className="w-full outline-none" >
+        className={`w-full outline-none ${inputClassName}`} >
       </input>
-      {
-        props.suffix
-      }
+      { suffix }
     </div>
     <div className="mt-1 text-red-700 text-sm">
       {

@@ -2,6 +2,8 @@ import MError from '../error.js';
 import { Cart, Checkout, mapCartItems } from '../schema/carts.js';
 import { Product } from '../schema/products.js';
 import { ObjectId } from "mongodb";
+import { Paypal } from "../utils/paypal.js";
+import { createOrder, Order } from '../schema/order.js';
 
 /*
   param:
@@ -141,4 +143,79 @@ export async function GetBreakdown(req, res) {
   }
   const checkout = new Checkout(cart.products);
   return res.status(200).json(checkout);
+}
+
+class CheckoutBody {
+  full_name = "";
+  email_address = "";
+  phone_number = "";
+  address_line_1 = "";
+  admin_area_2 = "";
+  postal_code = "";
+  payment_method = "";
+
+  constructor(obj) {
+    this.full_name = obj.full_name;
+    this.email_address = obj.email_address;
+    this.phone_number = obj.phone_number;
+    this.address_line_1 = obj.address_line_1;
+    this.admin_area_2 = obj.admin_area_2;
+    this.postal_code = obj.postal_code;
+    this.payment_method = obj.payment_method;
+  }
+
+  validate() {
+    // email_address and postal_code is optional
+    if (!this.payment_method || !["cod", "paypal"].includes(this.payment_method))
+      throw new MError(400, "payment_method is not defined or is not valid");
+
+    if (!this.full_name || !this.phone_number || !this.address_line_1 || !this.admin_area_2)
+      throw new MError(400, "Missing required fields");
+  }
+};
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function PostCheckout(req, res) {
+  const uid = new ObjectId(String(req.tokenPayload.id));
+  const body = new CheckoutBody(req.body);
+
+  body.validate();
+
+  const cart = await Cart.findOne({
+    owner: uid,
+    status: "cart"
+  }).sort({ updatedAt: -1 });
+
+  if (!cart) throw new MError(400, "No Cart found");
+
+  cart.status = "processing";
+
+  if (body.payment_method == "paypal") {
+    const paypalCreateOrder = Paypal.createOrder(cart, req.body);
+    await cart.save({ validateBeforeSave: true });
+    return res.status(200).json(paypalCreateOrder);
+  }
+  // cod
+  const order =  createOrder(req.tokenPayload, cart, body);
+  await order.save({ validateBeforeSave: true });
+  await cart.save({ validateBeforeSave: true });
+
+  return res.status(200).json(order);
+}
+
+class CheckoutResults {
+  orderId = "";
+  payerId = "";
+  status = "";
+  message = "";
+}
+
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function GetCheckoutFinished(req, res) {
 }

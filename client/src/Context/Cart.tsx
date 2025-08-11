@@ -5,6 +5,7 @@ import useCart from "../Hooks/useCart";
 import { useUserContext } from "./User";
 import Loading from "../Components/Loading";
 import { useNotification } from "./Notify";
+import { useNavigate } from "react-router";
 
 const CartContext = createContext<Cart | null>(null);
 const CartContextDispatcher = createContext<ActionDispatch<[action: CartContextAction]> | null>(null);
@@ -20,13 +21,15 @@ export interface CartContextProviderProps {
   children: ReactNode,
   withProductInfo?: boolean,
   waitForResult?: boolean
+  redirectIfEmpty?: string
 };
 
-export function CartContextProvider({ children, withProductInfo = false, waitForResult = false }: CartContextProviderProps) {
+export function CartContextProvider({ children, withProductInfo = false, waitForResult = false, redirectIfEmpty = "" }: CartContextProviderProps) {
   const [ initial, dispatcher ] = useReducer(reducer, null);
   const [ loading, setLoading ] = useState(true);
   const { user } = useUserContext();
   const { getCarts } = useCart();
+  const navigate = useNavigate();
   const notify = useNotification();
 
   useEffect(() => {
@@ -57,6 +60,13 @@ export function CartContextProvider({ children, withProductInfo = false, waitFor
     }
     a();
   }, [user]);
+
+  useEffect(() => {
+    if (loading) return;
+    if (initial == null && redirectIfEmpty) {
+      navigate(redirectIfEmpty);
+    }
+  }, [loading]);
 
   if (loading && waitForResult) {
     return <Loading></Loading>;

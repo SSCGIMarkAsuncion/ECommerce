@@ -50,7 +50,7 @@ export default function Register() {
   return <div className="w-full h-full bg-primary-50">
     <Navbar className="bg-primary-950" />
     <div className="min-h-full py-[var(--appbar-height)] bg-[inherit]">
-      <div className={`fraunces-regular my-8 w-[98%] md:w-[30%] mx-auto px-2 py-8 bg-white shadow-black shadow-xs/15 ${Theme.rounded}`}>
+      <div className={`fraunces-regular my-8 w-[98%] md:min-w-[40svw] md:w-[30%] mx-auto px-2 py-8 bg-white shadow-black shadow-xs/15 ${Theme.rounded}`}>
         <FormHeader title="Register" />
         <form className="text-lg md:text-sm px-8" onSubmit={onSubmit}>
           <FormError errors={errs} />

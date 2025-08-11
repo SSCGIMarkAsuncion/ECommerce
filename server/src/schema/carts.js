@@ -16,7 +16,7 @@ export class Checkout {
 
     this.products.forEach((cartItem) => {
       const product = cartItem.id;
-      console.log(product.stocks, cartItem.amount);
+      // console.log(product.stocks, cartItem.amount);
       if (product.stocks < cartItem.amount) {
         return;
       }
@@ -80,7 +80,11 @@ export const CartSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["done", "cart"],
+    enum: [
+      "done",
+      "cart",
+      "processing"
+    ],
     default: "cart"
   }
 }, { timestamps: true });

@@ -19,6 +19,7 @@ export async function connect() {
 export const COLLECTIONS = {
   USERS: "users",
   PRODUCTS: "products",
+  ORDERS: "orders",
   CARTS: "carts",
   HISTORY: "history",
   REVIEWS: "reviews"

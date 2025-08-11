@@ -116,7 +116,7 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
               Admin Dashboard
             </MenuItem>:<></>
           }
-          <MenuItem className="block w-full" href="/settings">Settings</MenuItem>
+          <MenuItem className="block w-full" href="/myorders">My Orders</MenuItem>
           <MenuItem className="block w-full" onClick={(e) => {
             toggle(e);
             logout();
@@ -160,7 +160,7 @@ function NavbarMenu({ type = "" }: { type: NavbarType }) {
         <>
         <ButtonMenu label={user.username}>
           { user.isAdmin() && <MenuItem href="/admin">Admin Dashboard</MenuItem> }
-          <MenuItem href="/settings">Settings</MenuItem>
+          <MenuItem href="/myorders">My Orders</MenuItem>
           <MenuItem onClick={() => {
             logout();
             navigate("/");

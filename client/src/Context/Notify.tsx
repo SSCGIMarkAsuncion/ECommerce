@@ -3,7 +3,7 @@ import { Card } from "../Components/Card";
 import { IconInfoFilled } from "../Utils/SVGIcons";
 import { MError } from "../Utils/Error";
 
-export const NotifyContext = createContext<((type: NotificationType, body: string) => void) | null>(null);
+export const NotifyContext = createContext<((type: NotificationType, body: string | MError | Error) => void) | null>(null);
 
 export type NotificationType = "warn" | "info" | "error";
 export interface NotificationItem {
@@ -21,10 +21,17 @@ export function useNotification() {
 export default function NotifyProvider({ children }: { children: ReactNode}) {
   const [ notifications, setNotifications ] = useState<NotificationItem[]>([]);
 
-  const pushNotify = useCallback((type: NotificationType, body: string) => {
+  const pushNotify = useCallback((type: NotificationType, body: string | MError | Error) => {
+    let message = "";
+    if (body instanceof MError)
+      message = body.toErrorList().join('\n');
+    else if (body instanceof Error)
+      message = body.message;
+    else
+      message = body
 
     setNotifications(v => {
-      return [ ...v, { id: crypto.randomUUID(),type, body }];
+      return [ ...v, { id: crypto.randomUUID(),type, body: message }];
     });
   }, []);
 

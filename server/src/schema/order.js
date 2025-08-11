@@ -26,6 +26,7 @@ export const ShippingInfoSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    default: ""
   }, 
   phoneNumber: {
     type: String,
@@ -41,6 +42,7 @@ export const ShippingInfoSchema = new mongoose.Schema({
   },
   postalCode: {
     type: String,
+    default: ""
   }
 }, { _id: false });
 

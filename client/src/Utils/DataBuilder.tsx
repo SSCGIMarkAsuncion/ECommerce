@@ -20,13 +20,6 @@ export interface IColumn {
   isArray?: boolean
 };
 
-// export function buildRowsFrom(dataType: OpenableData, rawDatas: any[]) {
-//   const formattedData = rawDatas.map((data) => {
-//     data.actions = (data: any) => (<RowActions type={dataType} data={data} />);
-//   });
-//   return formattedData;
-// }
-
 export function toDateTimeLocalString(date: Date | null) {
   if (!date) {
     return undefined;

@@ -18,11 +18,6 @@ export default function DataTable(props: DataTableProps) {
   const [pageSize, setPageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const { actionType } = useEditableDataContext();
-
-  const triggerAddEvent = () => {
-    actionType?.setActionType("add");
-  };
 
   const charsAscDesc = {
     asc: '⏶',
@@ -58,9 +53,7 @@ export default function DataTable(props: DataTableProps) {
   return <div className={`p-4 ${props.containerClass || ""}`}>
       <div className="flex gap-2 capitalize items-center">
         <h3 className="text-2xl">{props.title}</h3>
-        <Button onClick={() => {
-          triggerAddEvent();
-        }} className="m-2 ml-auto capitalize text-sm" pColor="green"><IconPlus className="w-4 h-4" /> Add</Button>
+        <AddButton />
       </div>
       <div className="w-full rounded-lg overflow-y-hidden border-2 border-gray-200">
       <table className={`min-w-full table-fixed text-black`}>
@@ -145,14 +138,27 @@ export default function DataTable(props: DataTableProps) {
     </div>;
 }
 
+function AddButton() {
+  const { actionType, selectedData: { selectedData } } = useEditableDataContext();
+
+  if (selectedData == "orders") return null;
+
+  return <Button onClick={(e) => {
+    e.stopPropagation();
+    actionType?.setActionType("add");
+  }} className="m-2 ml-auto capitalize text-sm" pColor="green"><IconPlus className="w-4 h-4" /> Add</Button>
+}
+
 export function RowActions({ data }: { data: any }) {
-  const { actionType, currentData } = useEditableDataContext();
+  const { actionType, currentData, selectedData: { selectedData } } = useEditableDataContext();
   const buttonSizes = "w-7 h-7";
 
   const triggerEvent = (evType: ActionTypes) => {
     actionType?.setActionType(evType);
     currentData?.setCurrentData(data);
   };
+
+  if (selectedData == "orders") return <p>No Actions available</p>;
 
   return <div className="flex gap-2 justify-center">
     <Button onClick={(e) => {

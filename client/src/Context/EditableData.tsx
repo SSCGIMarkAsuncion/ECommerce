@@ -3,6 +3,7 @@ import { type OpenableData, type TableData } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
 import { useNotification } from "./Notify";
 import { useSearchParams } from "react-router";
+import type { MError } from "../Utils/Error";
 
 export type ActionTypes = "none" | "new" | "edit" | "delete" | "add";
 type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -51,10 +52,7 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
         setTableData(data);
       }
       catch (e) {
-        if (e instanceof Error)
-          notify("error", e.message);
-        else
-          notify("error", String(e));
+        notify("error", e as MError);
       }
     }
     a();

@@ -64,7 +64,7 @@ function Page() {
         <h1 className="text-white text-lg px-2">Manage</h1>
         <SidebarButton active={selectedData.selectedData == "products"} onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
         <SidebarButton active={selectedData.selectedData == "orders"} onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
-        <SidebarButton active={selectedData.selectedData == "payments"} onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton>
+        {/* <SidebarButton active={selectedData.selectedData == "payments"} onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton> */}
         <SidebarButton active={selectedData.selectedData == "users"} onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
       </div>
       <div className="mt-auto">

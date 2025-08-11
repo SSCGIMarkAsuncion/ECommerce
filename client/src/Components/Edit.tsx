@@ -1,301 +1,175 @@
-import { useCallback, useState } from "react";
-import { Product } from "../Models/Product";
+import { useCallback, useContext, useState } from "react";
 import { useNotification } from "../Context/Notify";
-import { useEditableDataContext } from "../Context/EditableData";
-import useProducts from "../Hooks/useProducts";
-import { toDateTimeLocalString } from "../Utils/DataBuilder";
+import { EditFormContext, type EditInputFormDef, type InputDefs } from "../Context/EditableData";
 import Input, { InputPassword, TextArea } from "./Input";
 import FormError from "./FormError";
 import { EditorTags } from "./EditorTags";
 import { ImageEditor } from "./ImageEditor";
 import Button from "./Button";
 import type { MError } from "../Utils/Error";
-import User from "../Models/User";
-import useUsers from "../Hooks/useUser";
-import { checkPassword } from "../Utils/FormValidators";
 import Select from "./Select";
-import useImageMedia from "../Hooks/useImageMedia";
-import type Order from "../Models/Order";
 
 interface EditConfirmButtonsProps {
   loading: boolean,
   onCancel: () => void,
 };
 
-function EditConfirmButtons(props: EditConfirmButtonsProps) {
+export function EditConfirmButtons(props: EditConfirmButtonsProps) {
   return <div className="flex gap-1 text-xs mt-2">
     <Button className="ml-auto" loading={props.loading} onClick={props.onCancel} pColor="whitePrimary">Cancel</Button>
     <Button loading={props.loading} type="submit" pColor="green">Ok</Button>
   </div>
 }
 
-export interface EditProps<T> {
-  data: T,
-  closeModal: () => void,
+export interface EditorProps<T> {
+  inputDefs: InputDefs<T>,
+  close: (rdata?: React.RefObject<T>) => void,
   loading: {
     loading: boolean,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
   },
-  ref?: React.RefObject<any>
+  submitter: {
+    update: (data: T) => Promise<void>,
+    add: (data: T) => Promise<void>
+  },
+  onSuccess: () => void,
+  onSuccessMsg: (data: T) => string
 };
 
-export function EditProduct(props: EditProps<Product>) {
-  const { updateProduct, newProduct } = useProducts();
-  const { reload } = useEditableDataContext();
-  const [ currData, setCurrData ] = useState({ ...props.data });
+export function Editor<T>({ inputDefs, loading, close, submitter, onSuccessMsg, onSuccess }: EditorProps<T>) {
+  const rdata = useContext(EditFormContext);
   const [ err, setErr ] = useState<string[]>([]);
   const notify = useNotification();
-  const { deleteImg } = useImageMedia();
-  const { loading, setLoading } = props.loading;
 
-  const onCancel = useCallback(async () => {
-    setLoading(true);
-    const deleteImgs = currData.imgs.filter((link) => {
-      if (!currData.id) return true;
-      return !props.data.imgs.includes(link);
-    });
+  console.assert(rdata.current != null);
 
-    for (const link of deleteImgs) {
-      try {
-        notify("info", `Deleting ${link}`);
-        const v = await deleteImg(link)
-        notify("info", `Image deletion status ${v.result || "ok"}`)
-      }
-      catch(e: any) {
-         notify("error", e.message)
-      }
-    };
-    setLoading(false);
-    props.closeModal();
-  }, [currData]);
-  if (props.ref)
-    props.ref.current = onCancel;
+  function handleRenderOfInputDef(inputDef: EditInputFormDef<T>) {
+    const opts = {
+      id: inputDef.id,
+      label: inputDef.label,
+      name: inputDef.name,
+      placeholder: inputDef.placeholder,
+      readOnly: inputDef.readOnly,
+    } as any;
 
-  const onSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (err.length > 0) return;
-    setLoading(true);
+    const defValue = (inputDef.defaultValue)? inputDef.defaultValue(rdata):rdata.current[inputDef.id] || "";
+    // only add the key because html marks it as required as long as key exist
+    if (inputDef.required) opts.required = true
 
-    const form = e.currentTarget as HTMLFormElement;
-    const fdata = new FormData(form);
-    const product = Product.from(fdata, currData.tags, currData.imgs);
+    const onChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+      if (inputDef.onChange)
+        inputDef.onChange(rdata, e.currentTarget.value);
+      else
+        rdata.current[inputDef.id] = e.currentTarget.value;
+    }, []);
 
-    try {
-      if (product.id) {
-        await updateProduct(product)
-        notify("info", `Successfully edited product ${product.id}`);
-      }
-      else {
-        await newProduct(product);
-        notify("info", `Successfully created a new product`);
-      }
-      props.closeModal();
-    }
-    catch (e) {
-      const merrs = (e as MError).toErrorList();
-      setLoading(false);
-      setErr(merrs);
-      return;
-    }
-
-    setLoading(false);
-    reload();
-  }, [currData]);
-
-  const onChangeTags = useCallback((tags: string[]) => {
-    setCurrData((v) => {
-      return {
-        ...v,
-        tags
-      };
-    });
-  }, []);
-
-  const onChangeImgs = useCallback((imgs: string[]) => {
-    setCurrData((v) => {
-      return {
-        ...v,
-        imgs: imgs
-      };
-    });
-  }, []);
-
-  return <>
-    <form className="mt-4" onSubmit={onSubmit}>
-      <FormError errors={err} />
-
-      <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
-      <div className="*:flex-1 flex gap-1">
-        <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
-        <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
-      </div>
-
-      <Input id="name" type="text" required label="Name" className="text-sm" defaultValue={currData.name} />
-      <TextArea label="Description" id="description" className="text-sm" defaultValue={currData.description} />
-
-      <div className="*:flex-1 flex gap-1">
-        <Input id="price" type="number" required label="Price" className="text-sm" defaultValue={currData.price} />
-        <Input id="discount" type="number" required label="Discount%" min={0} max={100} step={0.5} className="text-sm" defaultValue={currData.discount || 0} />
-        <Input id="stocks" type="number" required label="Stocks" min={0} className="text-sm" defaultValue={currData.stocks} />
-      </div>
-
-      <EditorTags tags={currData.tags} onChangeTags={onChangeTags} />
-
-      <ImageEditor
-        imgs={currData.imgs}
-        onChangeImgs={onChangeImgs}
-        onProcessing={() => {
-          setLoading(true);
-          notify("info", "Image uploading");
-        }}
-        onProcessingDone={() => {
-          setLoading(false);
-          notify("info", "Image uploaded");
-        }}
-        onErr={(e) => {
-          const errs = e.toErrorList();
-          if (errs.length > 0) {
-            setErr(errs);
+    switch (inputDef.inputType) {
+      case "email":
+      case "text":
+        return <Input key={inputDef.id} {...opts} type={inputDef.inputType} defaultValue={defValue} onChange={onChange} />;
+      case "datetime-local":
+        return <Input key={inputDef.id} type="datetime-local" {...opts} defaultValue={defValue} onChange={onChange} />;
+      case "textarea":
+        return <TextArea key={inputDef.id} {...opts} defaultValue={defValue} onChange={onChange} />
+      case "number":
+        return <Input key={inputDef.id} {...opts} type="number" defaultValue={defValue} onChange={onChange} />
+      case "tags":
+        return <EditorTags key={inputDef.id} tags={rdata.current.tags || []} onChangeTags={(tags) => {
+          if (inputDef.onChange)
+            inputDef.onChange(rdata, tags);
+          else
+            rdata.current[inputDef.id] = tags;
+        }} />
+      case "images":
+        return <ImageEditor
+          key={inputDef.id} 
+          imgs={rdata.current.imgs || []}
+          onChangeImgs={(imgs) => {
+          if (inputDef.onChange)
+            inputDef.onChange(rdata, imgs);
+          else
+            rdata.current[inputDef.id] = imgs;
+          }}
+          onProcessing={() => {
+            loading.setLoading(true);
+            notify("info", "Image uploading");
+          }}
+          onProcessingDone={() => {
+            loading.setLoading(false);
+            notify("info", "Image uploaded");
+          }}
+          onErr={(e) => {
+            const errs = e.toErrorList();
+            if (errs.length > 0) {
+              setErr(errs);
+            }
+          }}
+        />
+      case "select":
+        return <Select {...opts} key={inputDef.id} onChange={onChange}>
+          {inputDef.options?.map((v) => {
+          return <option key={v} value={v} className="capitalize">{v}</option>
+          })
           }
-        }}
-      />
+        </Select>
+      case "password":
+        const required = {} as any;
+        if (!rdata.current.id)
+          required.required = true;
+        return <InputPassword key={inputDef.id} {...opts} {...required} defaultValue={defValue} validators={(!rdata.current.id && inputDef.validators)? inputDef.validators:[]}
+          onChange={onChange}
+          />
+      default:
+        break;
+    }
+  }
 
-      <EditConfirmButtons loading={loading} onCancel={onCancel} />
-    </form>
-  </>
-}
-
-export function EditUser(props: EditProps<User>) {
-  const { updateUser, createUser } = useUsers();
-  const { reload } = useEditableDataContext();
-  const { loading, setLoading } = props.loading;
-  const [ currData, _setCurrData ] = useState({ ...props.data });
-  const [ err, setErr ] = useState<string[]>([]);
-  const notify = useNotification();
+  const onClose = useCallback(() => {
+    close(rdata);
+  }, [])
 
   const onSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (err.length > 0) return;
-    setLoading(true);
 
-    const form = e.currentTarget as HTMLFormElement;
-    const fdata = new FormData(form);
-    const user = User.from(fdata);
-
+    console.log(rdata.current);
+    loading.setLoading(true);
     try {
-      if (user.id) {
-        await updateUser(user)
-        notify("info", `Successfully edited user ${user.id}`);
+      if (rdata.current.id) {
+        await submitter.update(rdata.current);
+        notify("info", `Successfully updated ${onSuccessMsg(rdata.current)}`);
       }
       else {
-        await createUser(user);
-        notify("info", `Successfully created a new user`);
+        await submitter.add(rdata.current);
+        notify("info", `Successfully created ${onSuccessMsg(rdata.current)}`);
       }
-      props.closeModal();
+
+      onSuccess();
     }
     catch (e) {
-      const merrs = (e as MError).toErrorList();
-      setLoading(false);
-      setErr(merrs);
+      notify("error", e as MError);
       return;
     }
+    finally {
+      loading.setLoading(false);
+    }
 
-    setLoading(false);
-    reload();
-  }, [currData]);
+    close();
+  }, []);
 
-  return <>
-    <form className="mt-4" onSubmit={onSubmit}>
-      <FormError errors={err} />
-
-      <Input id="id" type="text" label="Id" className="text-sm" readOnly value={currData.id} />
-      <div className="*:flex-1 flex gap-1">
-        <Input type="datetime-local" label="Created At" className="text-sm" readOnly value={toDateTimeLocalString(currData.createdAt)} />
-        <Input type="datetime-local" label="Updated At" className="text-sm" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
-      </div>
-
-      <div className="*:flex-1 flex gap-1">
-        <Input id="username" type="text" required label="Username" className="text-sm" defaultValue={currData.username} />
-        <Input id="email" type="text" required label="Email" className="text-sm" defaultValue={currData.email} />
-      </div>
-
-      <div className="*:flex-1 flex gap-1">
-        <InputPassword id="password" label="Password" className="text-sm" defaultValue={""} required={!currData.id} validators={!currData.id? [checkPassword]:[]}  />
-        <Select id="role" label="Role:" defaultValue={currData.role || "user"}>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-          <option value="superadmin">Superadmin</option>
-        </Select>
-        {/* <Input id="discount" type="number" required label="Discount%" min={0} max={100} step={0.5} className="text-sm" defaultValue={currData.discount || 0} /> */}
-      </div>
-
-      <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
-    </form>
-  </>
-}
-
-export function EditOrder(props: EditProps<Order>) {
-  // const { updateUser, createUser } = useUsers();
-  const { reload } = useEditableDataContext();
-  const { loading, setLoading } = props.loading;
-  const [ currData, _setCurrData ] = useState({ ...props.data });
-  const [ err, setErr ] = useState<string[]>([]);
-  const notify = useNotification();
-  const onSubmit = useCallback(async (e: React.FormEvent) => {
-
-    e.preventDefault();
-    if (err.length > 0) return;
-    setLoading(true);
-
-    const form = e.currentTarget as HTMLFormElement;
-    const fdata = new FormData(form);
-    // const user = User.from(fdata);
-
-    // try {
-    //   if (user.id) {
-    //     await updateUser(user)
-    //     notify("info", `Successfully edited user ${user.id}`);
-    //   }
-    //   else {
-    //     await createUser(user);
-    //     notify("info", `Successfully created a new user`);
-    //   }
-    //   props.closeModal();
-    // }
-    // catch (e) {
-    //   const merrs = (e as MError).toErrorList();
-    //   setLoading(false);
-    //   setErr(merrs);
-    //   return;
-    // }
-
-    setLoading(false);
-    reload();
-  }, [currData]);
-
-  return <>
-    <form className="mt-4 text-sm" onSubmit={onSubmit}>
-      <FormError errors={err} />
-      <Input id="id" type="text" label="Id" readOnly value={currData.id} />
-      <div className="*:flex-1 flex gap-1">
-        <Input type="datetime-local" label="Created At" readOnly value={toDateTimeLocalString(currData.createdAt)} />
-        <Input type="datetime-local" label="Updated At" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
-      </div>
-      <div className="*:flex-1 flex gap-1">
-        <Input id="user" type="text" required label="Username" readOnly defaultValue={currData.user as string} />
-        <Input id="cart" type="text" required label="Email" readOnly defaultValue={currData.cart as string} />
-      </div>
-
-      {/* <div className="*:flex-1 flex gap-1">
-        <InputPassword id="password" label="Password" className="text-sm" defaultValue={""} required={!currData.id} validators={!currData.id? [checkPassword]:[]}  />
-        <Select id="role" label="Role:" defaultValue={currData.role || "user"}>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-          <option value="superadmin">Superadmin</option>
-        </Select>
-      </div> */}
-
-      <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
-    </form>
-  </>
+  return <form className="mt-4 text-sm p-1" onSubmit={onSubmit}>
+    <FormError errors={err} />
+    {
+      inputDefs.map((def, i) => {
+        if (Array.isArray(def)) {
+          return <div key={`${i}`} className="*:flex-1 flex gap-1">
+            {
+              def.map((d) => handleRenderOfInputDef(d))
+            }
+          </div>;
+        }
+        return handleRenderOfInputDef(def);
+      })
+    }
+    <EditConfirmButtons loading={loading.loading} onCancel={onClose} />
+  </form>
 }

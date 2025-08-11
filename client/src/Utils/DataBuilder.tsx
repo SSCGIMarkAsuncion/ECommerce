@@ -22,7 +22,7 @@ export interface IColumn {
 
 export function toDateTimeLocalString(date: Date | null) {
   if (!date) {
-    return undefined;
+    return "";
   }
   return date.toISOString().slice(0,16);
 }

@@ -1,4 +1,5 @@
-import type { IColumn } from "../Utils/DataBuilder";
+import type { InputDefs } from "../Context/EditableData";
+import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
 
 export class Product {
   id: string;
@@ -174,60 +175,95 @@ export function productFilterQueryBuild(query: ProductFilterQuery) {
   return queries.join('&');
 }
 
-// export class ProductFilterQuery {
-//   sby: "date" | "price" | "";
-//   sort: "asc" | "desc" | "";
-//   priceMin: number;
-//   priceMax: number;
-//   isDiscounted: boolean;
-//   tags: string[];
-//   q: string;
-
-//   constructor(params: any | URLSearchParams) {
-//     if (params instanceof URLSearchParams) {
-//       this.sby = params.get("sby") as typeof this.sby || "";
-//       this.sort = params.get("sort") as typeof this.sort || "";
-//       this.isDiscounted = params.get("isDiscounted") == '1';
-//       this.tags = params.get("tags") != null ? params.get("tags")!.split(';') : [];
-//       this.q = params.get("q") || "";
-//       try {
-//         this.priceMin = Number(params.get("priceMin"));
-//         this.priceMax = Number(params.get("priceMax"));
-//       }
-//       catch {
-//         this.priceMin = 0;
-//         this.priceMax = 0;
-//       }
-//     }
-//     else {
-//       this.sby = params.sby || "";
-//       this.sort = params.sort || "";
-//       this.priceMin = params.priceMin || 0;
-//       this.priceMax = params.priceMax || 0;
-//       this.isDiscounted = params.isDiscounted || false;
-//       this.tags = params.tags || [];
-//       this.q = params.q || "";
-//     }
-//   }
-
-//   build() {
-//     const queries: string[] = [];
-//     const keys = Object.keys(JSON.stringify(this)) as Array<keyof this>;
-//     keys.forEach((key) => {
-//       if (!this[key]) return;
-
-//       let v = this[key] as any;
-//       if (Array.isArray(v)) {
-//         v = v.join(';');
-//       }
-//       if (v instanceof Boolean) {
-//         // this[key] is already checked before this so this means v is always true here
-//         v = '1';
-//       }
-//       queries.push(`${key as string}=${v}`);
-//     });
-
-//     if (queries.length <= 0) return "";
-//     return queries.join('&');
-//   }
-// }
+export const PRODUCT_EDIT_INPUTS: InputDefs<Product> = [
+  {
+    inputType: "text",
+    id: "id",
+    label: "Id",
+    readOnly: true,
+  },
+  [
+    {
+      inputType: "datetime-local",
+      id: "createdAt",
+      label: "CreatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.createdAt)
+      }
+    },
+    {
+      inputType: "datetime-local",
+      id: "updatedAt",
+      label: "UpdatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.updatedAt)
+      }
+    }
+  ],
+  {
+    inputType: "text",
+    id: "name",
+    required: true,
+    label: "Name",
+  },
+  {
+    inputType: "textarea",
+    id: "description",
+    label: "Description",
+  },
+  [
+    {
+      inputType: "number",
+      id: "price",
+      required: true,
+      label: "Price",
+      onChange: (data, newValue) => {
+        data.current.price = Number(newValue);
+      }
+    },
+    {
+      inputType: "number",
+      id: "discount",
+      label: "Discount%",
+      onChange: (data, newValue) => {
+        data.current.discount = Number(newValue);
+      },
+      props: {
+        min: 0,
+        max: 100,
+        step: 0.5
+      }
+    },
+    {
+      inputType: "number",
+      id: "stocks",
+      label: "Stocks",
+      required: true,
+      onChange: (data, newValue) => {
+        data.current.stocks = Number(newValue);
+      },
+      props: {
+        min: 0,
+        step: 1
+      }
+    }
+  ],
+  {
+    inputType: "tags",
+    id: "tags",
+    label: "",
+    onChange: (data, newValue) => {
+      data.current.tags = newValue;
+    }
+  },
+  {
+    inputType: "images",
+    id: "imgs",
+    label: "",
+    onChange: (data, newValue) => {
+      data.current.imgs = newValue;
+    }
+  }
+];

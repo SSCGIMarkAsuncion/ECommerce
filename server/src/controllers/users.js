@@ -36,15 +36,19 @@ export async function PutUser(req, res) {
   const set = {
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password,
+    password: req.body.password || "",
     role: req.body.role
   };
+  if (!set.password) {
+    delete set.password;
+  }
   for (const key of Object.keys(set)) {
     const item = set[key];
     if (item == undefined) {
       delete set[key];
     }
   }
+  console.log("PutUser::Set", set);
 
   if (set.role) {
     if (tokenRole != ROLES.SUPERADMIN && set.role == ROLES.SUPERADMIN) {
@@ -52,7 +56,7 @@ export async function PutUser(req, res) {
     }
   }
 
-  const result = await User.findByIdAndUpdate(id, set, { new: true });
+  const result = await User.findByIdAndUpdate(id, set, { new: true, runValidators: true });
   return res.status(200).json(result);
 }
 

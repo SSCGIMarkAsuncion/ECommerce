@@ -1,4 +1,5 @@
-import type { IColumn } from "../Utils/DataBuilder";
+import type { InputDefs } from "../Context/EditableData";
+import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
 import type Cart from "./Cart";
 import type User from "./User";
 
@@ -63,4 +64,33 @@ export const ORDERS_COLUMNS: IColumn[] = [
     enableColumnFilter: false,
     isDate: true
   },
+];
+
+export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
+  {
+    inputType: "text",
+    id: "id",
+    label: "Id",
+    readOnly: true,
+  },
+  [
+    {
+      inputType: "datetime-local",
+      id: "createdAt",
+      label: "CreatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.createdAt)
+      }
+    },
+    {
+      inputType: "datetime-local",
+      id: "updatedAt",
+      label: "UpdatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.updatedAt)
+      }
+    }
+  ],
 ];

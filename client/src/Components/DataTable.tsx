@@ -141,8 +141,6 @@ export default function DataTable(props: DataTableProps) {
 function AddButton() {
   const { actionType, selectedData: { selectedData } } = useEditableDataContext();
 
-  if (selectedData == "orders") return null;
-
   return <Button onClick={(e) => {
     e.stopPropagation();
     actionType?.setActionType("add");
@@ -157,8 +155,6 @@ export function RowActions({ data }: { data: any }) {
     actionType?.setActionType(evType);
     currentData?.setCurrentData(data);
   };
-
-  if (selectedData == "orders") return <p>No Actions available</p>;
 
   return <div className="flex gap-2 justify-center">
     <Button onClick={(e) => {

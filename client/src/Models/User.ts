@@ -1,4 +1,6 @@
-import type { IColumn } from "../Utils/DataBuilder";
+import type { InputDefs } from "../Context/EditableData";
+import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
+import { checkPassword } from "../Utils/FormValidators";
 
 export default class User {
   id: string;
@@ -79,4 +81,69 @@ export const USERS_COLUMNS: IColumn[] = [
     enableColumnFilter: true,
     isDate: true
   },
+];
+
+export const USERS_EDIT_INPUTS: InputDefs<User> = [
+  {
+    inputType: "text",
+    id: "id",
+    label: "Id",
+    readOnly: true,
+  },
+  [
+    {
+      inputType: "datetime-local",
+      id: "createdAt",
+      label: "CreatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.createdAt)
+      }
+    },
+    {
+      inputType: "datetime-local",
+      id: "updatedAt",
+      label: "UpdatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.updatedAt)
+      }
+    }
+  ],
+  [
+    {
+      inputType: "text",
+      id: "username",
+      label: "Username",
+      placeholder: "John",
+      required: true,
+    },
+    {
+      inputType: "email",
+      id: "email",
+      label: "Email",
+      placeholder: "John@email.com",
+      required: true,
+    },
+  ],
+  [
+    {
+      inputType: "password",
+      id: "password",
+      label: "Password",
+      validators: [checkPassword],
+      defaultValue: (data) => {
+        data.current.password = ""; // force remove the field to not include in update
+        return "";
+      }
+    },
+    {
+      inputType: "select",
+      id: "role",
+      label: "Role",
+      required: true,
+      defaultValue: (_) => "user",
+      options: ["user", "admin", "superadmin"]
+    }
+  ]
 ];

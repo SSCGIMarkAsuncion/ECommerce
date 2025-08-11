@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState, type HTMLAttributes } from "react";
-import { Product } from "../Models/Product";
+import { Product, PRODUCT_EDIT_INPUTS } from "../Models/Product";
 import Button from "./Button";
 import useProducts from "../Hooks/useProducts";
 import { MError } from "../Utils/Error";
-import { useEditableDataContext } from "../Context/EditableData";
+import { EditFormProvider, useEditableDataContext } from "../Context/EditableData";
 import { useNotification } from "../Context/Notify";
-import { EditProduct, EditUser } from "./Edit";
+import { Editor } from "./Edit";
 import useUsers from "../Hooks/useUser";
-import User from "../Models/User";
+import User, { USERS_EDIT_INPUTS } from "../Models/User";
+import useImageMedia from "../Hooks/useImageMedia";
+import Order, { ORDERS_EDIT_INPUTS } from "../Models/Order";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -28,23 +30,20 @@ export interface ModalEditProps {
 export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
   const { 
     selectedData: { selectedData: type },
-    currentData: { currentData: data }
+    currentData: { currentData: data }, reload
   } = useEditableDataContext();
+  const { updateProduct, newProduct } = useProducts();
+  const { updateUser, createUser } = useUsers();
+  const { deleteImg } = useImageMedia();
+  const notify = useNotification();
 
-  const customCloseTrigger = useRef<(() => Promise<void>) | null>(null);
   const closeTrigger = useRef(() => {});
 
   const [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
     closeTrigger.current = async () => {
-      // console.log("loading", loading);
       if (loading) return;
-      // console.log("running closeTrigger", customCloseTrigger.current);
-
-      if (customCloseTrigger.current)
-        await customCloseTrigger.current();
-
       cmodal();
     };
   }, [loading]);
@@ -64,18 +63,74 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
 
   let editComponent = null;
   let label = "";
+  let submitters = {
+    update: null,
+    add: null
+  } as any;
   const ploading={loading, setLoading}
+
   switch (type) {
     case "products":
-      editComponent = <EditProduct ref={customCloseTrigger} loading={ploading} closeModal={cmodal} data={data as Product || Product.empty()} />
       label = "Product";
+      submitters.update = async (data: any) => {
+        await updateProduct(new Product({ _id: data.id, ...data }));
+      }
+      submitters.add = async (data: any) => {
+        await newProduct(new Product({ _id: data.id, ...data }));
+      }
+      editComponent = <Editor inputDefs={PRODUCT_EDIT_INPUTS}
+        close={(d) => {
+          const currentImgs = d?.current.imgs || [];
+          const curr = (data as Product);
+
+          const shouldDelete = curr && curr.id?
+            currentImgs.filter((img) => !curr.imgs.includes(img)) : currentImgs;
+
+          shouldDelete.forEach((img) => {
+            deleteImg(img)
+              .then((v) => notify("info", `Image deletion status ${v.result || "ok"}`))
+              .catch((e) => notify("error", e.message));
+          });
+          cmodal();
+        }}
+        loading={ploading}
+        submitter={submitters}
+        onSuccessMsg={data => `Product ${data.id || ""}`}
+        onSuccess={reload}
+         />;
       break;
     case "users":
-      editComponent = <EditUser loading={ploading} closeModal={cmodal} data={data as User || User.empty()} />
+      // editComponent = <EditUser loading={ploading} closeModal={cmodal} data={data as User || User.empty()} />
       label = "User";
+      submitters.update = async (data: any) => {
+        await updateUser(new User({ _id: data.id, ...data }));
+      }
+      submitters.add = async (data: any) => {
+        await createUser(new User({ _id: data.id, ...data }));
+      }
+      editComponent = <Editor inputDefs={USERS_EDIT_INPUTS}
+        close={cmodal}
+        loading={ploading}
+        submitter={submitters}
+        onSuccessMsg={data => `User ${data.id || ""}`}
+        onSuccess={reload}
+         />;
       break;
     case "orders":
       label = "Order";
+      submitters.update = async (data: any) => {
+        console.log(new Order({ _id: data.id, data }));
+      }
+      submitters.add = async (data: any) => {
+        console.log(new Order({ _id: data.id, data }));
+      }
+      editComponent = <Editor inputDefs={ORDERS_EDIT_INPUTS}
+        close={cmodal}
+        loading={ploading}
+        submitter={submitters}
+        onSuccessMsg={data => `Order ${data.id || ""}`}
+        onSuccess={reload}
+         />;
       break;
     case "payments":
       label = "Payment";
@@ -85,7 +140,9 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
   return <div onClick={(e) => e.stopPropagation()} className="overflow-y-auto w-[80%] md:w-[90%] m-auto rounded-xs bg-white p-4 animate-slide-down">
     <div className="overflow-y-auto">
       <h1 className="text-4xl font-semibold text-primary-900">{label}</h1>
-      {editComponent}
+      <EditFormProvider data={data? {...data}:{}}>
+        {editComponent}
+      </EditFormProvider>
     </div>
   </div>;
 }

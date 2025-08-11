@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { type OpenableData, type TableData } from "../Utils/DataBuilder";
 import { useEditableData } from "../Hooks/useEditableData";
 import { useNotification } from "./Notify";
@@ -87,4 +87,36 @@ export function useEditableDataContext() {
     reload: useContext(ReloadContext),
     errors: useContext(ErrorsContext)
   };
+}
+
+export interface EditInputFormDef<T> {
+  inputType: "text" | "email" | "select" | "number" | "textarea" | "password" | "datetime-local" | "tags" | "images",
+  label: string,
+  id: string,
+  placeholder?: string,
+  name?: string,
+  defaultValue?: (data: React.RefObject<T>) => string, // if default use id as accessor to data: T
+  onChange?: (data: React.RefObject<T>, newValue: any) => void, // same as defaultValue
+  readOnly?: boolean,
+  required?: boolean,
+  // extraNode?: ReactNode,
+  options?: string[], // for select
+  // for img
+  onProcessing?: () => void,
+  onProcessingDone?: () => void,
+  onErr?: (e: MError, notify: ReturnType<typeof useNotification>) => void,
+  validators?: ((value: string) => string | string[])[],
+  props?: any // props to the element to render
+};
+
+export type InputDefs<T> = (EditInputFormDef<T> | (EditInputFormDef<T>[]))[];
+
+export const EditFormContext = createContext<React.RefObject<any>>(null!)
+
+export function EditFormProvider({ children, data }: { children: ReactNode, data: any }) {
+  const rdata = useRef<any>(data);
+
+  return <EditFormContext.Provider value={rdata}>
+    {children}
+  </EditFormContext.Provider>
 }

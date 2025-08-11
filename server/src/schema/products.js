@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
 import parseQueryValue from "../utils/query.js";
+import { extractPublicId } from "cloudinary-build-url";
+import { deleteImg } from "../cloudinary.js";
 
 export const ProductSchema = new mongoose.Schema({
   name: {
@@ -52,6 +54,18 @@ export const ProductSchema = new mongoose.Schema({
     type: [String],
   },
 }, { timestamps: true });
+
+ProductSchema.pre("deleteOne", { document: false, query: true }, async function (next) {
+  const docToDelete = await this.model.findOne(this.getFilter());
+  for (let i = 0; i < docToDelete.imgs.length; i++) {
+    const img = docToDelete.imgs[i];
+    const id = extractPublicId(img);
+    if (!id) return;
+    const res = await deleteImg(id);
+  }
+
+  next();
+});
 
 export const Product = mongoose.model("product", ProductSchema, COLLECTIONS.PRODUCTS);
 

@@ -13,6 +13,7 @@ export interface ShippingInfo {
 };
 
 export default class Order {
+  id: string = "";
   user: User | string = "";
   cart: Cart | string = "";
   payMethod: "cod" | "paypal" = "cod";
@@ -23,6 +24,7 @@ export default class Order {
   createdAt: Date | null = null;
 
   constructor(obj: any) {
+    this.id = obj._id || "";
     this.user = obj.user;
     this.cart = obj.cart;
     this.payMethod = obj.payMethod || "cod";

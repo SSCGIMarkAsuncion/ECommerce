@@ -15,6 +15,7 @@ import useUsers from "../Hooks/useUser";
 import { checkPassword } from "../Utils/FormValidators";
 import Select from "./Select";
 import useImageMedia from "../Hooks/useImageMedia";
+import type Order from "../Models/Order";
 
 interface EditConfirmButtonsProps {
   loading: boolean,
@@ -227,6 +228,72 @@ export function EditUser(props: EditProps<User>) {
         </Select>
         {/* <Input id="discount" type="number" required label="Discount%" min={0} max={100} step={0.5} className="text-sm" defaultValue={currData.discount || 0} /> */}
       </div>
+
+      <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
+    </form>
+  </>
+}
+
+export function EditOrder(props: EditProps<Order>) {
+  // const { updateUser, createUser } = useUsers();
+  const { reload } = useEditableDataContext();
+  const { loading, setLoading } = props.loading;
+  const [ currData, _setCurrData ] = useState({ ...props.data });
+  const [ err, setErr ] = useState<string[]>([]);
+  const notify = useNotification();
+  const onSubmit = useCallback(async (e: React.FormEvent) => {
+
+    e.preventDefault();
+    if (err.length > 0) return;
+    setLoading(true);
+
+    const form = e.currentTarget as HTMLFormElement;
+    const fdata = new FormData(form);
+    // const user = User.from(fdata);
+
+    // try {
+    //   if (user.id) {
+    //     await updateUser(user)
+    //     notify("info", `Successfully edited user ${user.id}`);
+    //   }
+    //   else {
+    //     await createUser(user);
+    //     notify("info", `Successfully created a new user`);
+    //   }
+    //   props.closeModal();
+    // }
+    // catch (e) {
+    //   const merrs = (e as MError).toErrorList();
+    //   setLoading(false);
+    //   setErr(merrs);
+    //   return;
+    // }
+
+    setLoading(false);
+    reload();
+  }, [currData]);
+
+  return <>
+    <form className="mt-4 text-sm" onSubmit={onSubmit}>
+      <FormError errors={err} />
+      <Input id="id" type="text" label="Id" readOnly value={currData.id} />
+      <div className="*:flex-1 flex gap-1">
+        <Input type="datetime-local" label="Created At" readOnly value={toDateTimeLocalString(currData.createdAt)} />
+        <Input type="datetime-local" label="Updated At" readOnly value={toDateTimeLocalString(currData.updatedAt)} />
+      </div>
+      <div className="*:flex-1 flex gap-1">
+        <Input id="user" type="text" required label="Username" readOnly defaultValue={currData.user as string} />
+        <Input id="cart" type="text" required label="Email" readOnly defaultValue={currData.cart as string} />
+      </div>
+
+      {/* <div className="*:flex-1 flex gap-1">
+        <InputPassword id="password" label="Password" className="text-sm" defaultValue={""} required={!currData.id} validators={!currData.id? [checkPassword]:[]}  />
+        <Select id="role" label="Role:" defaultValue={currData.role || "user"}>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+          <option value="superadmin">Superadmin</option>
+        </Select>
+      </div> */}
 
       <EditConfirmButtons loading={loading} onCancel={props.closeModal} />
     </form>

@@ -40,8 +40,6 @@ function Page() {
         setIsLoading(false);
   }, [tableData, actionType])
 
-  const currentData = tableData;
-
   return <>
     {/* <div className="h-[var(--appbar-height)]"></div> */}
     <div className="block md:flex">
@@ -51,8 +49,8 @@ function Page() {
         if (isLoading) {
           return <Loading>Loading Data</Loading>;
         }
-        else if (currentData && currentData.data.length > 0) {
-          return <DataTable containerClass="flex-1" title={selectedData.selectedData} tableColumns={currentData.column} tableData={currentData.data} />
+        else if (tableData && tableData.data.length > 0) {
+          return <DataTable containerClass="flex-1" title={selectedData.selectedData} tableColumns={tableData.column} tableData={tableData.data} />
         }
         return <NoContent />
        })()

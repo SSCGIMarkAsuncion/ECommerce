@@ -1,7 +1,9 @@
 import express from "express";
 import { authenticateJWT } from "../middleware/verify_token.js";
 import { hasAdminRole, hasSuperAdminRole } from "../middleware/role.js";
-import { PutCart, DeleteCart, GetCart, GetBreakdown, PostCheckout, GetUndoCheckout, PostCheckoutResult, GetAllCarts } from "../controllers/cart.js";
+import { PutCart, GetCart, GetBreakdown, PostCheckout, GetUndoCheckout, PostCheckoutResult, GetAllCarts } from "../controllers/cart.js";
+import { GenericDelete, validateParamId } from "../controllers/generic.js";
+import { Cart } from "../schema/carts.js";
 const router = express.Router();
 
 router.use(authenticateJWT);
@@ -13,6 +15,9 @@ router.post("/checkout", PostCheckout);
 router.get("/undo-checkout", GetUndoCheckout);
 router.post("/checkout-result", PostCheckoutResult);
 router.get("/all", hasAdminRole, GetAllCarts);
-router.delete("/delete/:id", hasSuperAdminRole, DeleteCart);
+router.delete("/delete/:id",
+   hasSuperAdminRole,
+   validateParamId,
+   GenericDelete(Cart));
 
 export default router;

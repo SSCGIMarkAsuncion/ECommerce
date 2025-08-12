@@ -2,6 +2,7 @@ import { User } from '../schema/user.js';
 import { ObjectId } from 'mongodb';
 import ROLES from "../utils/roles.js";
 import MError from '../error.js';
+import { ReqBody } from '../utils/ReqBody.js';
 
 /** 
  * @param {import('express').Request} req
@@ -13,74 +14,33 @@ export async function GetUsers(req, res) {
   return res.status(200).json(users);
 }
 
-/** 
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- */
-export async function DeleteUser(req, res) {
-  const id = new ObjectId(req.params.id);
-  const result = await User.findByIdAndDelete(id);
-
-  // returns the deleted User
-  return res.status(200).json(result);
+export class ReqUser extends ReqBody {
+  constructor(obj) {
+    super(obj);
+    this.username = obj.username;
+    this.email = obj.email;
+    this.password = obj.password || undefined;
+    if (typeof this.password == "string" && this.password.length == 0)
+        this.password = undefined;
+    this.role = obj.role;
+  }
 }
 
-/** 
+/*
  * @param {import('express').Request} req
- * @param {import('express').Response} res
+ * @param {import('express').Response} _
+ * @param {import('express').NextFunction} next
  */
-export async function PutUser(req, res) {
-  const id = new ObjectId(req.params.id);
+export async function validateRoleAssign(req, _, next) {
+  // assumes req.body.role exist
+  if (!req.body) throw new MError(400, "Body is empty");
+  if (!req.body.role) {
+    return next();
+  }
 
   const tokenRole = req.tokenPayload.role;
-  const set = {
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password || "",
-    role: req.body.role
-  };
-  if (!set.password) {
-    delete set.password;
+  if (tokenRole != ROLES.SUPERADMIN && req.body.role == ROLES.SUPERADMIN) {
+    throw new MError(400, `Cannot change role of user with ${ROLES.SUPERADMIN} with ${tokenRole} privileges`);
   }
-  for (const key of Object.keys(set)) {
-    const item = set[key];
-    if (item == undefined) {
-      delete set[key];
-    }
-  }
-  console.log("PutUser::Set", set);
-
-  if (set.role) {
-    if (tokenRole != ROLES.SUPERADMIN && set.role == ROLES.SUPERADMIN) {
-      throw new MError(400, `Cannot change role of user with ${ROLES.SUPERADMIN} with ${tokenRole} privileges`);
-    }
-  }
-
-  const result = await User.findByIdAndUpdate(id, set, { new: true, runValidators: true });
-  return res.status(200).json(result);
-}
-
-/** 
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- */
-export async function PostUser(req, res) {
-  const body = req.body;
-  const tokenRole = req.tokenPayload.role;
-  if (body.role) {
-    if (tokenRole != ROLES.SUPERADMIN && body.role == ROLES.SUPERADMIN) {
-      throw new MError(400, `Cannot create with a ${ROLES.SUPERADMIN} role with ${body.role} privileges`);
-    }
-  }
-
-  const user = new User(body);
-  let result = {};
-  try {
-    result = await user.save({ validateBeforeSave: true });
-  }
-  catch (e) {
-    throw new MError(400, "Please refer to your IT Personel");
-  }
-
-  return res.status(200).json(result);
+  next();
 }

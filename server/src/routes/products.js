@@ -1,8 +1,9 @@
 import express from "express";
-import { PostProduct, DeleteProduct, GetProduct, PutProduct, GetPresets } from "../controllers/product.js";
+import { GetProduct, GetPresets, ReqProduct } from "../controllers/product.js";
 import { authenticateJWT } from "../middleware/verify_token.js";
 import { hasAdminRole, hasSuperAdminRole } from "../middleware/role.js";
 import { Product } from "../schema/products.js";
+import { GenericAdd, GenericDelete, GenericUpdate, validateParamId } from "../controllers/generic.js";
 
 const router = express.Router();
 
@@ -12,17 +13,19 @@ router.get("/:id", GetProduct);
 router.delete("/delete/:id",
   authenticateJWT,
   hasSuperAdminRole,
-  DeleteProduct
+  validateParamId,
+  GenericDelete(Product)
 );
 router.put("/update/:id",
   authenticateJWT,
   hasAdminRole,
-  PutProduct
+  validateParamId,
+  GenericUpdate(Product, ReqProduct)
 );
 router.post("/add",
   authenticateJWT,
   hasAdminRole,
-  PostProduct
+  GenericAdd(Product, ReqProduct)
 );
 
 export default router;

@@ -131,8 +131,10 @@ export const USERS_EDIT_INPUTS: InputDefs<User> = [
       label: "Password",
       validators: [checkPassword],
       defaultValue: (data) => {
-        data.current.password = ""; // force remove the field to not include in update
-        return "";
+        if (data.current.id)
+          data.current.password = ""; // force remove the field to not include in update
+
+        return data.current.password || "";
       }
     },
     {

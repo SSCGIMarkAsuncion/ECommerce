@@ -21,6 +21,7 @@ export default class Order {
   result: any = null;
   status: OrderStatus = "pending";
   shippingInfo: ShippingInfo = {} as ShippingInfo;
+  amount: number = 0;
   updatedAt: Date | null = null;
   createdAt: Date | null = null;
 
@@ -31,6 +32,7 @@ export default class Order {
     this.payMethod = obj.payMethod || "cod";
     this.result = obj.result || null;
     this.status = obj.status || "pending";
+    this.amount = obj.amount || 0;
     this.shippingInfo = obj.shippingInfo;
     this.createdAt = obj.createdAt? new Date(obj.createdAt):null;
     this.updatedAt = obj.updatedAt? new Date(obj.updatedAt):null;
@@ -49,9 +51,17 @@ export const ORDERS_COLUMNS: IColumn[] = [
     enableColumnFilter: true
   },
   {
-    name: "Payment Method",
+    name: "Method",
     id: "payMethod",
     enableColumnFilter: true
+  },
+  {
+    id: "amount",
+    enableColumnFilter: true,
+    transform: (data) => {
+      return `${Math.trunc(data.amount * 100)/ 100}`;
+    },
+    isNumber: true
   },
   {
     name: "Status",
@@ -99,6 +109,15 @@ export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
       readOnly: true,
       id: "payMethod",
       label: "Payment Method",
+    },
+    {
+      inputType: "number",
+      readOnly: true,
+      defaultValue: data => {
+        return `${Math.trunc((data.current.amount || 0) * 100) / 100}`;
+      },
+      id: "amount",
+      label: "Amount payed",
     },
     {
       inputType: "select",

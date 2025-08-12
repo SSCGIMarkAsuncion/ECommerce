@@ -1,12 +1,15 @@
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import { COLLECTIONS } from "../mongodb.js";
+import { Checkout } from "./carts.js";
 
 export function createOrder(tokenPayload, cart, checkoutBody) {
+  const co = new Checkout(cart.products);
   const order = new Order({
     user: new ObjectId(String(tokenPayload.id)),
     cart: cart._id,
     payMethod: checkoutBody.payment_method,
+    amount: co.total,
     shippingInfo: {
       fullName: checkoutBody.full_name,
       email: checkoutBody.email_address,
@@ -68,6 +71,10 @@ export const OrderSchema = new mongoose.Schema({
   },
   result: {
     type: mongoose.Schema.Types.Mixed
+  },
+  amount: {
+    type: Number,
+    required: true,
   },
   status: {
     type: String,

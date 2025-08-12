@@ -1,5 +1,6 @@
 import mongoose, { mongo } from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
+import { Order } from "./order.js";
 
 export class Checkout {
   /** @type {({ id: any, amount: number })[]} */
@@ -88,5 +89,19 @@ export const CartSchema = new mongoose.Schema({
     default: "cart"
   }
 }, { timestamps: true });
+
+CartSchema.pre("findOneAndDelete", async function(next) {
+  const { _id } = this.getFilter();
+  if (!_id) next(new Error("_id is missing from filter"));
+
+  try {
+    await Order.findOneAndDelete({ cart: _id });
+  }
+  catch (e) {
+    console.log("CartSchema::findOneAndDelete", e);
+  }
+
+  next();
+});
 
 export const Cart = mongoose.model("cart", CartSchema, COLLECTIONS.CARTS);

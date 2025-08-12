@@ -74,7 +74,7 @@ export function ImageEditor(props: ImageEditorProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-1 my-2">
       {
         imgs.map((img, i) => {
-          return <Image key={i} src={img} alt={img} title={img} editable onRemove={onRemove} />
+          return <Image key={i} src={img} alt={img} title={img} className="h-[30svh]" editable onRemove={onRemove} />
         })
       }
     </div>

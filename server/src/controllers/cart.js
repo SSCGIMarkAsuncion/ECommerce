@@ -233,7 +233,7 @@ export async function GetUndoCheckout(req, res) {
  */
 export async function PostCheckoutResult(req, res) {
   const body = req.body.data;
-  if (!body) throw new MError(400, "Body is empty");
+  if (!body) throw new MError(400, "Body.data is empty");
   if (Object.keys(body).length == 0) throw new MError(400, "Body is empty");
 
   const uid = new ObjectId(String(req.tokenPayload.id));
@@ -241,15 +241,23 @@ export async function PostCheckoutResult(req, res) {
     owner: uid,
   }).sort({ updatedAt: -1 });
 
-  const order = await Order.findOne({
-    user: uid,
-    cart: cart._id
-  }).sort({ updatedAt: -1 });
-  order.status = "processing";
-  order.result = body;
-  await order.save({ validateBeforeSave: true });
+  const order = await Order.findOneAndUpdate(
+    {
+      user: uid,
+      cart: cart._id
+    },
+    {
+      status: "processing",
+      result: body
+    },
+    {
+      runValidators: true,
+      sort: { updatedAt: -1 },
+      new: true
+    }
+  );
 
-  res.status(200).send(null);
+  res.status(200).json(order);
 }
 
 

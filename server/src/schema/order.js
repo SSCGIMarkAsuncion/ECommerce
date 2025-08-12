@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import { COLLECTIONS } from "../mongodb.js";
-import { Checkout } from "./carts.js";
+import { Cart, Checkout } from "./carts.js";
+import { Product } from "./products.js";
 
 export function createOrder(tokenPayload, cart, checkoutBody) {
   const co = new Checkout(cart.products);
@@ -90,5 +91,44 @@ export const OrderSchema = new mongoose.Schema({
     default: "pending"
   }
 }, { timestamps: true });
+
+OrderSchema.pre("findOneAndUpdate", async function(next) {
+  const { cart: fcart } = this.getFilter();
+  const { status } = this.getUpdate();
+
+  if (status !== "processing") return next();
+
+  if (!fcart) {
+    return next(new Error("Order.cart id is not provided in filter"));
+  }
+
+  const cart = await Cart.findById(fcart).populate("products.id");
+  if (!cart) return next(new Error("Cart does not exist on this order"));
+
+  console.log(cart.products);
+  const bulkOps = cart.products.map((cartItem) => {
+    const amount = cartItem.amount;
+    // id here is populated
+    const { _id } = cartItem.id;
+
+    return {
+      updateOne: {
+        filter: { _id },
+        update: { $inc: { stocks: -amount }},
+      }
+    }
+  });
+
+  try {
+    const opResults = await Product.bulkWrite(bulkOps, { throwOnValidationError: true });
+    console.log("ProductBulkWrite", JSON.stringify(opResults, null, 2));
+  }
+  catch (e) {
+    console.log("OrderSchema.pre(findOneAndUpdate)", e);
+    return next(new Error("An error occurred updating Product information"));
+  }
+
+  next();
+});
 
 export const Order = mongoose.model("order", OrderSchema, COLLECTIONS.ORDERS);

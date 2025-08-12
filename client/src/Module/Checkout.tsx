@@ -97,7 +97,7 @@ export default function Checkout() {
 }
 
 function CodButton({ onSuccess }: { onSuccess: () => void }) {
-  const { loading, actions: { checkout } } = usePaymentContext();
+  const { loading, actions: { checkout, postCheckoutResult } } = usePaymentContext();
   const notify = useNotification();
 
   const onClick = useCallback(async (e: React.MouseEvent) => {
@@ -106,6 +106,7 @@ function CodButton({ onSuccess }: { onSuccess: () => void }) {
       // ignore results for cod payments
       await checkout();
       onSuccess();
+      await postCheckoutResult({ status: "successful" });
       notify("info", "Successfully created an order");
     }
     catch (e) {

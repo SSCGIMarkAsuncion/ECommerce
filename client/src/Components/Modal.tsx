@@ -12,6 +12,7 @@ import useImageMedia from "../Hooks/useImageMedia";
 import Order, { ORDERS_EDIT_INPUTS } from "../Models/Order";
 import useOrders from "../Hooks/useOrders";
 import useCart from "../Hooks/useCart";
+import Cart, { CART_EDIT_INPUTS } from "../Models/Cart";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -138,6 +139,21 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
       break;
     case "carts":
       label = "Carts";
+      submitters.update = async (data: any) => {
+        notify("warn", `UPDATE NOT IMPLEMENTED YET`)
+        console.log(new Cart({ _id: data.id, data }));
+      }
+      submitters.add = async (data: any) => {
+        notify("warn", `ADD NOT IMPLEMENTED YET`)
+        console.log(new Cart({ _id: data.id, data }));
+      }
+      editComponent = <Editor inputDefs={CART_EDIT_INPUTS}
+        close={cmodal}
+        loading={ploading}
+        submitter={submitters}
+        onSuccessMsg={data => `Cart ${data.id || ""}`}
+        onSuccess={reload}
+         />;
       break;
   };
 

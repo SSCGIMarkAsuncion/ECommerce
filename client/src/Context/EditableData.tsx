@@ -99,9 +99,7 @@ export interface EditInputFormDef<T> {
   onChange?: (data: React.RefObject<T>, newValue: any) => void, // same as defaultValue
   readOnly?: boolean,
   required?: boolean,
-  // extraNode?: ReactNode,
   options?: string[], // for select
-  // for img
   onProcessing?: () => void,
   onProcessingDone?: () => void,
   onErr?: (e: MError, notify: ReturnType<typeof useNotification>) => void,

@@ -221,6 +221,10 @@ export const PRODUCT_EDIT_INPUTS: InputDefs<Product> = [
       label: "Price",
       onChange: (data, newValue) => {
         data.current.price = Number(newValue);
+      },
+      props: {
+        min: 0.1,
+        step: "any"
       }
     },
     {

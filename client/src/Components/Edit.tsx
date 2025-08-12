@@ -50,6 +50,7 @@ export function Editor<T>({ inputDefs, loading, close, submitter, onSuccessMsg, 
       name: inputDef.name,
       placeholder: inputDef.placeholder,
       readOnly: inputDef.readOnly,
+      ...inputDef.props
     } as any;
 
     const defValue = (inputDef.defaultValue)? inputDef.defaultValue(rdata):rdata.current[inputDef.id] || "";
@@ -66,13 +67,11 @@ export function Editor<T>({ inputDefs, loading, close, submitter, onSuccessMsg, 
     switch (inputDef.inputType) {
       case "email":
       case "text":
-        return <Input key={inputDef.id} {...opts} type={inputDef.inputType} defaultValue={defValue} onChange={onChange} />;
       case "datetime-local":
-        return <Input key={inputDef.id} type="datetime-local" {...opts} defaultValue={defValue} onChange={onChange} />;
+      case "number":
+        return <Input key={inputDef.id} {...opts} type={inputDef.inputType} defaultValue={defValue} onChange={onChange} />;
       case "textarea":
         return <TextArea key={inputDef.id} {...opts} defaultValue={defValue} onChange={onChange} />
-      case "number":
-        return <Input key={inputDef.id} {...opts} type="number" defaultValue={defValue} onChange={onChange} />
       case "tags":
         return <EditorTags key={inputDef.id} tags={rdata.current.tags || []} onChangeTags={(tags) => {
           if (inputDef.onChange)
@@ -130,6 +129,10 @@ export function Editor<T>({ inputDefs, loading, close, submitter, onSuccessMsg, 
 
   const onSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const form = e.currentTarget as HTMLFormElement;
+    console.log(!form.checkValidity());
+    if (!form.checkValidity()) return;
 
     console.log(rdata.current);
     loading.setLoading(true);

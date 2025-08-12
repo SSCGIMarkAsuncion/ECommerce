@@ -1,4 +1,5 @@
-import type { IColumn } from "../Utils/DataBuilder";
+import type { InputDefs } from "../Context/EditableData";
+import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
 import type { Product } from "./Product"
 
 export interface CartItem {
@@ -51,16 +52,16 @@ export const CARTS_COLUMNS: IColumn[] = [
     enableColumnFilter: true
   },
   {
-    id: "products",
-    enableColumnFilter: true,
-    transform: (data: Cart) => {
-      return `${data.products.length} Products`;
-    }
-  },
-  {
     id: "status",
     enableColumnFilter: true,
     isNumber: true
+  },
+  {
+    id: "products",
+    enableColumnFilter: false,
+    transform: (data: Cart) => {
+      return `${data.products.length} Products`;
+    }
   },
   {
     name: "Updated At",
@@ -68,4 +69,42 @@ export const CARTS_COLUMNS: IColumn[] = [
     enableColumnFilter: true,
     isDate: true
   },
+];
+
+export const CART_EDIT_INPUTS: InputDefs<Cart> = [
+  [
+    {
+      inputType: "text",
+      id: "id",
+      label: "Id",
+      readOnly: true,
+    },
+    {
+      inputType: "datetime-local",
+      id: "createdAt",
+      label: "CreatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.createdAt)
+      }
+    },
+    {
+      inputType: "datetime-local",
+      id: "updatedAt",
+      label: "UpdatedAt",
+      readOnly: true,
+      defaultValue: (data) => {
+        return toDateTimeLocalString(data.current.updatedAt)
+      }
+    }
+  ],
+  {
+    inputType: "text",
+    id: "",
+    label: "Info",
+    readOnly: true,
+    defaultValue: (_) => {
+      return "Edit Not Implemented Yet"
+    }
+  }
 ];

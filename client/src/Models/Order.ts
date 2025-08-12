@@ -67,13 +67,13 @@ export const ORDERS_COLUMNS: IColumn[] = [
 ];
 
 export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
-  {
-    inputType: "text",
-    id: "id",
-    label: "Id",
-    readOnly: true,
-  },
   [
+    {
+      inputType: "text",
+      id: "id",
+      label: "Id",
+      readOnly: true,
+    },
     {
       inputType: "datetime-local",
       id: "createdAt",
@@ -93,4 +93,27 @@ export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
       }
     }
   ],
+  [
+    {
+      inputType: "text",
+      readOnly: true,
+      id: "payMethod",
+      label: "Payment Method",
+    },
+    {
+      inputType: "select",
+      id: "status",
+      label: "Status",
+      defaultValue: _ => "pending",
+      options: [
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "completed",
+        "cancelled",
+        "failed"
+      ]
+    }
+  ]
 ];

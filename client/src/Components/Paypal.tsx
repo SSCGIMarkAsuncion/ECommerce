@@ -1,8 +1,9 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { useEffect } from "react";
 import Button from "./Button";
+import { usePaymentContext } from "../Context/Payment";
 
 export default function ButtonPaypal({ className = "" }: { className?: string }) {
+  const { loading, actions: { checkout } } = usePaymentContext();
   // const [{ options }, dispatch] = usePayPalScriptReducer();
 
   // useEffect(() => {
@@ -14,9 +15,12 @@ export default function ButtonPaypal({ className = "" }: { className?: string })
   //   })
   // }, [])
 
-  return <Button disabled>Not implemented yet</Button>;
   return <>
-      <PayPalButtons className={className} style={{ layout: "horizontal" }}
+      <PayPalButtons disabled={loading} className={className} style={{ layout: "horizontal" }}
+        // createOrder={async (data, actions) => {
+
+        // }}
+
         onApprove={async (data, actions) => {
           console.log(data);
         }} />

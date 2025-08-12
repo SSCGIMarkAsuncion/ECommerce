@@ -11,5 +11,3 @@ export class OrderInfo {
     return JSON.stringify(this);
   }
 }
-
-

@@ -54,6 +54,10 @@ export default class User {
 
 export const USERS_COLUMNS: IColumn[] = [
   {
+    id: "id",
+    enableColumnFilter: true
+  },
+  {
     id: "email",
     enableColumnFilter: true
   },
@@ -70,12 +74,6 @@ export const USERS_COLUMNS: IColumn[] = [
     enableColumnFilter: true,
   },
   {
-    name: "Created At",
-    id: "createdAt",
-    enableColumnFilter: true,
-    isDate: true
-  },
-  {
     name: "Updated At",
     id: "updatedAt",
     enableColumnFilter: true,
@@ -84,13 +82,13 @@ export const USERS_COLUMNS: IColumn[] = [
 ];
 
 export const USERS_EDIT_INPUTS: InputDefs<User> = [
-  {
-    inputType: "text",
-    id: "id",
-    label: "Id",
-    readOnly: true,
-  },
   [
+    {
+      inputType: "text",
+      id: "id",
+      label: "Id",
+      readOnly: true,
+    },
     {
       inputType: "datetime-local",
       id: "createdAt",

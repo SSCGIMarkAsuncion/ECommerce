@@ -176,13 +176,13 @@ export function productFilterQueryBuild(query: ProductFilterQuery) {
 }
 
 export const PRODUCT_EDIT_INPUTS: InputDefs<Product> = [
-  {
-    inputType: "text",
-    id: "id",
-    label: "Id",
-    readOnly: true,
-  },
   [
+    {
+      inputType: "text",
+      id: "id",
+      label: "Id",
+      readOnly: true,
+    },
     {
       inputType: "datetime-local",
       id: "createdAt",

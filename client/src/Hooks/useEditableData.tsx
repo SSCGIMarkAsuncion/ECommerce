@@ -1,7 +1,9 @@
+import { CARTS_COLUMNS } from "../Models/Cart";
 import { ORDERS_COLUMNS } from "../Models/Order";
 import { PRODUCT_COLUMNS, type ProductFilterQuery } from "../Models/Product";
 import { USERS_COLUMNS } from "../Models/User";
 import { buildColumnFrom, type OpenableData, type TableData } from "../Utils/DataBuilder";
+import useCart from "./useCart";
 import useOrders from "./useOrders";
 import useProducts from "./useProducts";
 import useUsers from "./useUser";
@@ -10,6 +12,7 @@ export function useEditableData() {
   const { getProducts } = useProducts();
   const { getUsers } = useUsers();
   const { getOrders } = useOrders();
+  const { getAllCarts } = useCart();
 
   const load = async (type: OpenableData): Promise<TableData | null> => {
     let cols = null;
@@ -41,8 +44,15 @@ export function useEditableData() {
           column: cols,
           data: orders
         };
-      case "promos":
-      case "payments":
+      case "carts":
+        const carts = await getAllCarts();
+        if (carts.length == 0)
+          break;
+        cols = buildColumnFrom(CARTS_COLUMNS);
+        return {
+          column: cols,
+          data: carts
+        };
     }
 
     return {

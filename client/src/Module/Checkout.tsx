@@ -37,7 +37,7 @@ export default function Checkout() {
     orderOpts.current.payment_method = paymentMethod as typeof orderOpts.current.payment_method;
 
     // orderOpts.current.address_line_1 = data.get("")
-    console.log(orderOpts.current);
+    // console.log(orderOpts.current);
   }, [paymentMethod]);
 
   return <>
@@ -82,7 +82,7 @@ export default function Checkout() {
             </div>
             {
               paymentMethod == "paypal" ?
-                <ButtonPaypal /> : <CodButton onSuccess={onSuccess} />
+                <ButtonPaypal onSuccess={onSuccess} /> : <CodButton onSuccess={onSuccess} />
             }
           </form>
           <CartBreakdown />

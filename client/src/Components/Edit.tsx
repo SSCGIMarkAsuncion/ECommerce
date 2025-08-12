@@ -106,7 +106,7 @@ export function Editor<T>({ inputDefs, loading, close, submitter, onSuccessMsg, 
           }}
         />
       case "select":
-        return <Select {...opts} key={inputDef.id} onChange={onChange}>
+        return <Select {...opts} key={inputDef.id} onChange={onChange} defaultValue={defValue}>
           {inputDef.options?.map((v) => {
           return <option key={v} value={v} className="capitalize">{v}</option>
           })

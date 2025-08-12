@@ -3,7 +3,7 @@ import { createColumnHelper, type Row } from "@tanstack/react-table";
 import { RowActions } from "../Components/DataTable";
 import { Pill } from "../Components/Pill";
 
-export type OpenableData = "products" | "promos" | "orders" | "users" | "payments";
+export type OpenableData = "products" | "orders" | "users" | "carts";
 export type TableData = {
   column: any[],
   data: any[]
@@ -12,6 +12,7 @@ export type TableData = {
 export interface IColumn {
   name?: string,
   id: string,
+  transform?: (data: any) => string, // use the output of this fn instead of rawValue
   enableColumnFilter?: boolean,
   enableSorting?: boolean
   isNumber?: boolean,
@@ -52,7 +53,7 @@ export function buildColumnFrom(columnDef: IColumn[]) {
       },
       id: "actions",
       enableResizing: false,
-      maxSize: 100,
+      maxSize: 80,
       cell: props => {
         // console.log(props.row);
         // return <RowActions type={type} data={props.row.original} />
@@ -78,7 +79,7 @@ export function buildColumnFrom(columnDef: IColumn[]) {
           if (rawValue instanceof Date) {
             return rawValue.toLocaleString();
           }
-          if (Array.isArray(rawValue)) {
+          if (colDef.isArray && Array.isArray(rawValue)) {
             return <div className="flex flex-wrap gap-1 text-xs">
               {
                 rawValue.map((v) => {
@@ -87,8 +88,10 @@ export function buildColumnFrom(columnDef: IColumn[]) {
               }
             </div>
           }
-          const suffix = colDef.suffix || "";
-          return rawValue + suffix || "";
+          if (colDef.transform) {
+            return `${colDef.transform(props.row.original)}${colDef.suffix || ""}`;
+          }
+          return `${rawValue}${colDef.suffix || ""}`;
         },
         enableSorting: colDef.enableSorting,
         enableColumnFilter: colDef.isDate? false:colDef.enableColumnFilter

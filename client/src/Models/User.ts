@@ -140,7 +140,7 @@ export const USERS_EDIT_INPUTS: InputDefs<User> = [
       id: "role",
       label: "Role",
       required: true,
-      defaultValue: (_) => "user",
+      defaultValue: (data) => data.current.role,
       options: ["user", "admin", "superadmin"]
     }
   ]

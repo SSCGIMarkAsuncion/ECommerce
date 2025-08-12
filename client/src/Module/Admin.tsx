@@ -1,7 +1,7 @@
 import DataTable from "../Components/DataTable";
 import { useCallback, useEffect, useState } from "react";
 import Sidebar, { SidebarButton, SidebarOffset } from "../Components/Sidebar";
-import { IconBag, IconCart, IconLogout, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
+import { IconBag, IconBoxStacks, IconCart, IconLogout, IconMoneyWave, IconUser } from "../Utils/SVGIcons";
 import Loading from "../Components/Loading";
 import { EditableDataContextProvider, useEditableDataContext } from "../Context/EditableData";
 import { Modal, ModalDelete, ModalEdit } from "../Components/Modal";
@@ -61,8 +61,8 @@ function Page() {
         <A href="/" className="block mb-8"><Img src="/Logo_2.svg" className="size-18 mx-auto" /></A>
         <h1 className="text-white text-lg px-2">Manage</h1>
         <SidebarButton active={selectedData.selectedData == "products"} onClick={() => selectedData.setSelectedData("products")} className="[&>svg]:size-4"><IconBag />Products</SidebarButton>
-        <SidebarButton active={selectedData.selectedData == "orders"} onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconCart />Orders</SidebarButton>
-        {/* <SidebarButton active={selectedData.selectedData == "payments"} onClick={() => selectedData.setSelectedData("payments")} className="[&>svg]:size-4"><IconMoneyWave />Payments</SidebarButton> */}
+        <SidebarButton active={selectedData.selectedData == "orders"} onClick={() => selectedData.setSelectedData("orders")} className="[&>svg]:size-4"><IconBoxStacks fill="white" />Orders</SidebarButton>
+        <SidebarButton active={selectedData.selectedData == "carts"} onClick={() => selectedData.setSelectedData("carts")} className="[&>svg]:size-4"><IconCart />Carts</SidebarButton>
         <SidebarButton active={selectedData.selectedData == "users"} onClick={() => selectedData.setSelectedData("users")} className="[&>svg]:size-4"><IconUser />Users</SidebarButton>
       </div>
       <div className="mt-auto">

@@ -104,7 +104,7 @@ export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
       inputType: "select",
       id: "status",
       label: "Status",
-      defaultValue: _ => "pending",
+      defaultValue: data => data.current.status,
       options: [
         "pending",
         "processing",

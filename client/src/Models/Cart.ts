@@ -1,3 +1,4 @@
+import type { IColumn } from "../Utils/DataBuilder";
 import type { Product } from "./Product"
 
 export interface CartItem {
@@ -39,3 +40,32 @@ export class Checkout {
     this.total = obj.total;
   }
 }
+
+export const CARTS_COLUMNS: IColumn[] = [
+  {
+    id: "id",
+    enableColumnFilter: true
+  },
+  {
+    id: "owner",
+    enableColumnFilter: true
+  },
+  {
+    id: "products",
+    enableColumnFilter: true,
+    transform: (data: Cart) => {
+      return `${data.products.length} Products`;
+    }
+  },
+  {
+    id: "status",
+    enableColumnFilter: true,
+    isNumber: true
+  },
+  {
+    name: "Updated At",
+    id: "updatedAt",
+    enableColumnFilter: true,
+    isDate: true
+  },
+];

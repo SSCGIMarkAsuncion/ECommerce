@@ -10,6 +10,8 @@ import useUsers from "../Hooks/useUser";
 import User, { USERS_EDIT_INPUTS } from "../Models/User";
 import useImageMedia from "../Hooks/useImageMedia";
 import Order, { ORDERS_EDIT_INPUTS } from "../Models/Order";
+import useOrders from "../Hooks/useOrders";
+import useCart from "../Hooks/useCart";
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -119,9 +121,11 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
     case "orders":
       label = "Order";
       submitters.update = async (data: any) => {
+        notify("warn", `UPDATE NOT IMPLEMENTED YET`)
         console.log(new Order({ _id: data.id, data }));
       }
       submitters.add = async (data: any) => {
+        notify("warn", `ADD NOT IMPLEMENTED YET`)
         console.log(new Order({ _id: data.id, data }));
       }
       editComponent = <Editor inputDefs={ORDERS_EDIT_INPUTS}
@@ -132,8 +136,8 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
         onSuccess={reload}
          />;
       break;
-    case "payments":
-      label = "Payment";
+    case "carts":
+      label = "Carts";
       break;
   };
 
@@ -161,7 +165,8 @@ export function ModalDelete({ closeModal }: ModalEditProps) {
 
   const { removeProduct } = useProducts();
   const { deleteUser } = useUsers();
-
+  const { deleteOrder } = useOrders();
+  const { deleteCart } = useCart();
 
   let deleteFn = null;
   let successMsg = "";
@@ -174,10 +179,16 @@ export function ModalDelete({ closeModal }: ModalEditProps) {
       deleteFn = deleteUser;
       successMsg = `User ${data.id}`
       break;
-    case "promos":
     case "orders":
-    case "payments":
-      notify("warn", `delete on ${type} not implemented`);
+      deleteFn = deleteOrder;
+      successMsg = `Order ${data.id}`
+      break;
+    case "carts":
+      deleteFn = deleteCart;
+      break;
+    default:
+      deleteFn = null;
+      notify("error", `Unknown Type ${type} cannot delete`);
       break;
   };
 
@@ -189,7 +200,7 @@ export function ModalDelete({ closeModal }: ModalEditProps) {
       notify("info", `successfully deleted ${successMsg}`);
     }
     catch (e) {
-      notify("error", (e as MError).toErrorList().join('\n'));
+      notify("error", (e as MError));
     }
     reload();
     closeModal();

@@ -23,7 +23,7 @@ export function EditableDataContextProvider({ children }: { children: ReactNode 
     case "promos":
     case "orders":
     case "users":
-    case "payments":
+    case "carts":
       defaultSelected = searchParams.get("s")!;
     default:
       break;

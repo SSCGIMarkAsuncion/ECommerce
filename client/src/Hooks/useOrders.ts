@@ -19,7 +19,21 @@ export default function useOrders() {
     throw new MError(resjson);
   };
 
+  const deleteOrder = async (order: Order) => {
+    const res = await fetch(`${api}/${order.id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (res.status >= 200 && res.status <= 399) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
+  };
+
   return {
     getOrders,
+    deleteOrder
   };
 }

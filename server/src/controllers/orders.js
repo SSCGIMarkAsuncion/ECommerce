@@ -36,3 +36,17 @@ export async function GetOrders(req, res) {
 
   return res.status(200).json(orders);
 }
+
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function DeleteOrder(req, res) {
+  const orderId = new ObjectId(req.params.id);
+
+  const deleted = await Order.findByIdAndDelete(orderId);
+  console.log("DeleteOrder", deleted);
+
+  return res.status(200).send(`Successfully deleted ${req.params.id}`);
+}

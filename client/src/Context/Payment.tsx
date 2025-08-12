@@ -10,7 +10,9 @@ export interface PayPalOrderOptsContext {
   orderOpts: React.RefObject<OrderInfo>,
   loading: boolean,
   actions: {
-    checkout: () => Promise<PaypalCreateOrderOpts | null | MError>
+    checkout: () => Promise<PaypalCreateOrderOpts | null | MError>,
+    undoCheckout: () => Promise<null>,
+    postCheckoutResult: (data: any) => Promise<null>
   }
   // setOrderOpts: React.Dispatch<React.SetStateAction<PaypalOrderOpts>>
 };
@@ -23,7 +25,7 @@ export function usePaymentContext() {
 
 export default function PaymentProvider({ children }: { children: ReactNode }) {
   const orderOpts = useRef(new OrderInfo());
-  const { checkout: co } = useCheckout();
+  const { checkout: co, undoCheckout, postCheckoutResult } = useCheckout();
   const [ loading, setLoading ] = useState(false);
 
   const checkout = async () => {
@@ -37,12 +39,14 @@ export default function PaymentProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return <PayPalScriptProvider options={{ clientId: CLIENT_ID }}>
+  return <PayPalScriptProvider options={{ clientId: CLIENT_ID, currency: "PHP" }}>
     <PaymentOrderOpts.Provider value={{
       orderOpts,
       loading,
       actions: {
-        checkout
+        checkout,
+        undoCheckout,
+        postCheckoutResult
       }
     }}>
       {children}

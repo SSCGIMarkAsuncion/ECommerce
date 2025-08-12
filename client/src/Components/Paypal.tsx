@@ -1,28 +1,50 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import Button from "./Button";
 import { usePaymentContext } from "../Context/Payment";
+import { useNotification } from "../Context/Notify";
+import { MError } from "../Utils/Error";
 
-export default function ButtonPaypal({ className = "" }: { className?: string }) {
-  const { loading, actions: { checkout } } = usePaymentContext();
-  // const [{ options }, dispatch] = usePayPalScriptReducer();
-
-  // useEffect(() => {
-  //   dispatch({
-  //     type: DISPATCH_ACTION.RESET_OPTIONS,
-  //     value: {
-  //       ...options, currency: "ph"
-  //     }
-  //   })
-  // }, [])
+export default function ButtonPaypal({ className = "", onSuccess }: { className?: string, onSuccess: () => void }) {
+  const { orderOpts, loading, actions: { checkout, undoCheckout, postCheckoutResult } } = usePaymentContext();
+  const notify = useNotification();
 
   return <>
       <PayPalButtons disabled={loading} className={className} style={{ layout: "horizontal" }}
-        // createOrder={async (data, actions) => {
+        createOrder={async (data, actions) => {
+          orderOpts.current.payment_method = "paypal";
+          const paypalCreateOrderOpts = await checkout();
+          if (paypalCreateOrderOpts == null || paypalCreateOrderOpts instanceof MError) {
+            throw new MError("An Error Occured");
+          }
 
-        // }}
+          // console.log("PAYPAL_CREATE_ORDER", data, paypalCreateOrderOpts);
 
-        onApprove={async (data, actions) => {
-          console.log(data);
+          return actions.order.create({
+            ...paypalCreateOrderOpts,
+            ...data,
+          });
+        }}
+
+        onError={async (e) => {
+          try {
+            await undoCheckout();
+          }
+          catch (e) {
+            notify("error", e as MError);
+          }
+          console.log(e);
+          notify("error", new MError(e.message));
+        }}
+
+        onApprove={async (data, _actions) => {
+          try {
+            await postCheckoutResult(data);
+          }
+          catch (e) {
+            notify("error", e as MError);
+          }
+          finally {
+            onSuccess();
+          }
         }} />
   </>
 }

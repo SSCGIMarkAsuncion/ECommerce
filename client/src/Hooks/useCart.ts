@@ -29,8 +29,9 @@ export default function useCart() {
 
   const removeFromCart = async (product: Product) => {
     return addToCart(product, 0);
-  }
+  };
 
+  // rename to getCart
   const getCarts = async (includeProductInfo?: boolean) => {
     const include = (includeProductInfo)? "?withProduct=1":"";
     const url = `${api}/cart/${include}`;
@@ -52,7 +53,7 @@ export default function useCart() {
       return cart;
     }
     throw new MError(resjson);
-  }
+  };
 
   const getCartsAndSetCarts = (includeProductInfo?: boolean) => {
     useEffect(() => {
@@ -79,11 +80,41 @@ export default function useCart() {
     throw new MError(resjson);
   };
 
+  const getAllCarts = async () => {
+    const url = `${api}/cart/all`;
+    const res = await fetch(url, {
+      credentials: "include"
+    });
+
+    const resjson = await res.json() as any[];
+    if (res.status >= 200 && res.status <= 399 ) {
+      const carts = resjson.map((item) => new Cart(item));
+      return carts;
+    }
+    throw new MError(resjson);
+  };
+
+  const deleteCart = async (cart: Cart) => {
+    const url = `${api}/cart/delete/${cart.id}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      credentials: "include"
+    });
+
+    if (res.status >= 200 && res.status <= 399 ) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
+  };
+
   return {
     addToCart,
     getCarts,
     getCartsAndSetCarts,
     removeFromCart,
-    getBreakdown
+    getBreakdown,
+    getAllCarts,
+    deleteCart
   }
 }

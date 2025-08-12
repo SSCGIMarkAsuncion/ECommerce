@@ -187,35 +187,91 @@ export async function PostCheckout(req, res) {
   const cart = await Cart.findOne({
     owner: uid,
     status: "cart"
-  }).sort({ updatedAt: -1 });
+  }).populate("products.id").sort({ updatedAt: -1 });
 
   if (!cart) throw new MError(400, "No Cart found");
 
   cart.status = "processing";
+  const order = createOrder(req.tokenPayload, cart, body);
 
   if (body.payment_method == "paypal") {
     const paypalCreateOrder = Paypal.createOrder(cart, req.body);
+    await order.save({ validateBeforeSave: true });
     await cart.save({ validateBeforeSave: true });
     return res.status(200).json(paypalCreateOrder);
   }
   // cod
-  const order =  createOrder(req.tokenPayload, cart, body);
   await order.save({ validateBeforeSave: true });
   await cart.save({ validateBeforeSave: true });
 
   return res.status(200).json(order);
 }
 
-class CheckoutResults {
-  orderId = "";
-  payerId = "";
-  status = "";
-  message = "";
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function GetUndoCheckout(req, res) {
+  const uid = new ObjectId(String(req.tokenPayload.id));
+  const cart = await Cart.findOne({
+    owner: uid,
+  }).sort({ updatedAt: -1 });
+  cart.status = "cart";
+  await cart.save({ validateBeforeSave: true })
+  const deleted = await Order.findOneAndDelete({
+    user: uid,
+    cart: cart._id
+  });
+  console.log("UndoCheckout", cart, deleted);
+
+  res.status(200).send(null);
 }
 
 /**
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-export async function GetCheckoutFinished(req, res) {
+export async function PostCheckoutResult(req, res) {
+  const body = req.body.data;
+  if (!body) throw new MError(400, "Body is empty");
+  if (Object.keys(body).length == 0) throw new MError(400, "Body is empty");
+
+  const uid = new ObjectId(String(req.tokenPayload.id));
+  const cart = await Cart.findOne({
+    owner: uid,
+  }).sort({ updatedAt: -1 });
+
+  const order = await Order.findOne({
+    user: uid,
+    cart: cart._id
+  }).sort({ updatedAt: -1 });
+  order.status = "processing";
+  order.result = body;
+  await order.save({ validateBeforeSave: true });
+
+  res.status(200).send(null);
+}
+
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function GetAllCarts(req, res) {
+  const carts = await Cart.find().sort({ updatedAt: -1 });
+
+  res.status(200).json(carts);
+}
+
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function DeleteCart(req, res) {
+  const cartId = new ObjectId(req.params.id);
+  console.log(cartId);
+  await Cart.findByIdAndDelete(cartId);
+
+  res.status(200).send(`Successfully deleted Cart ${cartId.toString()}`);
 }

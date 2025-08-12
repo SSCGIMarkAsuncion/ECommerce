@@ -54,27 +54,30 @@ export interface ButtonMenu extends ButtonProps {
 
 export function ButtonMenu(props: ButtonMenu) {
   const [ isOpen, setIsOpen ] = useState(false);
+  const refContainer = useRef<HTMLDivElement>(null);
   const refSubMenu = useRef<HTMLDivElement>(null);
   const toggle = useCallback(() => {
     setIsOpen(v => !v);
   }, []);
 
   useEffect(() => {
+    if (!refContainer.current) return;
     if (!refSubMenu.current) return;
     const pad = 10;
     refSubMenu.current.style.left = '';
     refSubMenu.current.style.right = '';
     const { left, width } = refSubMenu.current.getBoundingClientRect();
+    const { width: cwidth } = refContainer.current.getBoundingClientRect();
 
     // implement left side if needed
 
     if (left+width >= window.innerWidth - pad) {
-      refSubMenu.current.style.left = `${(left+width)-window.innerWidth-pad}px`;
+      refSubMenu.current.style.left = `${-(width-cwidth)}px`;
     }
 
   }, [refSubMenu, isOpen]);
 
-  return <div className="relative cursor-pointer" onClick={toggle}>
+  return <div ref={refContainer} className="relative cursor-pointer" onClick={toggle}>
     <Button pColor="none" onClick={(e) => {
       e.stopPropagation();
       toggle();

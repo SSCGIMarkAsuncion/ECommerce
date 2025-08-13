@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { Order } from "../schema/order.js";
 import ROLES, { isAdmin } from "../utils/roles.js";
 import MError from "../error.js";
+import { mapCartItems } from "../schema/carts.js";
 
 function validatePutOrderBody(tokenPayload, body) {
   if (body.user || body.cart || body.payMethod) {
@@ -29,10 +30,30 @@ export async function PutOrder(req, res) {
  */
 export async function GetOrders(req, res) {
   const opt = {};
-  if (!isAdmin(req.tokenPayload.role)) {
+  const populate = req.query.populate == '1';
+  const self = req.query.self == '1'; // only relevant for admin
+
+  if (self || !isAdmin(req.tokenPayload.role)) {
     opt._id = new ObjectId(String(req.tokenPayload.id));
   }
-  const orders = await Order.find(opt).sort({ updatedAt: -1 });
+
+  let orders = [];
+  if (populate) {
+    orders = await Order.find(opt)
+      .populate({
+        path: "cart",
+        populate: { path: "products.id" }
+      })
+      .sort({ updatedAt: -1 })
+      .lean();
+    orders = orders.map((order) => {
+      order.cart.products = mapCartItems(order.cart.products);
+      return order;
+    });
+  }
+  else {
+    orders = await Order.find(opt).sort({ updatedAt: -1 }).lean();
+  }
 
   return res.status(200).json(orders);
 }

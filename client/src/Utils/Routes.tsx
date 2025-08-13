@@ -13,6 +13,7 @@ import MProductItem from "../Module/ProductItem";
 import AboutUs from "../Module/AboutUs";
 import Checkout from "../Module/Checkout";
 import PaymentProvider from "../Context/Payment";
+import MyOrder from "../Module/MyOrder";
 
 export const ROUTER = createBrowserRouter([
   {
@@ -47,6 +48,12 @@ export const ROUTER = createBrowserRouter([
     path: "/product/:id",
     element: <CartContextProvider>
       <MProductItem />
+    </CartContextProvider>
+  },
+  {
+    path: "/myorders",
+    element: <CartContextProvider>
+      <MyOrder />
     </CartContextProvider>
   },
   {

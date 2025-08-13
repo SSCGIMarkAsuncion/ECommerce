@@ -3,9 +3,9 @@ import { MError } from "../Utils/Error";
 
 const api = `${import.meta.env.VITE_API}/orders`;
 export default function useOrders() {
-  const getOrders = async () => {
-    // do not populate fields
-    const res = await fetch(`${api}/`, {
+  const getOrders = async (query: string[] = []) => {
+    const squery = encodeURI(query.join('&'));
+    const res = await fetch(`${api}/?${squery}`, {
       credentials: "include",
     });
 

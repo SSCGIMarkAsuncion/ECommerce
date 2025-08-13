@@ -1,5 +1,5 @@
 export type ButtonColorStyles = "primary" | "whitePrimary" | "green" | "red" | "none" | "nonePrimary";
-export type ButtonType = "filled" | "outline" | "icon";
+export type ButtonType = "filled" | "outline" | "icon" | "tab";
 
 export const Theme = {
   rounded: "rounded-xs",
@@ -36,6 +36,15 @@ export const Theme = {
       red: "bg-none hover:bg-red-900/25 active:bg-red-900/25",
       nonePrimary:  "",
       whitePrimary: "bg-none hover:bg-gray-500/25 active:bg-gray-500/25"
+    },
+    tab: {
+      primary: "rounded-none! text-primary-500 border-b-2 border-b-primary-300 hover:text-primary-900 hover:border-b-primary-900",
+      green: "",
+      red: "",
+      none:  "",
+      nonePrimary:  "",
+      whitePrimary: "",
+      active: "text-primary-900 border-b-2 border-b-primary-900"
     },
   },
   input: "w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 data-[invalid=true]:border-red-600 data-[invalid=true]:outline-2 data-[invalid=true]:outline-red-400 has-[input:focus-within]:border-primary-950 has-[input:focus-within]:outline-primary-700 has-[input:focus-within]:outline-2 has-[input:read-only]:bg-gray-400 has-[input:read-only]:border-gray-400 has-[input:read-only]:outline-none has-[input:read-only]:text-gray-700 flex items-center",

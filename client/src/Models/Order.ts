@@ -1,6 +1,6 @@
 import type { InputDefs } from "../Context/EditableData";
 import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
-import type Cart from "./Cart";
+import Cart from "./Cart";
 import type User from "./User";
 
 export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "completed" | "cancelled" | "failed";
@@ -29,6 +29,9 @@ export default class Order {
     this.id = obj._id || "";
     this.user = obj.user;
     this.cart = obj.cart;
+    if (typeof this.cart == "object") {
+      this.cart = new Cart(this.cart);
+    }
     this.payMethod = obj.payMethod || "cod";
     this.result = obj.result || null;
     this.status = obj.status || "pending";
@@ -136,3 +139,26 @@ export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
     }
   ]
 ];
+
+export class OrderQuery {
+  populated: boolean = false;
+  status: OrderStatus | "" = "";
+  sort: "asc" | "desc" | "" = "";
+  self: boolean = false;
+
+  build() {
+    const query = [];
+    if (this.populated)
+      query.push("populated=1");
+    if (this.self)
+      query.push("self=1");
+    if (this.status)
+      query.push(`status=${this.status}`);
+    if (this.sort)
+      query.push(`sort=${this.status}`);
+    
+
+    if (query.length == 0) return '';
+    return `?${encodeURI(query.join('&'))}`;
+  }
+}

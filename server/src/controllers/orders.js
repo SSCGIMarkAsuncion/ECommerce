@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { Order } from "../schema/order.js";
+import { Order, ORDER_STATUS } from "../schema/order.js";
 import ROLES, { isAdmin } from "../utils/roles.js";
 import MError from "../error.js";
 import { mapCartItems } from "../schema/carts.js";
@@ -24,35 +24,70 @@ export async function PutOrder(req, res) {
   return res.status(200).json(updated);
 }
 
+class QueryOrders {
+  constructor(query) {
+    this.populate = query.populate == '1';
+    this.self = query.self == '1'; // only relevant for admin
+    this.sort = query.sort || "desc";
+    if (!["asc", "desc"].includes(this.sort)) {
+      throw new MError(400, `Invalid. sort only accepts 'asc' or 'desc'`);
+    }
+    this.status = query.status;
+    if (this.status && !ORDER_STATUS.includes(this.status)) {
+      throw new MError(400, `Invalid. status only accepts ${ORDER_STATUS}`);
+    }
+  }
+
+  buildFilter(tokenPayload) {
+    console.log(this);
+    const opt = {};
+    if (this.self || !isAdmin(tokenPayload.role))
+      opt._id = new ObjectId(String(tokenPayload.id));
+    if (this.status)
+      opt.status = this.status;
+
+    return opt;
+  }
+
+  buildSort() {
+    switch (this.sort) {
+      case "desc": return { updatedAt: -1 };
+      case "asc": return { updatedAt: 1 }; 
+      default:
+        break;
+    }
+    return { updatedAt: -1 };
+  }
+};
+
 /** 
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
 export async function GetOrders(req, res) {
-  const opt = {};
-  const populate = req.query.populate == '1';
-  const self = req.query.self == '1'; // only relevant for admin
-
-  if (self || !isAdmin(req.tokenPayload.role)) {
-    opt._id = new ObjectId(String(req.tokenPayload.id));
-  }
+  const query = new QueryOrders(req.query);
 
   let orders = [];
-  if (populate) {
-    orders = await Order.find(opt)
+  const filterOpt = query.buildFilter(req.tokenPayload);
+  // console.log(filterOpt);
+  if (query.populate) {
+    orders = await Order.find(filterOpt)
       .populate({
         path: "cart",
         populate: { path: "products.id" }
       })
-      .sort({ updatedAt: -1 })
+      .sort(query.buildSort())
       .lean();
+
     orders = orders.map((order) => {
       order.cart.products = mapCartItems(order.cart.products);
       return order;
     });
   }
   else {
-    orders = await Order.find(opt).sort({ updatedAt: -1 }).lean();
+    orders = await Order.find(filterOpt)
+      .sort(query.buildSort())
+      .lean();
   }
 
   return res.status(200).json(orders);

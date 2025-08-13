@@ -1,11 +1,11 @@
-import Order from "../Models/Order";
+import Order, { OrderQuery } from "../Models/Order";
 import { MError } from "../Utils/Error";
 
 const api = `${import.meta.env.VITE_API}/orders`;
 export default function useOrders() {
-  const getOrders = async (query: string[] = []) => {
-    const squery = encodeURI(query.join('&'));
-    const res = await fetch(`${api}/?${squery}`, {
+  const getOrders = async (query: OrderQuery = new OrderQuery()) => {
+    const squery = query.build();
+    const res = await fetch(`${api}/${squery}`, {
       credentials: "include",
     });
 

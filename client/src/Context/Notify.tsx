@@ -63,12 +63,12 @@ function Notification({ item, remove }: { item: NotificationItem, remove: (item:
   }, []);
 
   const colors = {
-    warn: "fill-amber-500 text-amber-500 bg-amber-100! border-amber-300!",
-    info: "fill-blue-500 text-blue-500 bg-blue-100! border-blue-300!",
-    error: "fill-red-500 text-red-500 bg-red-100! border-red-300!"
+    warn: "fill-amber-500 text-amber-500 border-l-3 border-amber-300!",
+    info: "fill-blue-500 text-blue-500 border-l-3 border-blue-300!",
+    error: "fill-red-500 text-red-500 border-l-3 border-red-300!"
   };
 
-  return <Card className={`flex items-center gap-2 px-3! py-2! border-1 ${colors[item.type]}`} onClick={() => {
+  return <Card className={`animate-slide-down flex items-center gap-2 px-3! py-2! ${colors[item.type]}`} onClick={() => {
     if (timer.current) {
       clearTimeout(timer.current)
     }

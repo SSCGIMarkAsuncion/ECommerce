@@ -17,7 +17,7 @@ export class Paypal {
         },
         amount: {
           currency_code: "PHP",
-          value: `${breakdown.total}`
+          value: `${Math.trunc(breakdown.total * 100)/100}`
         }
       }],
     };

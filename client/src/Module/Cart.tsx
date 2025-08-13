@@ -7,9 +7,8 @@ import { Card } from "../Components/Card";
 import CartBreakdown from "../Components/CartBreakdown";
 import Radio from "../Components/Radio";
 import Img from "../Components/Img";
-import { useCallback, useRef } from "react";
-import { useNotification } from "../Context/Notify";
-import { useNavigate, useNavigation } from "react-router";
+import { useCallback } from "react";
+import { useNavigate } from "react-router";
 
 export default function Cart() {
   const { cart } = useCartContext();

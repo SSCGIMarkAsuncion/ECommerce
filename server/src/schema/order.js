@@ -23,6 +23,16 @@ export function createOrder(tokenPayload, cart, checkoutBody) {
   return order;
 }
 
+export const ORDER_STATUS = [
+  "pending",
+  "processing",
+  "shipped",
+  "delivered",
+  "completed",
+  "cancelled",
+  "failed",
+];
+
 export const ShippingInfoSchema = new mongoose.Schema({
   fullName: {
     type: String,
@@ -79,15 +89,7 @@ export const OrderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: [
-      "pending",
-      "processing",
-      "shipped",
-      "delivered",
-      "completed",
-      "cancelled",
-      "failed",
-    ],
+    enum: ORDER_STATUS,
     default: "pending"
   }
 }, { timestamps: true });

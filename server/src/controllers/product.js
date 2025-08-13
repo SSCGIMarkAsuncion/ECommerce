@@ -2,6 +2,8 @@ import { Product, ProductFilter } from '../schema/products.js';
 import { ObjectId } from 'mongodb';
 import MError from '../error.js';
 import { ReqBody } from '../utils/ReqBody.js';
+import { deleteImg } from '../cloudinary.js';
+import { extractPublicId } from 'cloudinary-build-url';
 
 /** 
  * @param {import('express').Request} req
@@ -68,4 +70,37 @@ export class ReqProduct extends ReqBody {
     this.price = obj.price,
     this.discount = obj.discount
   }
+}
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function PostCancelUpdate(req, res) {
+  const id = req.mParamId;
+  let product = await Product.findById(id)
+    .select("imgs")
+    .lean();
+
+  if (!product)
+    product = { imgs: [] };
+
+  const { imgs } = req.body;
+  if (!imgs)
+    return res.status(200).send(null)
+
+  const toDelete = imgs.filter((link) => !product.imgs.includes(link));
+  console.log(`PostCancelUpdate::DeleteImg`, toDelete);
+  toDelete.forEach((link) => {
+    const id = extractPublicId(link);
+    if (!id) {
+      return;
+    }
+    deleteImg(id)
+      .catch(e => {
+        console.log(`PostCancelUpdate::DeleteImg::${id}`, e);
+      });
+  });
+
+  res.status(200).send(null);
 }

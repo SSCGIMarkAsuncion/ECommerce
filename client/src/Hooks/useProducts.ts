@@ -117,6 +117,23 @@ export default function useProducts() {
     throw new MError(resjson);
   };
 
+  const cancelUpdate = async (update: Product) => {
+    const res = await fetch(`${url}/cancel-update/${update.id || ""}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: update.toJson()
+    });
+
+    if (res.status >= 200 && res.status < 399) {
+      return null;
+    }
+    const resjson = await res.json() as any[];
+    throw new MError(resjson);
+  };
+
   return {
     getProducts,
     getProductById,
@@ -125,6 +142,7 @@ export default function useProducts() {
     removeProduct,
     getPromo,
     getBestSellers,
-    getFilterPresets
+    getFilterPresets,
+    cancelUpdate
   };
 }

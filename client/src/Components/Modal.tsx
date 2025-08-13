@@ -35,7 +35,7 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
     selectedData: { selectedData: type },
     currentData: { currentData: data }, reload
   } = useEditableDataContext();
-  const { updateProduct, newProduct } = useProducts();
+  const { updateProduct, newProduct, cancelUpdate } = useProducts();
   const { updateUser, createUser } = useUsers();
   const { deleteImg } = useImageMedia();
   const notify = useNotification();
@@ -83,19 +83,11 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
       }
       editComponent = <Editor inputDefs={PRODUCT_EDIT_INPUTS}
         close={(d) => {
-          // move to backend
-          // post the current update to endpoint and make a comparison to delete unused images
-          const currentImgs = d?.current.imgs || [];
-          const curr = (data as Product);
-
-          const shouldDelete = curr && curr.id?
-            currentImgs.filter((img) => !curr.imgs.includes(img)) : currentImgs;
-
-          shouldDelete.forEach((img) => {
-            deleteImg(img)
-              .then((v) => notify("info", `Image deletion status ${v.result || "ok"}`))
-              .catch((e) => notify("error", e.message));
-          });
+          cancelUpdate(new Product({ _id: d?.current.id, ...d?.current }))
+            // .then(_ => notify("info", "Successfully deleted extra images"))
+            .catch(e => {
+              notify("error", e);
+            });
           cmodal();
         }}
         loading={ploading}

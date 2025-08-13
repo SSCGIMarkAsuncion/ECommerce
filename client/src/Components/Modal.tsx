@@ -83,6 +83,8 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
       }
       editComponent = <Editor inputDefs={PRODUCT_EDIT_INPUTS}
         close={(d) => {
+          // move to backend
+          // post the current update to endpoint and make a comparison to delete unused images
           const currentImgs = d?.current.imgs || [];
           const curr = (data as Product);
 

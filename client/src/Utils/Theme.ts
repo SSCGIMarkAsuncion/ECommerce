@@ -38,8 +38,8 @@ export const Theme = {
       whitePrimary: "bg-none hover:bg-gray-500/25 active:bg-gray-500/25"
     },
   },
-  input: "w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 data-[invalid=true]:border-red-600 data-[invalid=true]:outline-2 data-[invalid=true]:outline-red-400 has-[input:focus-within]:border-primary-950 has-[input:focus-within]:outline-primary-700 has-[input:focus-within]:outline-2 has-[input:read-only]:bg-gray-200 has-[input:read-only]:text-gray-600 flex items-center",
-  textarea: "w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 data-[invalid=true]:border-red-600 data-[invalid=true]:outline-2 data-[invalid=true]:outline-red-400  has-[textarea:focus-within]:border-primary-950 has-[textarea:focus-within]:outline-primary-700 has-[textarea:focus-within]:outline-2 has-[textarea:read-only]:bg-gray-400 has-[textarea:read-only]:text-gray-600 flex items-center",
+  input: "w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 data-[invalid=true]:border-red-600 data-[invalid=true]:outline-2 data-[invalid=true]:outline-red-400 has-[input:focus-within]:border-primary-950 has-[input:focus-within]:outline-primary-700 has-[input:focus-within]:outline-2 has-[input:read-only]:bg-gray-400 has-[input:read-only]:border-gray-400 has-[input:read-only]:outline-none has-[input:read-only]:text-gray-700 flex items-center",
+  textarea: "w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 data-[invalid=true]:border-red-600 data-[invalid=true]:outline-2 data-[invalid=true]:outline-red-400  has-[textarea:focus-within]:border-primary-950 has-[textarea:focus-within]:outline-primary-700 has-[textarea:focus-within]:outline-2 has-[textarea:read-only]:bg-gray-400 has-[textarea:read-only]:text-gray-700 flex items-center",
   select: "bg-none w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 focus:border-primary-950 active:border-primary-950" 
 };
 

@@ -100,9 +100,9 @@ export interface EditInputFormDef<T> {
   readOnly?: boolean,
   required?: boolean,
   options?: string[], // for select
-  onProcessing?: () => void,
-  onProcessingDone?: () => void,
-  onErr?: (e: MError, notify: ReturnType<typeof useNotification>) => void,
+  // onProcessing?: () => void,
+  // onProcessingDone?: () => void,
+  // onErr?: (e: MError, notify: ReturnType<typeof useNotification>) => void,
   validators?: ((value: string) => string | string[])[],
   props?: any // props to the element to render
 };

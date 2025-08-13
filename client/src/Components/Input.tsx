@@ -88,7 +88,7 @@ export default function Input({ containerClassName, inputClassName, prefix, suff
 export function InputPassword(props: InputProps) {
   const [ type, setType ] = useState("password");
   const suffix = type == "password"?
-   <IconEye fill="#000" />:<IconEyeSlash fill="#000" />;
+   <IconEye />:<IconEyeSlash />;
 
   const toggle = useCallback(() => {
     setType(v => {
@@ -105,7 +105,7 @@ export function InputPassword(props: InputProps) {
 
   return <Input {...props} ref={props.ref} validators={props.validators} {...required} id={props.id} label={props.label}
     type={type} suffix={
-      <div className="w-[18px] h-[18px] flex items-center cursor-pointer" onClick={(e) => {
+      <div className="w-[18px] h-[18px] flex items-center cursor-pointer *:fill-primary-900" onClick={(e) => {
         e.stopPropagation();
         toggle();
       }}>

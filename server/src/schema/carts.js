@@ -21,19 +21,21 @@ export class Checkout {
       if (product.stocks < cartItem.amount) {
         return;
       }
-      // console.log(this.subtotal, product.price, product.discount);
+      const rate = (100-this.vatRate)/100;
       if (product.discount && product.discount >= 0) {
         const percent = 1 - (product.discount / 100);
         const discountedPrice = Math.trunc(product.price * percent * 100) / 100;
-        this.subtotal += (discountedPrice * cartItem.amount);
+
+        this.subtotal += (discountedPrice * rate) * cartItem.amount;
+        this.total += discountedPrice * cartItem.amount;
       }
       else {
-        this.subtotal += (product.price * cartItem.amount);
+        this.subtotal += (product.price * rate) * cartItem.amount;
+        this.total += product.price * cartItem.amount;
       }
+      this.vatAmount = 0; // unused
       this.itemsAmount += cartItem.amount;
     });
-    this.vatAmount = Math.trunc(this.subtotal * (this.vatRate / 100) * 100) / 100;
-    this.total = this.subtotal + this.vatAmount;
   }
 };
 

@@ -3,6 +3,7 @@ import { Order, ORDER_STATUS } from "../schema/order.js";
 import ROLES, { isAdmin } from "../utils/roles.js";
 import MError from "../error.js";
 import { mapCartItems } from "../schema/carts.js";
+import parseQueryValue from "../utils/query.js";
 
 function validatePutOrderBody(tokenPayload, body) {
   if (body.user || body.cart || body.payMethod) {
@@ -32,9 +33,13 @@ class QueryOrders {
     if (!["asc", "desc"].includes(this.sort)) {
       throw new MError(400, `Invalid. sort only accepts 'asc' or 'desc'`);
     }
-    this.status = query.status;
-    if (this.status && !ORDER_STATUS.includes(this.status)) {
-      throw new MError(400, `Invalid. status only accepts ${ORDER_STATUS}`);
+    this.status = parseQueryValue(query.status);
+    if (this.status) {
+      this.status.forEach((status) => {
+        if (!ORDER_STATUS.includes(status)) {
+          throw new MError(400, `Invalid. status only accepts ${ORDER_STATUS} separated with ';' for multiple status`);
+        }
+      });
     }
   }
 
@@ -44,7 +49,7 @@ class QueryOrders {
     if (this.self || !isAdmin(tokenPayload.role))
       opt._id = new ObjectId(String(tokenPayload.id));
     if (this.status)
-      opt.status = this.status;
+      opt.status = { $in: this.status };
 
     return opt;
   }

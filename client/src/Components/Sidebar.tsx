@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ButtonHTMLAttributes, type HTMLAttributes, type HTMLProps } from "react";
+import { useCallback, useEffect, useState, type HTMLAttributes, type HTMLProps } from "react";
 import { Theme } from "../Utils/Theme";
 
 export default function Sidebar(props: HTMLAttributes<HTMLDivElement>) {

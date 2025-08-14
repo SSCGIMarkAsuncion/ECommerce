@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type HTMLProps } from "react";
+import { useCallback, useContext, useEffect, useState, type HTMLProps } from "react";
 import Footer from "../Components/Footer";
 import Navbar, { NavbarOffset } from "../Components/Navbar";
 import Tabs, { TabsContext } from "../Context/Tabs";
@@ -15,7 +15,7 @@ export default function MyOrder() {
     <NavbarOffset />
     <div className="min-h-[90svh] w-full md:w-[80%] mx-auto mt-4 fraunces-regular">
       <h1 className="text-4xl text-primary-900 mb-2">My Orders</h1>
-      <Tabs tabs={["Pending", "To Ship", "Received"]}>
+      <Tabs tabs={["Pending", "To Ship", "Received", "Cancelled"]}>
         <TabOrderList />
       </Tabs>
     </div>
@@ -38,18 +38,25 @@ function TabOrderList() {
         const s = tabs[selected];
         const orderQuery = new OrderQuery();
         orderQuery.populated = true;
-        orderQuery.status = "processing";
-        const orders = await getOrders(orderQuery)
         switch (s.toLowerCase()) {
           case "pending":
+            orderQuery.status = ["pending", "processing"];
+            break;
           case "to ship":
+            orderQuery.status = ["shipped"];
+            break;
           case "received":
-            setOrders(orders);
+            orderQuery.status = ["delivered", "completed"];
+            break;
+          case "cancelled":
+            orderQuery.status = ["cancelled", "failed"];
             break;
           default:
             notify("warn", "Invalid tab selection");
             break;
         }
+        const orders = await getOrders(orderQuery)
+        setOrders(orders);
       }
       catch (e) {
         console.log("TabOrderList::ERR", e);
@@ -76,26 +83,36 @@ interface ItemProps extends HTMLProps<HTMLDivElement> {
 };
 
 function OrderItem({ order, ...props }: ItemProps) {
-  return <Card {...props} className={`text-white p-4 rounded-lg! bg-primary-700! ${props.className}`}>
-    <p className="mb-2 text-xl uppercase tracking-wide">#{order.id.substring(order.id.length-10)}</p>
+  const notify = useNotification();
+  const onSummary = useCallback(() => {
+    notify("warn", "Open summary. Not Implemented Yet");
+  }, []);
+
+  return <Card {...props} className={`text-white p-4 rounded-lg! bg-primary-500! ${props.className}`}>
+    <div className="flex justify-between items-start">
+      <p className="mb-2 text-xl uppercase tracking-wide">#{order.id.substring(order.id.length - 10)}</p>
+        <p className="text-xs cursor-pointer text-green-400 hover:brightness-75" onClick={onSummary}>Summary</p>
+    </div>
     <OrderStatus status={order.status} />
     <div className="flex justify-between items-end w-full mt-4">
       <p className="capitalize text-lg">{order.status}</p>
       <div className="*:text-right text-white/70">
         <p className="text-sm"><span className="text-white/40">Amount:</span> {toCurrency(order.amount)}</p>
-        <p className="text-sm">{order.updatedAt?.toLocaleString() || ""}</p>
+        <p className="text-sm">Created: {order.createdAt?.toDateString() || ""}</p>
       </div>
     </div>
   </Card>;
 }
 
-function Circle({ active = false }: { active?: boolean }) {
-  return <div data-active={active ? '1' : ''} className={`size-4 border-3 rounded-full bg-[inherit] data-[active='1']:border-green-400 border-gray-300`}>
+function Circle({ active = false, error = false }: { active?: boolean, error?: boolean }) {
+  return <div data-active={active ? '1' : ''} data-error={error ? '1' : ''}
+   className={`size-4 border-2 rounded-full bg-[inherit] data-[active='1']:border-green-400 data-[error='1']:border-red-400 border-gray-200`}>
   </div>
 }
 
-function Hr({ active = false }: { active?: boolean }) {
-  return <hr data-active={active ? '1' : ''} className="flex-1 h-[3px] border-none data-[active='1']:bg-green-400 bg-gray-300" />
+function Hr({ active = false, error = false }: { active?: boolean, error?: boolean }) {
+  return <hr data-active={active ? '1' : ''} data-error={error ? '1' : ''}
+   className="flex-1 h-[2px] border-none data-[active='1']:bg-green-400 data-[error='1']:bg-red-400 bg-gray-200" />
 }
 
 function OrderStatus({ status }: { status: OrderStatus }) {
@@ -125,15 +142,15 @@ function OrderStatus({ status }: { status: OrderStatus }) {
   }
 
   return <div className="flex items-center">
-    <Circle active />
-    <Hr active />
-    <Hr active />
-    <Circle active />
-    <Hr active />
-    <Hr />
-    <Circle />
-    <Hr />
-    <Hr />
-    <Circle />
+    <Circle active={active>=1} error={active<0} />
+    <Hr active={active>=2} error={active<0} />
+    <Hr active={active>=3} error={active<0} />
+    <Circle active={active>=3} error={active<0} />
+    <Hr active={active>=3} error={active<0} />
+    <Hr active={active>=4} error={active<0} />
+    <Circle active={active>=4} error={active<0} />
+    <Hr active={active>=4} error={active<0} />
+    <Hr active={active>=5} error={active<0} />
+    <Circle active={active>=5} error={active<0} />
   </div>
 }

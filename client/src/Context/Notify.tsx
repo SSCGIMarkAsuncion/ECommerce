@@ -68,7 +68,7 @@ function Notification({ item, remove }: { item: NotificationItem, remove: (item:
     error: "fill-red-500 text-red-500 border-l-3 border-red-300!"
   };
 
-  return <Card className={`animate-slide-down flex items-center gap-2 px-3! py-2! ${colors[item.type]}`} onClick={() => {
+  return <Card className={`animate-slide-right-in flex items-center gap-2 px-3! py-2! ${colors[item.type]}`} onClick={() => {
     if (timer.current) {
       clearTimeout(timer.current)
     }

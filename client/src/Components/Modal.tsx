@@ -37,7 +37,6 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
   } = useEditableDataContext();
   const { updateProduct, newProduct, cancelUpdate } = useProducts();
   const { updateUser, createUser } = useUsers();
-  const { deleteImg } = useImageMedia();
   const notify = useNotification();
 
   const closeTrigger = useRef(() => {});

@@ -142,7 +142,7 @@ export const ORDERS_EDIT_INPUTS: InputDefs<Order> = [
 
 export class OrderQuery {
   populated: boolean = false;
-  status: OrderStatus | "" = "";
+  status: OrderStatus[] | [] = [];
   sort: "asc" | "desc" | "" = "";
   self: boolean = false;
 
@@ -153,7 +153,7 @@ export class OrderQuery {
     if (this.self)
       query.push("self=1");
     if (this.status)
-      query.push(`status=${this.status}`);
+      query.push(`status=${this.status.join(';')}`);
     if (this.sort)
       query.push(`sort=${this.status}`);
     

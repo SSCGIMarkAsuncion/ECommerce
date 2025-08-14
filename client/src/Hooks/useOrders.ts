@@ -20,7 +20,7 @@ export default function useOrders() {
   };
 
   const deleteOrder = async (order: Order) => {
-    const res = await fetch(`${api}/${order.id}`, {
+    const res = await fetch(`${api}/delete/${order.id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -44,9 +44,28 @@ export default function useOrders() {
     throw new MError(resjson);
   };
 
+  const updateOrder = async (order: Order) => {
+    // console.trace("UPDATE", order);
+    const res = await fetch(`${api}/update/${order.id}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(order)
+    });
+
+    if (res.status >= 200 && res.status <= 399) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
+  };
+
   return {
     getOrders,
     deleteOrder,
-    cancelOrder
+    cancelOrder,
+    updateOrder
   };
 }

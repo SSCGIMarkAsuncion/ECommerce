@@ -44,7 +44,7 @@ export const Theme = {
       none:  "",
       nonePrimary:  "",
       whitePrimary: "",
-      active: "text-primary-900 border-b-2 border-b-primary-900"
+      active: "data-[active='1']:text-primary-900 data-[active='1']:border-b-2 data-[active='1']:border-b-primary-900 data-[active='1']:font-semibold"
     },
   },
   input: "w-full rounded-md border-2 bg-gray-200 border-gray-200 py-1 px-2 data-[invalid=true]:border-red-600 data-[invalid=true]:outline-2 data-[invalid=true]:outline-red-400 has-[input:focus-within]:border-primary-950 has-[input:focus-within]:outline-primary-700 has-[input:focus-within]:outline-2 has-[input:read-only]:bg-gray-400 has-[input:read-only]:border-gray-400 has-[input:read-only]:outline-none has-[input:read-only]:text-gray-700 flex items-center",

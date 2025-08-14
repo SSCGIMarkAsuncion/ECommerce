@@ -40,6 +40,25 @@ export default class Order {
     this.createdAt = obj.createdAt? new Date(obj.createdAt):null;
     this.updatedAt = obj.updatedAt? new Date(obj.updatedAt):null;
   }
+
+  getStatusNumValue() {
+    switch (this.status) {
+      case "pending":
+        return 1;
+      case "processing":
+        return 2;
+      case "shipped":
+        return 3;
+      case "delivered":
+        return 4;
+      case "completed":
+        return 5;
+      case "cancelled":
+      case "failed":
+      default:
+        return -1;
+    }
+  }
 };
 
 export const ORDERS_COLUMNS: IColumn[] = [

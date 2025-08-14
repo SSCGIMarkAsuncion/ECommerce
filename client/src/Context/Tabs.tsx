@@ -29,7 +29,8 @@ export default function Tabs(props: TabsProviderProps) {
         tabs.map((tab, i) => {
           return <Button key={`TabButton-${i}`}
             pType="tab"
-            className={`${selected == i? Theme.button.tab.active:""}`}
+            data-active={selected==i?'1':''}
+            className={`${Theme.button.tab.active}`}
             onClick={(e) => {
             e.stopPropagation();
             setSelected(i);

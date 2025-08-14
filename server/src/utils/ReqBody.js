@@ -1,5 +1,3 @@
-import MError from "../error.js";
-
 export class ReqBody {
   constructor(body) {}
 

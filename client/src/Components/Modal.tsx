@@ -35,6 +35,7 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
   } = useEditableDataContext();
   const { updateProduct, newProduct, cancelUpdate } = useProducts();
   const { updateUser, createUser } = useUsers();
+  const { updateOrder } = useOrders();
   const notify = useNotification();
 
   const closeTrigger = useRef(() => {});
@@ -113,12 +114,13 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
     case "orders":
       label = "Order";
       submitters.update = async (data: any) => {
-        notify("warn", `UPDATE NOT IMPLEMENTED YET`)
-        console.log(new Order({ _id: data.id, data }));
+        // notify("warn", `UPDATE NOT IMPLEMENTED YET`)
+        // console.log(new Order({ _id: data.id, data }));
+        await updateOrder(new Order({ _id: data.id, ...data }));
       }
       submitters.add = async (data: any) => {
         notify("warn", `ADD NOT IMPLEMENTED YET`)
-        console.log(new Order({ _id: data.id, data }));
+        console.log(new Order({ _id: data.id, ...data }));
       }
       editComponent = <Editor inputDefs={ORDERS_EDIT_INPUTS}
         close={cmodal}

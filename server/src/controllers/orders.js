@@ -4,6 +4,7 @@ import ROLES, { isAdmin } from "../utils/roles.js";
 import MError from "../error.js";
 import { mapCartItems } from "../schema/carts.js";
 import parseQueryValue from "../utils/query.js";
+import { ReqBody } from "../utils/ReqBody.js";
 
 function validatePutOrderBody(tokenPayload, body) {
   if (body.user || body.cart || body.payMethod) {
@@ -97,28 +98,23 @@ export async function GetOrders(req, res) {
   return res.status(200).json(orders);
 }
 
-
-/** 
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- */
-export async function DeleteOrder(req, res) {
-  const orderId = new ObjectId(req.params.id);
-
-  const deleted = await Order.findByIdAndDelete(orderId);
-  console.log("DeleteOrder", deleted);
-
-  return res.status(200).send(`Successfully deleted ${req.params.id}`);
-}
-
-
 /** 
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
 export async function GetRequestCancelOrder(req, res) {
   const id = req.mParamId;
-  const uid = req.tokenPayload.id;
+  // const uid = req.tokenPayload.id;
+  const order = await Order.find({
+    _id: id
+  }).lean();
 
-  res.status(200).send(null);
+  res.status(200).json(order);
 }
+
+export class ReqOrder extends ReqBody {
+  constructor(obj) {
+    super(obj);
+    this.status = obj.status || undefined;
+  }
+};

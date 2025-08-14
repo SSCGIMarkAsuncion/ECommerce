@@ -21,7 +21,7 @@ export default function MyOrder() {
     <NavbarOffset />
     <div className="min-h-[90svh] w-full md:w-[80%] mx-auto mt-4 fraunces-regular">
       <h1 className="text-4xl text-primary-900 mb-2">My Orders</h1>
-      <Tabs tabs={["Pending", "To Ship", "Received", "Cancelled"]}>
+      <Tabs tabs={["Pending", "To Ship / Shipped", "Received", "Cancelled"]}>
         <TabOrderList />
       </Tabs>
     </div>
@@ -44,17 +44,17 @@ function TabOrderList() {
         const s = tabs[selected];
         const orderQuery = new OrderQuery();
         orderQuery.populated = true;
-        switch (s.toLowerCase()) {
-          case "pending":
+        switch (s) {
+          case tabs[0]:
             orderQuery.status = ["pending", "processing"];
             break;
-          case "to ship":
+          case tabs[1]:
             orderQuery.status = ["shipped"];
             break;
-          case "received":
+          case tabs[2]:
             orderQuery.status = ["delivered", "completed"];
             break;
-          case "cancelled":
+          case tabs[3]:
             orderQuery.status = ["cancelled", "failed"];
             break;
           default:
@@ -89,18 +89,21 @@ interface ItemProps extends HTMLProps<HTMLDivElement> {
 };
 
 function OrderSummary({ cart }: { cart: Cart }) {
-  return <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-    <div className="*:mb-2 *:w-full col-span-2">
-      {
-        cart.products.map((item) => {
-          return <CartItem key={item.id} cartItem={item} readOnly />
-        })
-      }
+  return <>
+    <h1 className="text-4xl tracking-wide mb-2">Summary</h1>
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+      <div className="*:mb-2 *:w-full col-span-2">
+        {
+          cart.products.map((item) => {
+            return <CartItem key={item.id} cartItem={item} readOnly />
+          })
+        }
+      </div>
+      <Card className="p-2 hover:bg-white! h-max">
+        <CartBreakdown cart={cart} />
+      </Card>
     </div>
-    <Card className="p-2 hover:bg-white! h-max">
-      <CartBreakdown cart={cart} />
-    </Card>
-  </div>;
+  </>;
 }
 
 function OrderItem({ order, ...props }: ItemProps) {
@@ -134,9 +137,9 @@ function OrderItem({ order, ...props }: ItemProps) {
   return <Card {...props} className={`text-white px-4 pt-4 pb-2 rounded-lg! bg-primary-500! ${props.className}`}>
     <div className="flex justify-between items-start">
       <p className="mb-2 text-xl uppercase tracking-wider">#{order.id.substring(order.id.length - 10)}</p>
-        <p className="text-xs cursor-pointer text-green-400 hover:brightness-75 tracking-wider text-shadow-xs text-shadow-primary-900" onClick={onSummary}>Summary</p>
+        <p className="text-xs cursor-pointer text-green-400 hover:brightness-75 tracking-wider font-semibold" onClick={onSummary}>Summary</p>
     </div>
-    <OrderStatus status={order.status} />
+    <OrderStatus order={order} />
     <div className="flex justify-between items-end w-full mt-4">
       <p className="capitalize text-lg">{order.status}</p>
       <div className="*:text-right text-white/70">
@@ -144,7 +147,7 @@ function OrderItem({ order, ...props }: ItemProps) {
         <p className="text-sm">Created: {order.createdAt?.toDateString() || ""}</p>
       </div>
     </div>
-    <Button loading={loading} pColor="none" className="text-xs ml-auto mt-2 hover:bg-red-600/50!" onClick={onCancel}>Cancel</Button>
+    {/* <Button loading={loading} hidden={order.getStatusNumValue() > 2} pColor="none" className="text-xs ml-auto mt-2 hover:bg-red-600/50!" onClick={onCancel}>Cancel</Button> */}
   </Card>;
 }
 
@@ -159,31 +162,8 @@ function Hr({ active = false, error = false }: { active?: boolean, error?: boole
    className="flex-1 h-[2px] border-none data-[active='1']:bg-green-400 data-[error='1']:bg-red-400 bg-gray-200" />
 }
 
-function OrderStatus({ status }: { status: OrderStatus }) {
-  let active = 1;
-  switch (status) {
-    case "pending":
-      active = 1;
-      break;
-    case "processing":
-      active = 2;
-      break;
-    case "shipped":
-      active = 3;
-      break;
-    case "delivered":
-      active = 4;
-      break;
-    case "completed":
-      active = 5;
-      break;
-    case "cancelled":
-    case "failed":
-      active = -1;
-      break;
-    default:
-      break;
-  }
+function OrderStatus({ order }: { order: Order }) {
+  let active = order.getStatusNumValue();
 
   return <div className="flex items-center">
     <Circle active={active>=1} error={active<0} />

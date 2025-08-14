@@ -20,7 +20,6 @@ export default function CartItem({ readOnly = false, ...props }: CartItemProps) 
   const product = props.cartItem.product!;
   const invalid = product.stocks < props.cartItem.amount;
 
-  console.log(props.cartItem, product);
   return <Card
     className={`fraunces-regular relative p-0! aspect-[9/5] h-[180px] grid grid-cols-4 gap-2 text-md md:text-lg ${invalid ? "bg-red-200!" : ""}`}
     onClick={(e) => {

@@ -1,4 +1,5 @@
-import User from "../Models/User";
+import type { ShippingInfo } from "../Models/Order";
+import User, { UserShipping } from "../Models/User";
 import { MError } from "../Utils/Error";
 
 const api = `${import.meta.env.VITE_API}/users`;
@@ -62,10 +63,41 @@ export default function useUsers() {
     throw new MError(resjson);
   };
 
+  const getShippingInfo = async () => {
+    const res = await fetch(`${api}/shipping-info`, {
+      credentials: "include",
+    });
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status <= 399) {
+      return new UserShipping(resjson);
+    }
+    throw new MError(resjson);
+  }
+
+  const updateShippingInfo = async (shippingInfo: UserShipping) => {
+    const res = await fetch(`${api}/update-shipping`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(shippingInfo)
+    });
+
+    const resjson = await res.json();
+    if (res.status >= 200 && res.status <= 399) {
+      return new UserShipping(resjson);
+    }
+    throw new MError(resjson);
+  };
+
   return {
     getUsers,
     deleteUser,
     updateUser,
-    createUser
+    createUser,
+    updateShippingInfo,
+    getShippingInfo
   };
 }

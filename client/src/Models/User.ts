@@ -2,12 +2,43 @@ import type { InputDefs } from "../Context/EditableData";
 import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
 import { checkPassword } from "../Utils/FormValidators";
 
+export class UserShipping {
+  lastname: string = "";
+  firstname: string = "";
+  middlename: string = "";
+  phoneNumber: string = "";
+  address: string = "";
+  area: string = "";
+  postalCode: string = "";
+
+  constructor(obj: any) {
+    this.lastname = obj.lastname || "";
+    this.firstname = obj.firstname || "";
+    this.middlename = obj.middlename || "";
+    this.phoneNumber = obj.phoneNumber || "";
+    this.address = obj.address || "";
+    this.area = obj.area || "";
+    this.postalCode = obj.postalCode || "";
+  }
+
+  isEqual(rhs: UserShipping) {
+    const keys = Object.keys(this);
+    for (let i=0;i<keys.length;i++) {
+      const key = keys[i] as keyof UserShipping;
+      const isSame = this[key] === rhs[key];
+      if (!isSame) return false;
+    }
+    return true;
+  }
+}
+
 export default class User {
   id: string;
   username: string;
   email: string;
   password: string | null; // only included for login and register
   role: "admin" | "superadmin" | "user";
+  shipping: UserShipping;
   createdAt: Date | null;
   updatedAt: Date | null;
 
@@ -17,6 +48,7 @@ export default class User {
     this.email = obj.email;
     this.role = obj.role;
     this.password = obj.password? obj.password:null;
+    this.shipping = new UserShipping(obj);
     this.createdAt = obj.createdAt? new Date(obj.createdAt):null;
     this.updatedAt = obj.updatedAt? new Date(obj.updatedAt):null;
   }

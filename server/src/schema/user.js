@@ -3,6 +3,37 @@ import { COLLECTIONS } from "../mongodb.js";
 import { hash } from "../encryption.js";
 import { validatePassword } from "../error.js";
 
+export const UserShippingSchema = new mongoose.Schema({
+  lastname: {
+    type: String,
+    default: ""
+  },
+  firstname: {
+    type: String,
+    default: ""
+  },
+  middlename: {
+    type: String,
+    default: ""
+  },
+  phoneNumber: {
+    type: String,
+    default: ""
+  },
+  address: {
+    type: String,
+    default: ""
+  },
+  area: {
+    type: String,
+    default: ""
+  },
+  postalCode: {
+    type: String,
+    default: ""
+  }
+}, { _id: false });
+
 export const UserSchema = new mongoose.Schema({
   username: {
     required: true,
@@ -32,6 +63,7 @@ export const UserSchema = new mongoose.Schema({
     enum: ["user", "admin", "superadmin"],
     default: "user"
   },
+  shipping: UserShippingSchema
 }, { timestamps: true }
 );
 

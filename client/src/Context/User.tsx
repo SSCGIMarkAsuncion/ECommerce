@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import User from "../Models/User";
+import User, { UserShipping } from "../Models/User";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import Loading from "../Components/Loading";
+import useUsers from "../Hooks/useUser";
 
 export type TUserContext = User | null;
 export interface TUserContextDispatcher {
@@ -102,4 +103,43 @@ export function AuthenticatedOnly({ children }: { children: ReactNode }) {
   return <>
     {children}
   </>;
+} 
+
+interface TUserShippingContext {
+  shippingInfo: UserShipping,
+  updateShippingInfo: (update: UserShipping) => Promise<void>
+};
+
+export const UserShippingContext = createContext<TUserShippingContext>(null!)
+
+
+export function UserShippingInformation({ children }: { children: ReactNode }) {
+  const { user } = useUserContext();
+  const [ shippingInfo, setShippingInfo ] = useState(new UserShipping({}))
+  const { getShippingInfo, updateShippingInfo: updateShipInfo } = useUsers();
+
+  useEffect(() => {
+    if (!user) return;
+    async function a() {
+      try {
+        const shippingInfo = await getShippingInfo()
+        setShippingInfo(shippingInfo);
+      }
+      catch (e) {
+        console.log("UserShippingInformation::ERR", e);
+      }
+    }
+    a();
+  }, [user])
+
+  const updateShippingInfo = useCallback(async (update: UserShipping) => {
+    const newSI = await updateShipInfo(update);
+    setShippingInfo(newSI);
+  }, [user]);
+
+  return <UserShippingContext.Provider value={{
+    shippingInfo, updateShippingInfo
+  }}>
+    {children}
+  </UserShippingContext.Provider>
 }

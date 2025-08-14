@@ -26,13 +26,46 @@ export class ReqUser extends ReqBody {
   }
 }
 
+export class ReqUpdateUserShipping extends ReqBody {
+  constructor(obj) {
+    super(obj);
+    this.shipping = {
+      lastname: "",
+      firstname: "",
+      middlename: "",
+      phoneNumber: "",
+      address: "",
+      area: "",
+      postalCode: ""
+    };
+    if (typeof obj == "object") {
+      this.shipping = {
+        ...this.shipping,
+        ...obj
+      }
+    }
+  }
+}
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function PutUpdateShipping(req, res) {
+  let uid = new ObjectId(String(req.tokenPayload.id));
+  const body = new ReqUpdateUserShipping(req.body);
+
+  const updated = await User.findByIdAndUpdate(uid, body.toObj(), { runValidators: true, new: true });
+
+  res.status(200).json(updated);
+}
+
 /*
  * @param {import('express').Request} req
  * @param {import('express').Response} _
  * @param {import('express').NextFunction} next
  */
 export async function validateRoleAssign(req, _, next) {
-  // assumes req.body.role exist
   if (!req.body) throw new MError(400, "Body is empty");
   if (!req.body.role) {
     return next();
@@ -43,4 +76,16 @@ export async function validateRoleAssign(req, _, next) {
     throw new MError(400, `Cannot change role of user with ${ROLES.SUPERADMIN} with ${tokenRole} privileges`);
   }
   next();
+}
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function GetShippingInformation(req, res) {
+  let uid = new ObjectId(String(req.tokenPayload.id));
+  const u = await User.find({
+    _id: uid,
+  }).lean();
+  return res.status(200).json(u.shipping || {});
 }

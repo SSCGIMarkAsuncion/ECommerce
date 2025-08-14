@@ -27,7 +27,7 @@ export async function PutOrder(req, res) {
 
 class QueryOrders {
   constructor(query) {
-    this.populate = query.populate == '1';
+    this.populated = query.populated == '1';
     this.self = query.self == '1'; // only relevant for admin
     this.sort = query.sort || "desc";
     if (!["asc", "desc"].includes(this.sort)) {
@@ -48,7 +48,7 @@ class QueryOrders {
     const opt = {};
     if (this.self || !isAdmin(tokenPayload.role))
       opt._id = new ObjectId(String(tokenPayload.id));
-    if (this.status)
+    if (this.status.length > 0)
       opt.status = { $in: this.status };
 
     return opt;
@@ -74,8 +74,7 @@ export async function GetOrders(req, res) {
 
   let orders = [];
   const filterOpt = query.buildFilter(req.tokenPayload);
-  // console.log(filterOpt);
-  if (query.populate) {
+  if (query.populated) {
     orders = await Order.find(filterOpt)
       .populate({
         path: "cart",
@@ -110,4 +109,16 @@ export async function DeleteOrder(req, res) {
   console.log("DeleteOrder", deleted);
 
   return res.status(200).send(`Successfully deleted ${req.params.id}`);
+}
+
+
+/** 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export async function GetRequestCancelOrder(req, res) {
+  const id = req.mParamId;
+  const uid = req.tokenPayload.id;
+
+  res.status(200).send(null);
 }

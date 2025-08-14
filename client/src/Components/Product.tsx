@@ -49,7 +49,7 @@ export function ProductItem({ product, ...props}: ProductItemProps) {
       <p className="text-wrap text-xs text-primary-950/80">Stock: {product.stocks}</p>
       <div className="mt-auto">
         <Price price={product.price} promoPrice={product.discount} promoTextSize="text-xs" className="font-medium text-right"/>
-        <ButtonCart product={product} />
+        <ButtonCart product={product} className="justify-between" />
       </div>
     </div>
     {

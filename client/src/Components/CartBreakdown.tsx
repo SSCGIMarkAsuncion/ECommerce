@@ -2,24 +2,22 @@ import { useEffect, useState } from "react";
 import useCart from "../Hooks/useCart"
 import { useNotification } from "../Context/Notify";
 import type { MError } from "../Utils/Error";
-import { Checkout } from "../Models/Cart";
+import Cart, { Checkout } from "../Models/Cart";
 import { toCurrency } from "../Utils/Currency";
-import { useCartContext } from "../Context/Cart";
 
-export default function CartBreakdown() {
+export default function CartBreakdown({ cart }: { cart: Cart }) {
   const [ checkoutInfo, setCheckoutInfo ] = useState<Checkout | null>(null);
-  const { cart } = useCartContext();
   const { getBreakdown }  = useCart();
   const notify = useNotification();
 
   useEffect(() => {
     async function a() {
       try {
-        const info = await getBreakdown();
+        const info = await getBreakdown(cart);
         setCheckoutInfo(info);
       }
       catch (e) {
-        notify("error", ( e as MError ).toErrorList().join('\n'));
+        notify("error", e as MError);
       }
     }
     a();

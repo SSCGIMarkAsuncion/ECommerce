@@ -9,9 +9,15 @@ import { useNotification } from "../Context/Notify";
 import type { MError } from "../Utils/Error";
 import Loading from "../Components/Loading";
 import { toCurrency } from "../Utils/Currency";
+import { ModalContext, ModalProvider } from "../Context/Modal";
+import type Cart from "../Models/Cart";
+import CartItem from "../Components/CartItem";
+import CartBreakdown from "../Components/CartBreakdown";
+import Button from "../Components/Button";
+import { IconXMark } from "../Utils/SVGIcons";
 
 export default function MyOrder() {
-  return <>
+  return <ModalProvider>
     <NavbarOffset />
     <div className="min-h-[90svh] w-full md:w-[80%] mx-auto mt-4 fraunces-regular">
       <h1 className="text-4xl text-primary-900 mb-2">My Orders</h1>
@@ -21,7 +27,7 @@ export default function MyOrder() {
     </div>
     <Navbar type="product" />
     <Footer />
-  </>;
+  </ModalProvider>;
 }
 
 function TabOrderList() {
@@ -82,16 +88,53 @@ interface ItemProps extends HTMLProps<HTMLDivElement> {
   order: Order
 };
 
+function OrderSummary({ cart }: { cart: Cart }) {
+  return <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+    <div className="*:mb-2 *:w-full col-span-2">
+      {
+        cart.products.map((item) => {
+          return <CartItem key={item.id} cartItem={item} readOnly />
+        })
+      }
+    </div>
+    <Card className="p-2 hover:bg-white! h-max">
+      <CartBreakdown cart={cart} />
+    </Card>
+  </div>;
+}
+
 function OrderItem({ order, ...props }: ItemProps) {
   const notify = useNotification();
+  const { setContent } = useContext(ModalContext);
+  const { cancelOrder } = useOrders();
+  const [ loading, setLoading ] = useState(false);
+
   const onSummary = useCallback(() => {
-    notify("warn", "Open summary. Not Implemented Yet");
+    // notify("warn", "Open summary. Not Implemented Yet");
+    setContent((
+      <Card onClick={(e) => e.stopPropagation()} className="p-4 fraunces-regular">
+        <Button pType="icon" pColor="red" className="size-7 *:fill-red-600 ml-auto mb-2" onClick={() => setContent(null)}><IconXMark /></Button>
+        <OrderSummary cart={order.cart as Cart} />
+      </Card>
+    ));
   }, []);
 
-  return <Card {...props} className={`text-white p-4 rounded-lg! bg-primary-500! ${props.className}`}>
+  const onCancel = useCallback(async () => {
+    notify("warn", "cancel");
+    setLoading(true);
+    try {
+      await cancelOrder(order);
+    }
+    catch (e) {
+      notify("error", e as MError);
+    }
+    setLoading(false);
+  }, []);
+
+  return <Card {...props} className={`text-white px-4 pt-4 pb-2 rounded-lg! bg-primary-500! ${props.className}`}>
     <div className="flex justify-between items-start">
-      <p className="mb-2 text-xl uppercase tracking-wide">#{order.id.substring(order.id.length - 10)}</p>
-        <p className="text-xs cursor-pointer text-green-400 hover:brightness-75" onClick={onSummary}>Summary</p>
+      <p className="mb-2 text-xl uppercase tracking-wider">#{order.id.substring(order.id.length - 10)}</p>
+        <p className="text-xs cursor-pointer text-green-400 hover:brightness-75 tracking-wider text-shadow-xs text-shadow-primary-900" onClick={onSummary}>Summary</p>
     </div>
     <OrderStatus status={order.status} />
     <div className="flex justify-between items-end w-full mt-4">
@@ -101,6 +144,7 @@ function OrderItem({ order, ...props }: ItemProps) {
         <p className="text-sm">Created: {order.createdAt?.toDateString() || ""}</p>
       </div>
     </div>
+    <Button loading={loading} pColor="none" className="text-xs ml-auto mt-2 hover:bg-red-600/50!" onClick={onCancel}>Cancel</Button>
   </Card>;
 }
 

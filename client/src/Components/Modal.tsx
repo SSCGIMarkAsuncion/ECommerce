@@ -8,7 +8,6 @@ import { useNotification } from "../Context/Notify";
 import { Editor } from "./Edit";
 import useUsers from "../Hooks/useUser";
 import User, { USERS_EDIT_INPUTS } from "../Models/User";
-import useImageMedia from "../Hooks/useImageMedia";
 import Order, { ORDERS_EDIT_INPUTS } from "../Models/Order";
 import useOrders from "../Hooks/useOrders";
 import useCart from "../Hooks/useCart";
@@ -19,9 +18,8 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
 };
 
 export function Modal(props: ModalProps) {
-  return <div 
-   className="overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6">
-    <div className="mt-[var(--appbar-height)]"></div>
+  return <div {...props}
+   className={`overflow-y-auto fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-xs p-6 z-9999 ${props.className}`}>
     {props.children}
   </div>;
 }

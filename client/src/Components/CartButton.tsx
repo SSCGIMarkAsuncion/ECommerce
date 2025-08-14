@@ -69,13 +69,13 @@ interface BtnProps extends ButtonProps {
 function Btn(props: BtnProps) {
   const amount = props.cartAmount || 0;
   if (amount >= 1) {
-    return <div className={`flex gap-1 justify-between items-center ${props.className}`}>
+    return <div className={`flex gap-4 items-center ${props.className}`}>
       <Button className="aspect-square size-8 fill-white" onClick={(e) => {
         e.stopPropagation();
         if (props.onChangeCartAmount)
           props.onChangeCartAmount(amount-1);
       }}><IconMinus /></Button>
-      {amount}
+      <p>{amount}</p>
       <Button className="aspect-square size-8 fill-white" onClick={(e) => {
         e.stopPropagation();
         if (props.onChangeCartAmount)

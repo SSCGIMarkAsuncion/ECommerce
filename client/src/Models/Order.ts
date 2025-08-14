@@ -152,10 +152,10 @@ export class OrderQuery {
       query.push("populated=1");
     if (this.self)
       query.push("self=1");
-    if (this.status)
+    if (this.status.length > 0)
       query.push(`status=${this.status.join(';')}`);
     if (this.sort)
-      query.push(`sort=${this.status}`);
+      query.push(`sort=${this.sort}`);
     
 
     if (query.length == 0) return '';

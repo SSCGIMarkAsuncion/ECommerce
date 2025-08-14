@@ -130,10 +130,11 @@ export async function GetCart(req, res) {
  */
 export async function GetBreakdown(req, res) {
   const uid = new ObjectId(String(req.tokenPayload.id));
+  const cartId = req.mParamId;
 
   const cart = await Cart.findOne({
+    _id: cartId,
     owner: uid,
-    status: "cart"
   }).sort({ updatedAt: -1 })
     .populate("products.id")
     .lean().exec();

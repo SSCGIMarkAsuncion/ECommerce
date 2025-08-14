@@ -32,8 +32,21 @@ export default function useOrders() {
     throw new MError(resjson);
   };
 
+  const cancelOrder = async (order: Order) => {
+    const res = await fetch(`${api}/request-cancel/${order.id}`, {
+      credentials: "include",
+    });
+
+    if (res.status >= 200 && res.status <= 399) {
+      return null;
+    }
+    const resjson = await res.json();
+    throw new MError(resjson);
+  };
+
   return {
     getOrders,
-    deleteOrder
+    deleteOrder,
+    cancelOrder
   };
 }

@@ -1,6 +1,6 @@
 import type { InputDefs } from "../Context/EditableData";
 import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
-import type { Product } from "./Product"
+import { Product } from "./Product"
 
 export interface CartItem {
   id: string,
@@ -19,7 +19,15 @@ export default class Cart {
   constructor(obj: any) {
     this.id = obj._id;
     this.owner = obj.owner;
-    this.products = obj.products as CartItem[];
+    this.products = obj.products as CartItem[] || [];
+    if (this.products.length > 0 && typeof this.products[0].product == "object") {
+      this.products = this.products.map((item) => {
+        return {
+          ...item,
+          product: new Product(item.product)
+        }
+      });
+    }
     this.status = obj.status;
     this.createdAt = obj.createdAt? new Date(obj.createdAt):null;
     this.updatedAt = obj.updatedAt? new Date(obj.updatedAt):null;

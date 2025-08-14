@@ -10,7 +10,7 @@ router.use(authenticateJWT);
 // rename to /set/:id
 router.put("/add/:id", PutCart);
 router.get("/", GetCart);
-router.get("/breakdown", GetBreakdown);
+router.get("/breakdown/:id", validateParamId, GetBreakdown);
 router.post("/checkout", PostCheckout);
 router.get("/undo-checkout", GetUndoCheckout);
 router.post("/checkout-result", PostCheckoutResult);

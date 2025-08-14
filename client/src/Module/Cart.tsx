@@ -28,7 +28,7 @@ export default function Cart() {
           </div>
           <div className="text-md w-full md:w-max min-w-[200px]">
             <Card className="p-2 hover:bg-[initial]! fraunces-regular">
-              <CartBreakdown />
+              <CartBreakdown cart={cart} />
               <Checkout />
             </Card>
           </div>

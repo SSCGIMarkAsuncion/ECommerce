@@ -43,13 +43,6 @@ export default function useCart() {
     if (res.status >= 200 && res.status <= 399) {
       if (!resjson) return null;
       const cart = new Cart(resjson);
-      if (includeProductInfo) {
-        const newProducts = cart.products.map((product) => {
-          const np = new Product(product.product);
-          return { ...product, product: np };
-        });
-        cart.products = newProducts;
-      }
       return cart;
     }
     throw new MError(resjson);
@@ -68,8 +61,8 @@ export default function useCart() {
     }, []);
   };
 
-  const getBreakdown = async () => {
-    const res = await fetch(`${api}/cart/breakdown`,{
+  const getBreakdown = async (cart: Cart) => {
+    const res = await fetch(`${api}/cart/breakdown/${cart.id}`,{
       credentials: "include"
     });
 

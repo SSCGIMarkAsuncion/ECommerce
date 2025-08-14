@@ -1,6 +1,6 @@
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import Radio from "../Components/Radio";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Input from "../Components/Input";
 import Navbar, { NavbarOffset } from "../Components/Navbar";
 import Footer from "../Components/Footer";
@@ -12,6 +12,8 @@ import { useNotification } from "../Context/Notify";
 import type { MError } from "../Utils/Error";
 import { useUserContext } from "../Context/User";
 import OrderSuccessfullyCreated from "../Components/OrderSuccessfullyCreated";
+import { useCartContext } from "../Context/Cart";
+import type Cart from "../Models/Cart";
 
 export default function Checkout() {
   const [ searchParams, ] = useSearchParams();
@@ -19,6 +21,7 @@ export default function Checkout() {
   const { orderOpts } = usePaymentContext();
   const [ paymentMethod, setPaymentMethod ] = useState(searchParams.get("paymentMethod") || "cod");
   const [ isDoneAndSuccessful, setIsDoneAndSuccessful ] = useState(false);
+  const { cart } = useCartContext();
 
   const onSuccess = useCallback(() => {
     setIsDoneAndSuccessful(true);
@@ -85,7 +88,7 @@ export default function Checkout() {
                 <ButtonPaypal onSuccess={onSuccess} /> : <CodButton onSuccess={onSuccess} />
             }
           </form>
-          <CartBreakdown />
+          <CartBreakdown cart={cart as Cart} />
         </div>:
         <div className="min-h-full w-[80%] m-auto flex items-center">
           <OrderSuccessfullyCreated title="Order successfully created" />

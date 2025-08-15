@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { COLLECTIONS } from "../mongodb.js";
 import { Cart, Checkout } from "./carts.js";
 import { Product } from "./products.js";
+import { History } from "./history.js";
 
 export function createOrder(tokenPayload, cart, checkoutBody) {
   const co = new Checkout(cart.products);
@@ -131,6 +132,16 @@ OrderSchema.pre("findOneAndUpdate", async function(next) {
   }
 
   next();
+});
+
+OrderSchema.post("findOneAndDelete", async function(doc) {
+    const hist = await History.insertOne({
+      type: "delete",
+      schema: COLLECTIONS.ORDERS,
+      data: doc
+    });
+
+    console.log(hist);
 });
 
 export const Order = mongoose.model("order", OrderSchema, COLLECTIONS.ORDERS);

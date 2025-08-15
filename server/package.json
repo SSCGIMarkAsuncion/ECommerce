@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "lint": "eslint **/*.js",
-    "start": "nodemon --exec \"npm run lint && node src/index.js \""
+    "start": "nodemon --exec \"npm run lint && node src/index.js \"",
+    "deploy": "node src/index.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

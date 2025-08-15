@@ -38,7 +38,7 @@ export default function Register() {
     setLoading(true);
     authRegister(user)
       .then(() => {
-        navigate("/");
+        navigate("/login");
       })
       .catch((err: MError) => {
         let merrs = err.toErrorList();

@@ -48,7 +48,7 @@ class QueryOrders {
     console.log(this);
     const opt = {};
     if (this.self || !isAdmin(tokenPayload.role))
-      opt._id = new ObjectId(String(tokenPayload.id));
+      opt.user = new ObjectId(String(tokenPayload.id));
     if (this.status.length > 0)
       opt.status = { $in: this.status };
 

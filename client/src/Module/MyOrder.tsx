@@ -43,6 +43,7 @@ function TabOrderList() {
         setLoading(true);
         const s = tabs[selected];
         const orderQuery = new OrderQuery();
+        orderQuery.self = true;
         orderQuery.populated = true;
         switch (s) {
           case tabs[0]:

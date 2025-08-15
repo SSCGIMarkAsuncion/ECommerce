@@ -25,7 +25,7 @@ router.delete("/delete/:id",
 
 router.put("/edit/:id",
   authenticateJWT,
-  hasAdminRole,
+  hasSuperAdminRole,
   validateParamId,
   validateRoleAssign,
   GenericUpdate(User, ReqUser)

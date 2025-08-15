@@ -30,9 +30,9 @@ export class ReqUpdateUserShipping extends ReqBody {
   constructor(obj) {
     super(obj);
     this.shipping = {
-      lastname: "",
-      firstname: "",
-      middlename: "",
+      lastName: "",
+      firstName: "",
+      middleName: "",
       phoneNumber: "",
       address: "",
       area: "",
@@ -56,8 +56,9 @@ export async function PutUpdateShipping(req, res) {
   const body = new ReqUpdateUserShipping(req.body);
 
   const updated = await User.findByIdAndUpdate(uid, body.toObj(), { runValidators: true, new: true });
+  if (!updated) return res.status(200).json({});
 
-  res.status(200).json(updated);
+  res.status(200).json(updated.shipping)
 }
 
 /*
@@ -84,8 +85,6 @@ export async function validateRoleAssign(req, _, next) {
  */
 export async function GetShippingInformation(req, res) {
   let uid = new ObjectId(String(req.tokenPayload.id));
-  const u = await User.find({
-    _id: uid,
-  }).lean();
+  const u = await User.findById(uid).lean();
   return res.status(200).json(u.shipping || {});
 }

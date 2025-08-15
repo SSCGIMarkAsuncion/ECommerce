@@ -1,5 +1,7 @@
 export class OrderInfo {
-  full_name: string = "";
+  first_name: string = "";
+  last_name: string = "";
+  middle_name: string = "";
   email_address: string = "";
   phone_number: string = "";
   address_line_1: string = "";

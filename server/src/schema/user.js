@@ -4,15 +4,15 @@ import { hash } from "../encryption.js";
 import { validatePassword } from "../error.js";
 
 export const UserShippingSchema = new mongoose.Schema({
-  lastname: {
+  lastName: {
     type: String,
     default: ""
   },
-  firstname: {
+  firstName: {
     type: String,
     default: ""
   },
-  middlename: {
+  middleName: {
     type: String,
     default: ""
   },

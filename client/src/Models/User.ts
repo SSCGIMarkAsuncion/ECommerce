@@ -3,18 +3,18 @@ import { toDateTimeLocalString, type IColumn } from "../Utils/DataBuilder";
 import { checkPassword } from "../Utils/FormValidators";
 
 export class UserShipping {
-  lastname: string = "";
-  firstname: string = "";
-  middlename: string = "";
+  lastName: string = "";
+  firstName: string = "";
+  middleName: string = "";
   phoneNumber: string = "";
   address: string = "";
   area: string = "";
   postalCode: string = "";
 
   constructor(obj: any) {
-    this.lastname = obj.lastname || "";
-    this.firstname = obj.firstname || "";
-    this.middlename = obj.middlename || "";
+    this.lastName = obj.lastName || "";
+    this.firstName = obj.firstName || "";
+    this.middleName = obj.middleName || "";
     this.phoneNumber = obj.phoneNumber || "";
     this.address = obj.address || "";
     this.area = obj.area || "";

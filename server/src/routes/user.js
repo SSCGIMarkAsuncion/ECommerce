@@ -7,12 +7,15 @@ import { User } from "../schema/user.js";
 
 const router = express.Router();
 
+router.get("/shipping-info",
+  authenticateJWT,
+  GetShippingInformation
+);
 router.get("/",
   authenticateJWT,
   hasAdminRole,
   GetUsers
 );
-
 router.delete("/delete/:id",
   authenticateJWT,
   hasSuperAdminRole,
@@ -32,11 +35,6 @@ router.put("/update-shipping",
   authenticateJWT,
   PutUpdateShipping
 );
-router.get("/shipping-info". 
-  authenticateJWT,
-  GetShippingInformation
-);
-
 router.post("/create",
   authenticateJWT,
   hasAdminRole,

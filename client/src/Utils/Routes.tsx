@@ -65,11 +65,11 @@ export const ROUTER = createBrowserRouter([
   {
     path: "/checkout",
     element: <AuthenticatedOnly>
-      <PaymentProvider>
-        <CartContextProvider waitForResult={true} redirectIfEmpty="/products">
-          <Checkout />
-        </CartContextProvider>
-      </PaymentProvider>
+        <PaymentProvider>
+          <CartContextProvider waitForResult={true} redirectIfEmpty="/products">
+            <Checkout />
+          </CartContextProvider>
+        </PaymentProvider>
     </AuthenticatedOnly>
   },
   {

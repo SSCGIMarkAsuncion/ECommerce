@@ -12,7 +12,7 @@ export interface PayPalOrderOptsContext {
   actions: {
     checkout: () => Promise<PaypalCreateOrderOpts | null | MError>,
     undoCheckout: () => Promise<null>,
-    postCheckoutResult: (data: any) => Promise<null>
+    postCheckoutResult: (data: any) => Promise<null>,
   }
   // setOrderOpts: React.Dispatch<React.SetStateAction<PaypalOrderOpts>>
 };

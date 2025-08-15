@@ -156,7 +156,7 @@ class CheckoutBody {
   payment_method = "";
 
   constructor(obj) {
-    this.full_name = obj.full_name;
+    this.full_name = `${obj.last_name}, ${obj.first_name} ${obj.middle_name}`;
     this.email_address = obj.email_address;
     this.phone_number = obj.phone_number;
     this.address_line_1 = obj.address_line_1;

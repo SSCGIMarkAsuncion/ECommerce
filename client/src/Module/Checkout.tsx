@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router";
 import Radio from "../Components/Radio";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Input from "../Components/Input";
 import Navbar, { NavbarOffset } from "../Components/Navbar";
 import Footer from "../Components/Footer";

@@ -7,7 +7,7 @@ export interface GalleryProps extends HTMLProps<HTMLDivElement> {
   links: string[],
 };
 
-export default function Gallery({ links, ...props }: GalleryProps) {
+export default function Gallery({ links }: GalleryProps) {
   const images = links.map((link) => ({
     original: link,
     thumbnail: link

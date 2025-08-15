@@ -2,7 +2,7 @@ import type React from "react";
 import { Theme, type ButtonColorStyles, type ButtonType } from "../Utils/Theme";
 import { IconCaretDown, IconSort, IconSpinner } from "../Utils/SVGIcons";
 import { useNavigate } from "react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { type SortType } from "../Hooks/useProducts";
 
 type HTMLButtonTypes = "button" | "submit" | "reset" | undefined;

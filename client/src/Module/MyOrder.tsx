@@ -108,10 +108,10 @@ function OrderSummary({ cart }: { cart: Cart }) {
 }
 
 function OrderItem({ order, ...props }: ItemProps) {
-  const notify = useNotification();
+  // const notify = useNotification();
   const { setContent } = useContext(ModalContext);
-  const { cancelOrder } = useOrders();
-  const [ loading, setLoading ] = useState(false);
+  // const { cancelOrder } = useOrders();
+  // const [ loading, setLoading ] = useState(false);
 
   const onSummary = useCallback(() => {
     // notify("warn", "Open summary. Not Implemented Yet");
@@ -123,17 +123,17 @@ function OrderItem({ order, ...props }: ItemProps) {
     ));
   }, []);
 
-  const onCancel = useCallback(async () => {
-    notify("warn", "cancel");
-    setLoading(true);
-    try {
-      await cancelOrder(order);
-    }
-    catch (e) {
-      notify("error", e as MError);
-    }
-    setLoading(false);
-  }, []);
+  // const onCancel = useCallback(async () => {
+  //   notify("warn", "cancel");
+  //   setLoading(true);
+  //   try {
+  //     await cancelOrder(order);
+  //   }
+  //   catch (e) {
+  //     notify("error", e as MError);
+  //   }
+  //   setLoading(false);
+  // }, []);
 
   return <Card {...props} className={`text-white px-4 pt-4 pb-2 rounded-lg! bg-primary-500! ${props.className}`}>
     <div className="flex justify-between items-start">

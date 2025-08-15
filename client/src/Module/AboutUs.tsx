@@ -1,9 +1,8 @@
 import Navbar, { NavbarOffset } from "../Components/Navbar";
 import Footer from "../Components/Footer";
-import { Card } from "../Components/Card";
 import type { ReactNode } from "react";
 import { Theme } from "../Utils/Theme";
-import { IconBoxStacks, IconCart, IconCommunity, IconStar } from "../Utils/SVGIcons";
+import { IconBoxStacks, IconCart, IconStar } from "../Utils/SVGIcons";
 import ContactUs from "../Components/ContactUs";
 
 export default function AboutUs() {

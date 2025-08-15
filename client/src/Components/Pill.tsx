@@ -1,4 +1,4 @@
-import type { HTMLAttributes, HTMLProps } from "react";
+import type { HTMLProps } from "react";
 import Button from "./Button";
 import { IconXMark } from "../Utils/SVGIcons";
 

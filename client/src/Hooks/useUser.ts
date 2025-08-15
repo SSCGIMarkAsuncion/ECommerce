@@ -1,4 +1,3 @@
-import type { ShippingInfo } from "../Models/Order";
 import User, { UserShipping } from "../Models/User";
 import { MError } from "../Utils/Error";
 

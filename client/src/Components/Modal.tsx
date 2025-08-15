@@ -151,12 +151,12 @@ export function ModalEdit({ closeModal: cmodal }: ModalEditProps) {
          break;
     case "history":
       label = "History";
-      submitters.update = async (data: any) => {
-        notify("warn", `UPDATE NOT IMPLEMENTED YET`)
+      submitters.update = async (_data: any) => {
+        // notify("warn", `UPDATE NOT IMPLEMENTED YET`)
         // console.log(new Cart({ _id: data.id, data }));
       }
-      submitters.add = async (data: any) => {
-        notify("warn", `ADD NOT IMPLEMENTED YET`)
+      submitters.add = async (_data: any) => {
+        // notify("warn", `ADD NOT IMPLEMENTED YET`)
         // console.log(new Cart({ _id: data.id, data }));
       }
       editComponent = <Editor inputDefs={HISTORY_EDIT_INPUTS}

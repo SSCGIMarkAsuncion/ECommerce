@@ -13,6 +13,10 @@ import historyRouter from "./routes/history.js";
 import orderRouter from "./routes/order.js";
 import { authenticateJWT } from "./middleware/verify_token.js";
 import { configureCloudinary } from "./cloudinary.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 3000;
@@ -29,19 +33,23 @@ app.use(cookieParser());
 app.use(express.text());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.resolve(__dirname, '../../client/dist')));
 
-app.get('/', async (req, res) => {
-  res.status(200)
-    .send("Server is Working");
+// app.get('/', async (req, res) => {
+//   res.status(200)
+//     .send("Server is Working");
+// });
+app.use("/api/auth/", authRouter);
+app.use("/api/products/", productsRouter);
+app.use("/api/cart/", cartRouter);
+app.use("/api/orders/", orderRouter);
+app.use("/api/users/", usersRouter);
+app.use("/api/file/", authenticateJWT, fileRouter);
+app.use("/api/reviews/", reviewsRouter);
+app.use("/api/history/", historyRouter);
+app.get("/", (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../client/dist/', 'index.html'));
 });
-app.use("/auth/", authRouter);
-app.use("/products/", productsRouter);
-app.use("/cart/", cartRouter);
-app.use("/orders/", orderRouter);
-app.use("/users/", usersRouter);
-app.use("/file/", authenticateJWT, fileRouter);
-app.use("/reviews/", reviewsRouter);
-app.use("/history/", historyRouter);
 app.use(
 /*** @param {Error} err */
   (err, _, res, __) => {

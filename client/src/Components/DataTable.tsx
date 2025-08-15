@@ -15,7 +15,7 @@ export interface DataTableProps extends HTMLProps<HTMLElement> {
 export default function DataTable(props: DataTableProps) {
   const data = props.tableData;
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, _setPageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -141,6 +141,8 @@ export default function DataTable(props: DataTableProps) {
 function AddButton() {
   const { actionType, selectedData: { selectedData } } = useEditableDataContext();
 
+  if (selectedData == "history") return null;
+
   return <Button onClick={(e) => {
     e.stopPropagation();
     actionType?.setActionType("add");
@@ -155,6 +157,8 @@ export function RowActions({ data }: { data: any }) {
     actionType?.setActionType(evType);
     currentData?.setCurrentData(data);
   };
+
+  if (selectedData == "history") return <p>NO AVAILABLE ACTIONS</p>
 
   return <div className="flex gap-2 justify-center">
     <Button onClick={(e) => {

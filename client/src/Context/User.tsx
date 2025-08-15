@@ -1,9 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import User, { UserShipping } from "../Models/User";
+import User from "../Models/User";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import Loading from "../Components/Loading";
-import useUsers from "../Hooks/useUser";
 
 export type TUserContext = User | null;
 export interface TUserContextDispatcher {

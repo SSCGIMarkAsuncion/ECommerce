@@ -3,6 +3,7 @@ import { COLLECTIONS } from "../mongodb.js";
 import parseQueryValue from "../utils/query.js";
 import { extractPublicId } from "cloudinary-build-url";
 import { deleteImg } from "../cloudinary.js";
+import { History } from "./history.js";
 
 export const ProductSchema = new mongoose.Schema({
   name: {
@@ -65,6 +66,16 @@ ProductSchema.pre("deleteOne", { document: false, query: true }, async function 
   }
 
   next();
+});
+
+ProductSchema.post("findOneAndDelete", async function(doc) {
+    const hist = await History.insertOne({
+      type: "delete",
+      schema: COLLECTIONS.PRODUCTS,
+      data: doc
+    });
+
+    console.log(hist);
 });
 
 export const Product = mongoose.model("product", ProductSchema, COLLECTIONS.PRODUCTS);

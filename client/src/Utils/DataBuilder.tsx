@@ -3,7 +3,7 @@ import { createColumnHelper, type Row } from "@tanstack/react-table";
 import { RowActions } from "../Components/DataTable";
 import { Pill } from "../Components/Pill";
 
-export type OpenableData = "products" | "orders" | "users" | "carts";
+export type OpenableData = "products" | "orders" | "users" | "carts" | "history";
 export type TableData = {
   column: any[],
   data: any[]

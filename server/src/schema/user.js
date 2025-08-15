@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
 import { hash } from "../encryption.js";
 import { validatePassword } from "../error.js";
+import { History } from "./history.js";
 
 export const UserShippingSchema = new mongoose.Schema({
   lastName: {
@@ -70,6 +71,16 @@ export const UserSchema = new mongoose.Schema({
 UserSchema.pre("save", async function(next) {
   this.password = hash(this.password);
   next();
+});
+
+UserSchema.post("findOneAndDelete", async function(doc) {
+    const hist = await History.insertOne({
+      type: "delete",
+      schema: COLLECTIONS.USERS,
+      data: doc
+    });
+
+    console.log(hist);
 });
 
 UserSchema.pre("findOneAndUpdate", function(next) {

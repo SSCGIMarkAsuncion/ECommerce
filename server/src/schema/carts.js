@@ -1,6 +1,7 @@
 import mongoose, { mongo } from "mongoose";
 import { COLLECTIONS } from "../mongodb.js";
 import { Order } from "./order.js";
+import { History } from "./history.js";
 
 export class Checkout {
   /** @type {({ id: any, amount: number })[]} */
@@ -104,6 +105,16 @@ CartSchema.pre("findOneAndDelete", async function(next) {
   }
 
   next();
+});
+
+CartSchema.post("findOneAndDelete", async function(doc) {
+    const hist = await History.insertOne({
+      type: "delete",
+      schema: COLLECTIONS.CARTS,
+      data: doc
+    });
+
+    console.log(hist);
 });
 
 export const Cart = mongoose.model("cart", CartSchema, COLLECTIONS.CARTS);

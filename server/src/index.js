@@ -9,6 +9,7 @@ import cartRouter from "./routes/cart.js";
 import fileRouter from "./routes/file.js";
 import usersRouter from "./routes/user.js";
 import reviewsRouter from "./routes/reviews.js";
+import historyRouter from "./routes/history.js";
 import orderRouter from "./routes/order.js";
 import { authenticateJWT } from "./middleware/verify_token.js";
 import { configureCloudinary } from "./cloudinary.js";
@@ -40,6 +41,7 @@ app.use("/orders/", orderRouter);
 app.use("/users/", usersRouter);
 app.use("/file/", authenticateJWT, fileRouter);
 app.use("/reviews/", reviewsRouter);
+app.use("/history/", historyRouter);
 app.use(
 /*** @param {Error} err */
   (err, _, res, __) => {

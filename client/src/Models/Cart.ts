@@ -107,12 +107,16 @@ export const CART_EDIT_INPUTS: InputDefs<Cart> = [
     }
   ],
   {
-    inputType: "text",
-    id: "",
-    label: "Info",
+    inputType: "textarea",
+    id: "products",
+    label: "Products (Not Editable)",
     readOnly: true,
-    defaultValue: (_) => {
-      return "Edit Not Implemented Yet"
+    defaultValue: (d) => {
+      return JSON.stringify(d.current.products, null, 2);
+    },
+    props: {
+      rows: 10,
+      className: "has-[textarea:read-only]:bg-gray-200! has-[textarea:read-only]:border-gray-200!"
     }
   }
 ];

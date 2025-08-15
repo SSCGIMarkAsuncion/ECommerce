@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { COLLECTIONS } from "../mongodb";
+import { COLLECTIONS } from "../mongodb.js";
 
 /*
  add
@@ -33,9 +33,5 @@ export const HistorySchema = new mongoose.Schema({
     default: null
   }
 }, { timestamps: true });
-
-HistorySchema.pre("save", function(next) {
-
-});
 
 export const History = mongoose.model(COLLECTIONS.HISTORY, HistorySchema, COLLECTIONS.HISTORY);

@@ -34,7 +34,7 @@ export default function Home() {
   return <>
     <div id="home" className="relative bg-[url('/home_bg.png')] bg-cover bg-center aspect-[16/9] min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-4 md:px-18 pb-8">
       <div className="z-9 absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/75 via-transparent to-black/75"></div>
-      <div className="relative z-11 w-[60%] fraunces-regular text-5xl/14 md:text-6xl/15 xl:text-8xl/26">
+      <div className="z-11 w-[60%] fraunces-regular text-5xl/14 md:text-6xl/15 xl:text-8xl/26">
         <h1 className="my-10 text-white tracking-wider font-medium text-shadow-black text-shadow-lg">
           Where Flavor Meets Togetherness
         </h1>

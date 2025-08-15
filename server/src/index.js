@@ -47,7 +47,7 @@ app.use("/api/users/", usersRouter);
 app.use("/api/file/", authenticateJWT, fileRouter);
 app.use("/api/reviews/", reviewsRouter);
 app.use("/api/history/", historyRouter);
-app.get("/", (req, res) => {
+app.get("/*splat", (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../client/dist/', 'index.html'));
 });
 app.use(

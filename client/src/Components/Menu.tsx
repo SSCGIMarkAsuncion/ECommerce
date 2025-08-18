@@ -87,7 +87,7 @@ export function ButtonMenu(props: ButtonMenu) {
       <IconCaretDown className={`${isOpen? "animate-rotate-180":"animate-rotate-180-rev"}`}/>
       </div>
     </Button>
-    <div ref={refSubMenu} hidden={!isOpen} className={`${isOpen? "animate-slide-down pointer-events-auto":"animate-slide-up pointer-events-none"} absolute bottom-[-1] bg-primary-700 py-1 ${Theme.rounded} bg-primary-900 shadow-sm shadow-black/25 flex flex-col w-max`}>
+    <div ref={refSubMenu} hidden={!isOpen} className={`${isOpen? "animate-slide-down pointer-events-auto":"animate-slide-up pointer-events-none"} absolute top-full bg-primary-700 py-1 ${Theme.rounded} bg-primary-900 shadow-sm shadow-black/25 flex flex-col w-max`}>
       {props.children}
     </div>
   </div>

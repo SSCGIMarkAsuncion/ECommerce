@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import Button from "../Components/Button";
-import Navbar from "../Components/Navbar";
+import Navbar, { NavbarOffset } from "../Components/Navbar";
 import PromoList from "../Components/PromoList";
 import { type Product } from "../Models/Product";
 import BestSeller from "../Components/BestSellerCarousel";
 import Footer from "../Components/Footer";
-import { useNavigate } from "react-router";
 import useProducts from "../Hooks/useProducts";
 import ContactUs from "../Components/ContactUs";
 import { Theme } from "../Utils/Theme";
@@ -15,7 +14,6 @@ export default function Home() {
   const { getPromo, getBestSellers } = useProducts();
   const [ promos, setPromos ] = useState<Product[]>([]);
   const [ bestSellers, setBestSellers ] = useState<Product[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     getPromo()
@@ -32,14 +30,16 @@ export default function Home() {
   }, []);
 
   return <>
-    <div id="home" className="relative bg-[url('/home_bg.png')] bg-cover bg-center aspect-[16/9] min-h-[400px] bg-primary-950 pt-[var(--appbar-height)] px-4 md:px-18 pb-8">
-      <div className="z-9 absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/75 via-transparent to-black/75"></div>
-      <div className="z-11 w-[60%] fraunces-regular text-5xl/14 md:text-6xl/15 xl:text-8xl/26">
-        <h1 className="my-10 text-white tracking-wider font-medium text-shadow-black text-shadow-lg">
+    <NavbarOffset />
+    <div id="home" className="relative min-h-[400px] h-[100svh] bg-primary-50">
+      <div className="z-0 opacity-90 absolute top-0 left-0 bg-[url('/home_bg.png')] bg-cover bg-center h-full w-full"></div>
+      <div className="relative py-12 pl-8 z-10 w-[60%] fraunces-regular text-5xl/14 md:text-6xl/15 xl:text-8xl/26">
+        <h1 className="text-white mb-6 tracking-wider font-medium text-shadow-black text-shadow-lg">
           Where Flavor Meets Togetherness
         </h1>
-        <Button onClick={() => navigate("/products") } href="/products" pColor="whitePrimary" className="text-lg">Explore now</Button>
+        <Button href="/products" pColor="whitePrimary" className="text-lg">Explore now</Button>
       </div>
+      {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/75 via-transparent to-black/75"></div> */}
     </div>
     <div id="promos" className="bg-primary-50 md:p-4">
       <h1 className="fraunces-regular text-center text-6xl font-semibold text-primary-900">Promos</h1>

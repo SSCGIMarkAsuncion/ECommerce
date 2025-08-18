@@ -225,7 +225,7 @@ export function ModalDelete({ closeModal }: ModalEditProps) {
     try {
       if (deleteFn)
         await deleteFn(data);
-      notify("info", `successfully deleted ${successMsg}`);
+      notify("info", `Successfully Archived ${successMsg}`);
     }
     catch (e) {
       notify("error", (e as MError));
@@ -249,7 +249,7 @@ export function ModalDelete({ closeModal }: ModalEditProps) {
   }, [])
 
   return <div onClick={(e) => e.stopPropagation()} className="w-max m-auto rounded-xs bg-white p-4 animate-slide-down">
-    <h1 className="text-lg fraunces-regular">Are you sure you want to delete?</h1>
+    <h1 className="text-lg fraunces-regular">Are you sure you want to Archive this data?</h1>
     <div className="flex gap-1 text-xs mt-2">
       <Button className="ml-auto" loading={loading} onClick={closeModal} pColor="whitePrimary">Cancel</Button>
       <Button loading={loading} pColor="red" onClick={() => {

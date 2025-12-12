@@ -63,18 +63,20 @@ function Notification({ item, remove }: { item: NotificationItem, remove: (item:
   }, []);
 
   const colors = {
-    warn: "fill-amber-500 text-amber-500 border-l-3 border-amber-300!",
-    info: "fill-blue-500 text-blue-500 border-l-3 border-blue-300!",
-    error: "fill-red-500 text-red-500 border-l-3 border-red-300!"
+    warn: "fill-amber-500 text-amber-500 border-l-3 border-amber-300",
+    info: "fill-blue-500 text-blue-500 border-l-3 border-blue-300",
+    error: "fill-red-500 text-red-500 border-l-3 border-red-300"
   };
 
-  return <Card className={`animate-slide-right-in flex items-center gap-2 px-3! py-2! ${colors[item.type]}`} onClick={() => {
+  return <Card className={`animate-slide-right-in flex items-center gap-2 px-3 py-2 min-w-[max-content] ${colors[item.type]}`} onClick={() => {
     if (timer.current) {
       clearTimeout(timer.current)
     }
     remove(item);
   }}>
-    <IconInfoFilled className="size-6" />
-    <span className="text-md mr-2 font-semibold">{item.body}</span>
+    <div className="w-6">
+        <IconInfoFilled className="size-6" />
+    </div>
+    <p className="text-md mr-2 font-semibold">{item.body}</p>
   </Card>
 }

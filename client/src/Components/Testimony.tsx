@@ -2,6 +2,7 @@ import Carousel from "react-multi-carousel";
 import 'react-multi-carousel/lib/styles.css';
 import useReviews from "../Hooks/useReviews";
 import { useEffect, useState, type HTMLProps } from "react";
+import { Theme } from '../Utils/Theme';
 import { Review } from "../Models/Reviews";
 import { Card } from "./Card";
 import Rating from "./Rating";
@@ -28,7 +29,18 @@ export default function Testimonials() {
   }, []);
 
   if (loading) {
-    return <Skeleton className="h-[60svh] aspect-[5/3] bg-primary-200 mx-auto" />
+    return <Skeleton className="h-[200px] aspect-[5/3] bg-primary-200 mx-auto" />
+  }
+
+  if (testimonials.length == 0) {
+    return <div
+     className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
+      <div>
+        <div className="flex gap-2 mt-2 justify-center text-sm">
+          <p>No Testimonials Right Now</p>
+        </div>
+      </div>
+    </div>
   }
 
   return <Carousel

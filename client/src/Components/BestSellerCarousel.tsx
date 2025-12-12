@@ -1,6 +1,6 @@
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { CarouselBreakpoints } from '../Utils/Theme';
+import { CarouselBreakpoints, Theme } from '../Utils/Theme';
 import type { Product } from '../Models/Product';
 import { useCallback } from 'react';
 import { Card } from './Card';
@@ -8,9 +8,19 @@ import Price from './Price';
 import Img from './Img';
 import { useNavigate } from 'react-router';
 
-export default function BestSeller({ products }: { products: Product[] }) {
+export default function BestSeller({ products, isLoaded = false }: { products: Product[], isLoaded?: boolean }) {
   const responsive = CarouselBreakpoints;
 
+  if (isLoaded && products && products.length == 0) {
+    return <div
+     className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
+      <div>
+        <div className="flex gap-2 mt-2 justify-center text-sm">
+          <p>No Best Seller Right Now</p>
+        </div>
+      </div>
+    </div>
+  }
   return <Carousel
     swipeable={true}
     draggable={false}

@@ -12,19 +12,23 @@ import Testimonials from "../Components/Testimony";
 
 export default function Home() {
   const { getPromo, getBestSellers } = useProducts();
+  const [ isPromoLoading, setIsPromoLoading ] = useState(true);
   const [ promos, setPromos ] = useState<Product[]>([]);
   const [ bestSellers, setBestSellers ] = useState<Product[]>([]);
+  const [ isBestSellerLoading, setIsBestSellerLoading ] = useState(true);
 
   useEffect(() => {
     getPromo()
       .then((promos) => {
         setPromos(promos);
+        setIsPromoLoading(false);
       })
       .catch((e) => console.log(e));
 
     getBestSellers()
       .then((bestSellers) => {
         setBestSellers(bestSellers);
+        setIsBestSellerLoading(false);
       })
       .catch(e => console.log(e));
   }, []);
@@ -43,11 +47,11 @@ export default function Home() {
     </div>
     <div id="promos" className="bg-primary-50 md:p-4">
       <h1 className="fraunces-regular text-center text-6xl font-semibold text-primary-900">Promos</h1>
-      <PromoList promos={promos} />
+      <PromoList promos={promos} isLoaded={!isPromoLoading}  />
     </div>
     <div id="bestsellers" className="bg-primary-600 p-4">
       <h1 className="my-5 fraunces-regular text-white text-center text-4xl font-medium tracking-wide">Best Sellers </h1>
-      <BestSeller products={bestSellers} />
+      <BestSeller products={bestSellers} isLoaded={!isBestSellerLoading} />
     </div>
     <div id="testimonials" className="fraunces-regular text-primary-900 bg-primary-200/75 p-6">
       <p className="text-center text-6xl mb-6 font-semibold">What Our Customers Say</p>

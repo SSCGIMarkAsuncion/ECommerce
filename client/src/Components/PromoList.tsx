@@ -1,5 +1,6 @@
 import React from "react";
 import type { Product } from "../Models/Product";
+import { Theme } from '../Utils/Theme';
 import Skeleton from "./Skeleton";
 import { ButtonCart } from "./CartButton";
 import { BgSkewedRect } from "../Utils/SVGIcons";
@@ -7,7 +8,8 @@ import Price from "./Price";
 import Img from "./Img";
 
 export interface PromoListProps extends React.HTMLProps<HTMLDivElement> {
-  promos: Product[]
+  promos: Product[],
+  isLoaded?: boolean
 };
 
 export interface PromoProps extends React.HTMLProps<HTMLDivElement> {
@@ -16,6 +18,16 @@ export interface PromoProps extends React.HTMLProps<HTMLDivElement> {
 };
 
 export default function PromoList(props: PromoListProps) {
+  if (props.isLoaded && props.promos.length == 0) {
+    return <div
+     className={`w-full bg-primary-200 border-primary-300 text-primary-600 *:fill-primary-600 border-1 p-8 text-xl text-center animate-appear flex flex-col gap-4 items-center justify-center fraunces-regular font-medium ${Theme.rounded}`}>
+      <div>
+        <div className="flex gap-2 mt-2 justify-center text-sm">
+          <p>No Promos</p>
+        </div>
+      </div>
+    </div>
+  }
   return <div className="p-2 flex flex-col gap-8">
   {
     (props.promos.length == 0)?

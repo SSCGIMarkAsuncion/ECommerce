@@ -22,8 +22,6 @@ export function useEditableData() {
     switch (type) {
       case "products":
         const products = await getProducts({} as ProductFilterQuery);
-        if (products.length == 0)
-          break;
         cols = buildColumnFrom(PRODUCT_COLUMNS);
         return {
           column: cols,
@@ -31,8 +29,6 @@ export function useEditableData() {
         };
       case "users":
         const users = await getUsers();
-        if (users.length == 0)
-          break;
         cols = buildColumnFrom(USERS_COLUMNS);
         return {
           column: cols,
@@ -40,8 +36,6 @@ export function useEditableData() {
         };
       case "orders":
         const orders = await getOrders();
-        if (orders.length == 0)
-          break;
         cols = buildColumnFrom(ORDERS_COLUMNS);
         return {
           column: cols,
@@ -49,8 +43,6 @@ export function useEditableData() {
         };
       case "carts":
         const carts = await getAllCarts();
-        if (carts.length == 0)
-          break;
         cols = buildColumnFrom(CARTS_COLUMNS);
         return {
           column: cols,
@@ -58,8 +50,6 @@ export function useEditableData() {
         };
       case "history":
         const history = await getHistory();
-        if (history.length == 0)
-          break;
         cols = buildColumnFrom(HISTORY_COLUMNS);
         return {
           column: cols,

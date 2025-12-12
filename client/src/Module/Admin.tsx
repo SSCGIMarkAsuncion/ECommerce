@@ -49,7 +49,7 @@ function Page() {
         if (isLoading) {
           return <Loading className="h-screen">Loading Data</Loading>;
         }
-        else if (tableData && tableData.data.length > 0) {
+        else if (tableData) {
           return <DataTable containerClass="flex-1" title={selectedData.selectedData} tableColumns={tableData.column} tableData={tableData.data} />
         }
         return <NoContent />
